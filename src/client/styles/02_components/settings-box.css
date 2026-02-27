@@ -1,0 +1,24 @@
+.settings-box {
+  @apply border rounded-lg flex flex-col gap-y-1 p-3;
+
+  &.settings-box--default {
+    @apply border-gray-700;
+  }
+
+  &.settings-box--danger {
+    @apply border-red-500;
+  }
+}
+
+.settings-box__title {
+  @apply font-roboto-regular text-base text-gray-300;
+}
+
+.settings-box__content {
+  @apply flex items-end justify-between gap-3;
+}
+
+.settings-box__text {
+  @apply text-sm text-gray-300 flex-1;
+}
+

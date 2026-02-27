@@ -1,0 +1,12 @@
+.card-list__item {
+  &:has(> * > .dropdown--open),
+  &:hover {
+    .card-list__data.card-list__menu > div:first-child {
+      @apply block;
+    }
+  }
+}
+
+.card-list__data.card-list__menu > div:first-child {
+  @apply relative hidden;
+}

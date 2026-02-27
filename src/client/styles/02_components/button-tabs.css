@@ -1,0 +1,28 @@
+.buttonTabs {
+  @apply w-full
+}
+
+.buttonTabs__items {
+  @apply flex items-stretch w-full;
+}
+
+.buttonTabs__item {
+  @apply flex-1;
+  
+  &.is-active {
+    @apply pointer-events-none;
+    .buttonTabs__link {
+      @apply text-white bg-gray-800;
+    }
+  }
+
+  &.is-disabled {
+    .buttonTabs__link {
+      @apply text-gray-400 cursor-not-allowed pointer-events-none;
+    }
+  }
+}
+
+.buttonTabs__link {
+  @apply flex relative text-gray-500 text-xs justify-center font-medium py-1.5 px-2 hover:bg-gray-900 rounded-lg w-full;
+}

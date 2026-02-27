@@ -1,0 +1,65 @@
+.checkbox__container {
+  @apply w-full relative flex items-center cursor-pointer;
+}
+
+.checkbox {
+  @apply absolute opacity-0;
+
+  &:checked {
+    + .checkbox__box {
+      &::before {
+        @apply scale-100 bg-gray-700;
+      }
+
+      .checkbox__box-icon {
+        @apply opacity-100;
+      }
+    }
+  }
+}
+
+.checkbox-changed .checkbox__label::after {
+  content: "";
+  @apply w-1.5 h-1.5 rounded-full bg-primary-600;
+}
+
+.checkbox__box {
+  @apply w-4 h-4 relative border border-gray-400 rounded-[4px] before:content-[""] hover:border-gray-100;
+  transition: border-color 0.1s ease-in-out;
+  &::before {
+    @apply absolute w-full h-full top-0 left-0 rounded-[3px] scale-0;
+    transition: transform 0.1s ease-in-out;
+  }
+}
+
+.checkbox__box-icon {
+  @apply absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-0 pointer-events-none text-white z-[2];
+  transition: opacity 0.1s ease-in-out;
+  svg {
+    @apply w-4 h-auto;
+  }
+}
+
+.checkbox__label {
+  @apply text-sm font-medium text-gray-300 leading-[1] ml-2 flex items-center text-center gap-x-1;
+  a {
+    @apply text-gray-500;
+  }
+}
+
+.checkbox__caption {
+  @apply text-xs text-gray-500 ml-6;
+}
+
+.checkbox__wrap--error {
+  .checkbox__box {
+    @apply border-red-600;
+  }
+  .checkbox__caption {
+    @apply text-red-600;
+  }
+}
+
+.checkbox__wrap--disabled {
+  @apply opacity-40 pointer-events-none;
+}

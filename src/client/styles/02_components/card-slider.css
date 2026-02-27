@@ -1,0 +1,36 @@
+.card-slider__wrapper {
+  @apply relative w-full overflow-hidden;
+}
+
+.card-slider__indicator {
+  @apply
+    w-8 h-8 flex items-center justify-center p-2
+    bg-gray-800
+    absolute top-1/2 -translate-y-1/2
+    z-10 rounded-full
+    disabled:pointer-events-none disabled:opacity-50;
+
+  &.indicator--left {
+    @apply left-0;
+  }
+
+  &.indicator--right {
+    @apply right-0;
+  }
+}
+
+.card-slider__track {
+  @apply scrollbar-none overflow-auto scroll-smooth px-4;
+}
+
+.card-slider__container {
+  @apply flex;
+}
+
+.card-slider__item {
+  @apply shrink-0 px-2;
+}
+
+.card-slider__item-content {
+  @apply rounded-lg p-4 bg-gray-900 border border-gray-600;
+}

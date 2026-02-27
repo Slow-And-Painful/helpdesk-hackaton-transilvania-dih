@@ -1,0 +1,35 @@
+.tool-instance-card__container {
+  @apply rounded-lg shadow-lg border border-gray-800 bg-gray-900 text-white p-[11px] min-h-[132px];
+}
+
+.tool-instance-card-red__container {
+  @apply rounded-lg shadow-lg border border-primary-900 text-white cursor-pointer min-h-[134px];
+}
+
+.tool-instance-card-red__inner-container {
+  @apply w-full h-full bg-[#2C0102] rounded-lg border-r-5 border-primary-400 p-[11px];
+}
+
+.tool-instance-card__title-container {
+  @apply flex items-center gap-2.5 mb-2;
+}
+
+.tool-instance-card__title {
+  @apply text-base font-medium truncate;
+}
+
+.tool-instance-card__description {
+  @apply text-gray-400 text-sm font-normal truncate;
+}
+
+.tool-instance-card-red__description {
+  @apply text-sm line-clamp-4 font-normal;
+}
+
+.tool-instance-card-separator {
+  @apply w-full h-px bg-gray-800 my-4;
+}
+
+.tool-instance-card__link {
+  @apply text-sm font-normal text-gray-400 truncate;
+}

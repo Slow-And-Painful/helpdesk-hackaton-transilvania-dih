@@ -1,0 +1,3 @@
+export enum ORGANIZATION_USER_ROLE {
+  ADMIN = "ADMIN"
+}

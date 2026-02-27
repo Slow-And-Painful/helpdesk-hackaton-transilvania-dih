@@ -1,0 +1,9 @@
+:root {
+  --nav-width: 152px;
+  --nav-height: 94px;
+  --footer-height: 82px;
+}
+
+:root body[data-sidebar-collapse="true"] #page {
+  --nav-width: 60px;
+}

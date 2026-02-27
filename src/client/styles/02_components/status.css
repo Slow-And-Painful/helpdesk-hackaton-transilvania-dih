@@ -1,0 +1,16 @@
+.status {
+  @apply inline-flex items-center gap-x-2 px-1.5 py-0.5 rounded-lg h-5;
+}
+
+.status__content {
+  @apply text-sm font-medium leading-[1];
+}
+
+.status--BLOCKED,
+.status--DISABLED {
+  @apply bg-gray-600 text-gray-100;
+}
+
+.status--PENDING_VERIFICATION {
+  @apply bg-gray-400 text-gray-900;
+}

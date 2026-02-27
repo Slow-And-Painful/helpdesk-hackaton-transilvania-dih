@@ -1,0 +1,38 @@
+{
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "lib": ["dom", "WebWorker", "ES2021.String"],
+    "paths": {
+      "$utils/*": ["src/utils/*"],
+      "$types": ["src/types/index.d.ts"],
+      "$types/*": ["src/types/*"],
+      "$api/*": ["src/api/*"],
+      "$components/*": ["src/components/*"],
+      "$dbSchemas/*": ["src/dbSchemas/*"],
+      "$services/*": ["src/services/*"],
+      "$handlers/*": ["src/handlers/*"],
+      "$templates/*": ["src/templates/*"],
+      "$routers/*": ["src/routers/*"],
+      "$json_schemas/*": ["src/json_schemas/*"],
+      "$hooks/*": ["src/hooks/*"],
+      "$seeds/*": ["src/seeds/*"],
+      "$constants/*": ["src/constants/*"]
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "plugins": [
+      {
+        "name": "@kitajs/ts-html-plugin"
+      }
+    ]
+  },
+  "include": ["**/*.ts", "**/*.js", "**/*.mjs", "**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}

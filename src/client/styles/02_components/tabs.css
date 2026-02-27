@@ -1,0 +1,54 @@
+.tabs {
+  @apply w-full border-b border-gray-800;
+}
+
+.tabs__items {
+  @apply flex items-stretch w-fit box-border;
+}
+
+.tabs__items--grid-2 {
+  @apply grid grid-cols-2;
+}
+
+.tabs__items--grid-3 {
+  @apply grid grid-cols-3;
+}
+
+.tabs__items--grid-4 {
+  @apply grid grid-cols-4;
+}
+
+.tabs__items--grid-5 {
+  @apply grid grid-cols-5;
+}
+
+.tabs__items--grid-6 {
+  @apply grid grid-cols-6;
+}
+
+
+.tabs__item {
+  @apply flex-1 border-b-[3px] border-transparent;
+  transition: border-color 0.2s ease-in-out;
+
+  &:not(.is-disabled, .is-active) {
+    @apply hover:border-gray-800;
+  }
+  
+  &.is-active {
+    @apply pointer-events-none border-gray-500;
+    .tabs__link {
+      @apply text-white;
+    }
+  }
+
+  &.is-disabled {
+    .tabs__link {
+      @apply text-gray-500;
+    }
+  }
+}
+
+.tabs__link {
+  @apply flex relative text-gray-400 text-xs justify-center font-medium w-full p-2 px-4;
+}

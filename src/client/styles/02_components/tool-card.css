@@ -1,0 +1,51 @@
+.tool-card-red__container {
+  @apply rounded-lg shadow-lg border border-primary-900 text-white cursor-pointer h-[170px] min-w-[164px] max-w-[170px] flex-1 shrink-0;
+}
+
+.tool-card-red__container--disabled {
+  @apply border-gray-700 bg-gray-900 text-white;
+
+  .tool-card-red__inner-container {
+    @apply bg-gray-900 border-gray-400;
+  }
+}
+
+.tool-card-red__container.tool-card__listing {
+  @apply !w-full !max-w-none !min-w-0 !h-[140px];
+
+  .tool-card__title {
+    @apply !h-auto !max-w-none
+  }
+}
+
+.tool-card-red__inner-container {
+  @apply w-full h-full bg-[#2C0102] rounded-lg border-r-5 border-primary-400 p-[11px] flex flex-col items-center justify-start relative;
+}
+
+.tool-card__title-container {
+  @apply flex items-center gap-2.5;
+}
+
+.tool-card__title {
+  @apply text-base font-medium text-center mx-auto max-w-[120px] absolute bottom-3 h-[42px] flex items-center justify-center;
+}
+
+.tool-card-red__icon {
+  @apply py-4;
+}
+
+.tool-card__description {
+  @apply text-gray-400 text-sm font-normal truncate;
+}
+
+.tool-card-red__description {
+  @apply text-sm line-clamp-4 font-normal;
+}
+
+.tool-card-separator {
+  @apply w-full h-px bg-gray-800 my-4;
+}
+
+.tool-card__link {
+  @apply text-sm font-normal text-gray-400 truncate;
+}

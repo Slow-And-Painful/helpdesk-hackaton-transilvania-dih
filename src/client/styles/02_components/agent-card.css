@@ -1,0 +1,62 @@
+.agent-card__container {
+  @apply  border rounded-[13px] text-white cursor-pointer flex flex-col;
+}
+
+.agent-card--sm {
+  @apply rounded-xl border-[0.5px] border-primary-500;
+
+  .agent-card__title {
+    @apply text-xs font-normal;
+  }
+
+  .agent-card__inner-container {
+    @apply px-4 scroll-py-2.5 bg-gray-900 border-r-[5px] border-primary-500 rounded-xl;
+  }
+}
+
+.agent-card--md {
+  @apply border-primary-500;
+
+  .agent-card__inner-container {
+    @apply bg-gray-900 border-r-[5px] border-primary-500;
+  }
+
+  .agent-card__description {
+    @apply line-clamp-2;
+  }
+}
+
+.agent-card--lg {
+  @apply border-gray-300;
+
+  .agent-card__inner-container {
+    @apply bg-gray-800 border-l-5 border-gray-300;
+  }
+
+  .agent-card__description {
+    @apply line-clamp-10;
+  }
+}
+
+.agent-card__inner-container {
+  @apply w-full flex-1 rounded-xl p-[11px] flex flex-col gap-y-2;
+}
+
+.agent-card__title-container {
+  @apply flex items-center gap-x-2
+}
+
+.agent-card__title {
+  @apply text-base font-medium truncate;
+}
+
+.agent-card__description {
+  @apply text-gray-200 text-sm font-normal flex-1;
+}
+
+.agent-card__container:hover {
+  @apply border-primary-200;
+  .agent-card__inner-container {
+    @apply bg-gray-700 border-primary-200
+  }
+}

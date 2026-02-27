@@ -1,0 +1,13 @@
+.breadcrumb,
+.breadcrumb__list,
+.breadcrumb__item {
+  @apply flex items-center gap-x-1.5;
+}
+
+.breadcrumb {
+  @apply font-roboto-regular text-sm text-gray-400;
+}
+
+.breadcrumb__item a:hover {
+  @apply text-white;
+}

@@ -1,0 +1,21 @@
+.usage-alert__container {
+  @apply hidden h-0 w-0;
+}
+
+html[data-with-usage-alert] {
+  .usage-alert__container {
+    @apply h-[44px] w-full absolute top-0 left-0 z-[999] flex items-center justify-between text-white px-4;
+
+    &.theme--info {
+      @apply bg-gray-600;
+    }
+
+    &.theme--warning {
+      @apply bg-[#6C310D];
+    }
+
+    &.theme--danger {
+      @apply bg-danger-900;
+    }
+  }
+}

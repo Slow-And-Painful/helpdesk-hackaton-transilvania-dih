@@ -1,0 +1,25 @@
+.alert {
+  @apply relative p-2 rounded-lg
+  flex items-center gap-x-2 justify-start
+  text-sm font-roboto-regular select-text;
+}
+
+.alert__with-title {
+  @apply flex-col gap-y-2;
+}
+
+.alert--danger {
+  @apply bg-red-900 text-red-100;
+}
+
+.alert--info {
+  @apply bg-gray-600 text-white;
+}
+
+.alert--success {
+  @apply bg-green-900 text-green-100;
+}
+
+.alert--warning {
+  @apply bg-orange-900 text-orange-100;
+}

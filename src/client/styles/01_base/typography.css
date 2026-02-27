@@ -1,0 +1,19 @@
+.paragraph-sm {
+  @apply text-sm;
+}
+.paragraph-md {
+  @apply text-base;
+}
+
+.title-sm {
+  @apply text-base font-roboto-semibold;
+}
+.title-md {
+  @apply text-xl font-roboto-semibold;
+}
+.title-lg {
+  @apply text-2xl font-roboto-semibold;
+}
+.title-xl {
+  @apply text-h2 font-roboto-semibold;
+}

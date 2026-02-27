@@ -1,0 +1,11 @@
+.user-avatar {
+  @apply rounded-full flex items-center justify-center overflow-hidden text-white uppercase shrink-0;
+}
+
+.user-avatar--sm {
+  @apply text-[10px] w-5 h-5;
+}
+
+.user-avatar--md {
+  @apply text-sm w-9.5 h-9.5;
+}

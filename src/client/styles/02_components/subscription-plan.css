@@ -1,0 +1,26 @@
+.subscription-plan__update-price-form__price-per-month,
+.subscription-plan__update-price-form__price-per-year {
+  @apply flex items-center justify-between gap-x-2;
+
+  .input__label {
+    @apply flex-1 h-full m-0 p-0;
+  }
+
+  .input__container {
+    @apply w-24;
+    input {
+      @apply text-center
+    }
+  }
+}
+
+.subscription-plan-card--active {
+  @apply !border-[#EC1F4E];
+  box-shadow: 0px 4px 27px 0px rgba(236, 31, 78, 0.20);
+}
+
+.subscription-plans-slider {
+  .card-slider__container {
+    @apply py-6;
+  }
+}

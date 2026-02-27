@@ -1,0 +1,178 @@
+.input__wrap {
+  @apply w-full relative;
+}
+
+.input__container {
+  @apply w-full relative;
+}
+
+.input__label {
+  @apply pr-4 mb-2
+  text-sm font-roboto-medium text-gray-300
+  flex items-center text-left gap-x-1;
+}
+
+.input-changed .input__label::after,
+.input-changed .select__label::after {
+  content: "";
+  @apply w-1.5 h-1.5 rounded-full bg-blue-500;
+}
+
+.input {
+  @apply w-full h-10 text-sm leading-[1.25] text-white 
+  bg-gray-900/50 px-4 
+  border border-gray-800 rounded-lg 
+  placeholder-gray-500 outline-none 
+  !overflow-hidden text-ellipsis
+  hover:border-gray-700
+  focus:border-gray-600 focus:bg-gray-900/70;
+  transition: 
+    border-color 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.input--sm {
+  @apply h-8 px-3 text-sm;
+}
+
+.input--md {
+  @apply h-10 px-4 text-sm;
+}
+
+.input--lg {
+  @apply h-12 px-5 text-base;
+}
+
+.input__icon {
+  @apply flex absolute top-1/2 -translate-y-1/2 text-gray-500 z-[2];
+}
+
+.input__icon--prepend {
+  @apply left-3;
+  svg {
+    @apply w-4 h-auto;
+  }
+}
+
+.input__icon--append {
+  @apply right-3;
+  svg {
+    @apply w-4 h-auto;
+  }
+}
+
+.input__caption {
+  @apply block text-xs text-gray-400 font-normal mt-1.5 px-1;
+  a {
+    @apply text-gray-300 hover:text-white transition-colors;
+  }
+}
+
+/* State */
+.input__wrap--prepend {
+  .input {
+    @apply pl-10;
+  }
+}
+
+.input__wrap--append {
+  .input {
+    @apply pr-10;
+  }
+}
+
+.input__wrap--disabled {
+  @apply opacity-50 pointer-events-none;
+  
+  .input {
+    @apply bg-gray-900/30 border-gray-800 text-gray-500 cursor-not-allowed;
+  }
+}
+
+.input__wrap--error {
+  .input__label {
+    @apply text-red-400;
+  }
+
+  .input {
+    @apply border-red-900/50 bg-red-950/20
+    hover:border-red-800/50
+    focus:border-red-700/50 focus:bg-red-950/30;
+  }
+  
+  .input__icon {
+    @apply text-red-500;
+  }
+
+  .input__caption {
+    @apply text-red-400;
+    a,
+    strong {
+      @apply text-red-300;
+    }
+  }
+}
+
+.input__wrap--readonly {  
+  .input {
+    @apply bg-gray-900/30 border-gray-800 text-gray-400 cursor-default
+    hover:border-gray-800 focus:border-gray-800 focus:bg-gray-900/30;
+  }
+  
+  .input__icon {
+    @apply text-gray-600;
+  }
+
+  &.input__wrap--error {
+    .input__label {
+      @apply text-gray-400;
+    }
+
+    .input__icon {
+      @apply text-gray-600;
+    }
+
+    .input {
+      @apply bg-gray-900/30 border-gray-800 placeholder-gray-600;
+    }
+
+    .input__caption {
+      @apply text-gray-500;
+      a {
+        @apply text-gray-400;
+      }
+    }
+  }
+}
+
+/* Autofill styles for dark theme */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #111827 inset;
+  box-shadow: 0 0 0px 1000px #111827 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Date picker */
+.month-item-name,
+.month-item-year {
+  background-color: #1f2937;
+  color: white;
+}
+
+:root {
+  --litepicker-is-today-color: #3b82f6;
+}
+
+/* Remove number input spinners */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}

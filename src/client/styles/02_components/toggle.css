@@ -1,0 +1,58 @@
+.toggle__container {
+  @apply w-full relative flex items-center gap-x-2;
+}
+
+.toggle__label {
+  @apply block text-white text-sm font-medium mb-2;
+}
+
+.toggle {
+  @apply sr-only m-0;
+  &:checked {
+    ~ .toggle__box {
+      @apply bg-green-500;
+      .toggle__box-icon {
+        @apply -translate-y-1/2 translate-x-[11px];
+      }
+    }
+  }
+}
+
+.toggle__box {
+  @apply relative rounded-[40px] bg-gray-300 w-[28px] h-[17px] cursor-pointer drop-shadow-sm;
+  transition: background-color 0.4s ease-in-out;
+}
+
+.toggle__box-icon {
+  @apply absolute top-1/2 left-[1px] -translate-y-1/2 w-[15px] h-[15px] rounded-[50%] bg-white;
+  transition: translate 0.3s ease-in-out;
+}
+
+.toggle__text {
+  @apply text-sm font-roboto-medium;
+}
+
+.toggle__caption {
+  @apply block text-xs text-gray-500 font-normal mt-2;
+  a {
+    @apply text-gray-900;
+  }
+}
+
+.toggle__wrap--error {
+  .toggle__caption {
+    @apply text-red-600;
+  }
+  .toggle__box {
+    @apply bg-red-500;
+  }
+}
+
+.toggle__wrap--disabled,
+.toggle__wrap:has(.toggle:disabled) {
+  @apply pointer-events-none opacity-50;
+  .toggle__text,
+  .toggle__caption {
+    @apply text-gray-400;
+  }
+}

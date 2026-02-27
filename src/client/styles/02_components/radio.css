@@ -1,0 +1,64 @@
+.radio__container {
+  @apply w-full relative flex items-center cursor-pointer;
+}
+
+.radio {
+  @apply absolute opacity-0;
+
+  &:checked {
+    + .radio__circle {
+      @apply bg-gray-700;
+
+      &::before {
+        @apply scale-100;
+      }
+
+      .radio__dot {
+        @apply scale-100 opacity-100;
+      }
+    }
+  }
+}
+
+.radio__circle {
+  @apply w-4 h-4 relative border border-gray-400 rounded-full before:content-[""] hover:border-gray-100;
+  transition: border-color 0.1s ease-in-out;
+
+  &::before {
+    @apply absolute w-full h-full top-0 left-0 rounded-full scale-0;
+    transition: transform 0.1s ease-in-out;
+  }
+}
+
+.radio__dot {
+  @apply absolute top-1/2 left-1/2 w-2 h-2 rounded-full bg-white opacity-0 scale-0 pointer-events-none z-[2];
+  transform: translate(-50%, -50%);
+  transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.radio__label {
+  @apply text-sm font-medium text-white leading-[1] ml-2 flex items-center text-center gap-x-1;
+  a {
+    @apply text-gray-500;
+  }
+}
+
+.radio__caption {
+  @apply text-xs text-gray-500 ml-6;
+}
+
+.radio__wrap--error {
+  .radio__circle {
+    @apply border-red-600;
+  }
+  .radio__dot {
+    @apply bg-red-600;
+  }
+  .radio__caption {
+    @apply text-red-600;
+  }
+}
+
+.radio__wrap--disabled {
+  @apply opacity-40 pointer-events-none;
+}

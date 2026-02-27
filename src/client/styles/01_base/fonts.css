@@ -1,0 +1,59 @@
+@font-face {
+  font-family: "Roboto Bold";
+  font-style: normal;
+  src: url("../../fonts/Roboto-Bold.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Bold Italic";
+  font-style: normal;
+  src: url("../../fonts/Roboto-BoldItalic.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Italic";
+  font-style: normal;
+  src: url("../../fonts/Roboto-Italic.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Light";
+  font-style: normal;
+  src: url("../../fonts/Roboto-Light.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Light Italic";
+  font-style: normal;
+  src: url("../../fonts/Roboto-LightItalic.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Medium Italic";
+  font-style: normal;
+  src: url("../../fonts/Roboto-MediumItalic.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Medium";
+  font-style: normal;
+  src: url("../../fonts/Roboto-Medium.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Regular";
+  font-style: normal;
+  src: url("../../fonts/Roboto-Regular.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Semibold";
+  font-style: normal;
+  src: url("../../fonts/Roboto-SemiBold.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Roboto Semibold Italic";
+  font-style: normal;
+  src: url("../../fonts/Roboto-SemiBoldItalic.ttf") format("opentype");
+}

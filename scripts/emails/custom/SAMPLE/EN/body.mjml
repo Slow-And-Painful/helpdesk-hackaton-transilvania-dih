@@ -1,0 +1,32 @@
+<mjml>
+  <mj-head>
+    <mj-style>
+      .header { height: 212px; background-image:
+      url('https://images.unsplash.com/photo-1557683316-973673baf926?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z3JhZGllbnQlMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww');
+      background-size: cover; background-position: center; } .body {
+      font-family: Inter; background-color: #FFF; } .text { font-family: Inter;
+      font-size: 16px; font-weight: 300; line-height: 19px; text-align: center;
+      color: rgba(3, 29, 68, 0); } .image { width: 100%; float: right; } @media
+      (max-width: 480px) { .hide_on_mobile { display: none !important; } }
+      @media (max-width: 480px) { .full_on_mobile { width: 100% !important; } }
+    </mj-style>
+  </mj-head>
+  <mj-body>
+    <mj-section padding-bottom="0">
+      <mj-column css-class="body">
+        <mj-spacer css-class="header" />
+        <mj-text
+          css-class="text"
+          align="center"
+          font-size="24px"
+          line-height="24px"
+          font-weight="bold"
+          color="#1F2a37"
+        >
+          Esempio di email custom
+        </mj-text>
+        <mj-spacer height="20px" />
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

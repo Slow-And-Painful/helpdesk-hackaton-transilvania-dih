@@ -1,0 +1,22 @@
+.searchable-list-dropdown__option {
+  .dropdown__link {
+    @apply bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-gray-700 rounded-lg;
+  }
+
+  &.dropdown__item--selected {
+    .dropdown__link {
+      @apply bg-gray-700 border-gray-600;
+      * {
+        @apply text-white;
+      }
+    }
+  }
+}
+
+.searchable-list-dropdown__dropdown {
+  @apply !mt-6 !relative !bg-transparent p-2 border border-gray-800 rounded-lg h-[430px];
+
+  .dropdown__items {
+    @apply gap-y-2;
+  }
+}

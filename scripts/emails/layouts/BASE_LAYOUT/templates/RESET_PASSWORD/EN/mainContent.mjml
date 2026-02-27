@@ -1,0 +1,25 @@
+<mj-section>
+  <mj-column>
+    <mj-text
+      font-size="16px"
+      line-height="20px"
+      color="#d8d8d8"
+      font-family="Roboto Regular,sans-serif"
+      >Hello {{targetUser.firstName}} {{targetUser.lastName}}, click on the following button to reset your password</mj-text
+    >
+  </mj-column>
+</mj-section>
+<mj-section>
+  <mj-column>
+    <mj-button
+      font-family="Roboto Regular,sans-serif"
+      font-weight="700"
+      background-color="#ffffff"
+      color="#000000"
+      border-radius="999px"
+      href="{{resetLink}}"
+    >
+      Reset password
+    </mj-button>
+  </mj-column>
+</mj-section>

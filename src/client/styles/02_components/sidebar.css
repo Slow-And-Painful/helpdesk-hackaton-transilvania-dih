@@ -1,0 +1,251 @@
+html {
+  --sidebar-width: 15rem;
+  --sidebar-animation-duration: 0.2s;
+  --sidebar-height: calc(100% - 2.5rem);
+}
+
+html[data-with-usage-alert] {
+  --sidebar-height: calc(calc(100% - 2.5rem) - 44px);
+  .sidebar__container {
+    @apply top-[64px];
+  }
+}
+
+html[data-sidebar-closed] {
+  --sidebar-width: 3rem;
+
+  .sidebar__header {
+    @apply flex-col gap-3 px-1;
+  }
+
+  .sidebar__toggle {
+    @apply rotate-0;
+  }
+
+  .sidebar__expanded-logo,
+  .sidebar__footer__terms-and-conditions {
+    @apply hidden;
+  }
+
+  .sidebar__collapsed-logo {
+    @apply block;
+  }
+
+  .sidebar__menu {
+    @apply px-1;
+  }
+
+  .sidebar__menu-item {
+    @apply w-8 h-8;
+  }
+
+  .sidebar__menu-item-link {
+    @apply !flex items-center justify-center;
+  }
+
+  .sidebar__menu-item-link.sidebar__menu-item-link--tooltip,
+  .sidebar__menu-item-link--tooltip {
+    @apply !inline-flex;
+  }
+
+  .sidebar__menu-item-link.sidebar__menu-item-link--full {
+    @apply !hidden
+  }
+
+  .sidebar__menu-item-label {
+    @apply hidden;
+  }
+
+  .sidebar__menu-item__dropdown-link {
+    @apply hidden mt-0;
+  }
+
+  div:has(> .sidebar__menu-item__dropdown-link) {
+    @apply hidden;
+  }
+
+  .sidebar__menu-item__dropdown-toggle {
+    @apply hidden;
+  }
+
+  .sidebar__user-data-container {
+    @apply px-1 justify-center;
+  }
+
+  .sidebar__user-data {
+    @apply justify-center;
+
+    > div {
+      @apply justify-center;
+    }
+  }
+
+  .sidebar__user-name-container {
+    @apply hidden;
+  }
+
+  .sidebar__user-toggle {
+    @apply hidden;
+  }
+}
+
+.sidebar__container {
+  @apply fixed top-5 left-5 z-40 
+  h-[var(--sidebar-height)] w-[var(--sidebar-width)] bg-gray-900
+  border border-gray-800 rounded-2xl
+  pt-4 flex flex-col;
+  transition: width var(--sidebar-animation-duration);
+}
+
+.sidebar__header {
+  @apply flex items-center justify-between px-4 pb-4 border-b border-gray-800;
+  transition: padding var(--sidebar-animation-duration);
+}
+
+.sidebar__toggle {
+  @apply rotate-180 flex items-center justify-center
+}
+
+.sidebar__expanded-logo {
+  @apply block
+}
+
+.sidebar__collapsed-logo {
+  @apply hidden
+}
+
+.sidebar__menu {
+  @apply flex flex-col items-center w-full text-sm relative px-2 py-4 overflow-y-auto text-gray-400 overflow-x-hidden;
+}
+
+.sidebar__menu-item {
+  @apply w-full flex relative shrink-0 transition-colors duration-200 rounded-lg font-roboto-light px-2;
+
+  a {
+    @apply text-gray-300;
+  }
+
+  .icon {
+    @apply text-gray-400;
+  }
+
+  .dropdown__item--danger .icon {
+    @apply text-current;
+  }
+
+  &:hover:not(&.sidebar__menu-item--active) {
+    @apply bg-gray-800;
+
+    .sidebar__menu-item a {
+      @apply text-gray-200;
+    }
+
+    .sidebar__menu-item-link > .icon {
+      @apply text-gray-400;
+    }
+
+    .sidebar__menu-item__dropdown-toggle:not(.sidebar__menu-item__dropdown-menu-toggle) {
+      @apply bg-gray-700;
+    }
+  }
+
+  &:hover {
+    .sidebar__menu-item__dropdown-menu-toggle {
+      @apply !flex;
+    }
+  }
+
+  &.sidebar__menu-item--active {
+    @apply bg-gray-700;
+  }
+
+  &:not(:first-child) {
+    @apply mt-2;
+  }
+}
+
+.sidebar__menu-item--active a {
+  @apply text-white;
+
+  .icon {
+    @apply text-gray-100;
+  }
+}
+
+.sidebar__menu-item-link.sidebar__menu-item-link--tooltip {
+  @apply !hidden;
+}
+
+.sidebar__menu-item-link--tooltip {
+  @apply !hidden
+}
+
+.sidebar__menu-item__dropdown {
+  @apply flex items-center w-full gap-x-2 cursor-pointer;
+
+  &.closed {
+    .sidebar__menu-item__dropdown-toggle {
+      @apply rotate-0;
+    }
+  }
+}
+
+.sidebar__menu-item__dropdown-link {
+  @apply pl-6 h-8 overflow-hidden;
+  transition: 
+    height 0.3s,
+    margin-top 0.3s;
+
+  &.closed {
+    @apply h-0 mt-0;
+  }
+}
+
+.sidebar__menu-item__dropdown-toggle {
+  @apply flex items-center justify-center rotate-180 transition-colors duration-200 rounded-md;
+}
+
+.sidebar__menu-item-link {
+  @apply flex items-center w-full gap-x-2 py-1.5 cursor-pointer
+}
+
+.sidebar__menu-item-label {
+  @apply truncate
+}
+
+.sidebar__user-data-container {
+  @apply border-t border-gray-800 p-4 cursor-pointer;
+}
+
+.sidebar__user-data {
+  @apply flex items-start justify-between;
+}
+
+.sidebar__user-name-container {
+  @apply flex-1 truncate;
+}
+
+.sidebar__user-name {
+  @apply text-white text-sm truncate;
+}
+
+.sidebar__user-organization {
+  @apply text-gray-400 text-xs truncate;
+}
+
+
+.sidebar__footer {
+  @apply flex-1 flex flex-col justify-end;
+}
+
+.sidebar__footer__terms-and-conditions {
+  @apply px-4 py-3 text-xs text-gray-400 border-t border-gray-800;
+
+  a {
+    @apply underline hover:cursor-pointer;
+  }
+}
+
+.sidebar__menu-item__dropdown-menu-toggle {
+  @apply cursor-pointer !hidden
+}

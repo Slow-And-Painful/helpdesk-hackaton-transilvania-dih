@@ -1,0 +1,166 @@
+html,
+body,
+#page {
+  @apply h-full;
+}
+
+#small-screen-view {
+  @apply hidden;
+}
+
+@media screen and (max-width: 768px) {
+  body:not(:has([data-visible-on-mobile])) {
+    #small-screen-view {
+      @apply flex;
+    }
+
+    #page:not(:has(.figma_adapter)),  
+    #chat {
+      @apply hidden;
+    }
+  }
+}
+
+body {
+  @apply font-roboto-regular bg-black text-white overflow-hidden scrollbar-none;
+}
+
+.container {
+  @apply mx-auto;
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+*[data-tooltip-text]:after {
+  content: attr(data-tooltip-text);
+  position: fixed;
+  @apply bg-gray-800 text-white text-xs px-2 py-1 rounded-lg max-w-[300px] pointer-events-none;
+  --translate-y: calc(-100% - 8px);
+  transform: translate(-50%, var(--translate-y));
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 0s;
+  transition-delay: 0s;
+}
+
+*[data-tooltip-text]:hover:after {
+  opacity: 1;
+  transition: opacity 0.3s;
+  transition-delay: 0.5s;
+  cursor: default;
+  pointer-events: none;
+}
+
+@layer base {
+  button:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  label:has(input[type="radio"]:not(:disabled)),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+.page__content {
+  @apply flex flex-col w-full h-full overflow-y-auto overflow-x-hidden;
+  &:not(.figma_adapter) {
+    @apply pt-5;
+    scrollbar-gutter: stable both-edges;
+  }
+}
+
+.bg-logo {
+  @apply flex items-center justify-center w-full;
+}
+
+.page__content:not(.figma_adapter) .bg-logo {
+  @apply fixed top-0 left-0 -z-1 pt-[63px];
+}
+
+.page__content.with-sidebar,
+.bg-logo:has(+ .page__content.with-sidebar),
+.page__content.with-sidebar > * > .bg-logo {
+  /* space left + sidebar width + space right */
+  padding-left: calc(var(--sidebar-width) + 36px);
+  padding-right: 36px;
+  transition: padding-left var(--sidebar-animation-duration);
+}
+
+.page__content.with-chat > div,
+.page__content.with-sidebar > div {
+  @apply pb-5
+}
+
+html[data-with-usage-alert] {
+  .page__content {
+    @apply pt-[64px];
+  }
+}
+
+* {
+  @apply scrollbar;
+}
+
+
+html[data-chat-minified="false"] {
+  .page__content.with-chat,
+  .bg-logo:has(+ .page__content.with-chat),
+  .page__content.with-chat > * > .bg-logo {
+    @apply hidden;
+  }
+  
+  .page__content.with-sidebar.with-chat,
+  .bg-logo:has(+ .page__content.with-sidebar.with-chat),
+  .page__content.with-sidebar.with-chat > * > .bg-logo {
+    @apply hidden
+  }
+}
+
+html[data-chat-minified="true"],
+html[data-chat-minified="false"][data-chat-closed] {
+  .page__content.with-chat,
+  .bg-logo:has(+ .page__content.with-chat),
+  .page__content.with-chat > * > .bg-logo {
+    padding-right: calc(var(--chat-width) + 36px);
+    transition: padding-right var(--chat-animation-duration);
+  }
+  
+  .page__content.with-sidebar.with-chat,
+  .bg-logo:has(+ .page__content.with-sidebar.with-chat),
+  .page__content.with-sidebar.with-chat > * > .bg-logo {
+    padding-left: calc(var(--sidebar-width) + 36px);
+    padding-right: calc(var(--chat-width) + 36px);
+    transition: padding-left var(--sidebar-animation-duration), padding-right var(--chat-animation-duration);
+  }
+}
+
+a:hover {
+  @apply underline;
+}
+
+#sidebar a:hover,
+a.pagination__link:hover,
+.tabs a:hover,
+.dropdown__items a:hover,
+a[data-link-no-underline]:hover {
+  @apply no-underline;
+}
+
+pre {
+  @apply my-1 relative;
+  background-color: #282C34;
+
+  code {
+    @apply overflow-auto scrollbar block w-full p-2
+  }
+}
+
+pre button[data-value] {
+  @apply absolute top-0 right-0 pt-1 pr-1 pl-0.5 hidden opacity-0;
+  transition: opacity 0.3s;
+}
+
+pre:hover button[data-value] {
+  @apply block opacity-100 bg-[#282C34] backdrop-blur-lg;
+}

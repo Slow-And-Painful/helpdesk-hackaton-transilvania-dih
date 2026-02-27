@@ -1,0 +1,66 @@
+.dropzone {
+  @apply flex justify-center items-center rounded-lg bg-gray-800 border border-gray-500 border-dashed h-[220px] p-2 relative overflow-hidden;
+
+  div[data-no-file-message] {
+    @apply flex;
+  } 
+
+  div[data-uploaded-files-section] {
+    @apply hidden;
+  }
+}
+
+.dropzone.dragover {
+  @apply bg-gray-700;
+}
+
+.dropzone.dropzone--has-file {
+  @apply bg-transparent block p-0;
+  
+  div[data-no-file-message] {
+    @apply hidden;
+  }
+
+  div[data-uploaded-files-section] {
+    @apply block;
+  }
+}
+
+.dropzone div[data-no-file-message] {
+  @apply text-gray-300 cursor-pointer w-full h-full flex flex-col justify-center items-center gap-2;
+}
+
+[data-input-file]:has(input:disabled) {
+  @apply cursor-default;
+
+  [data-uploaded-files-section] {
+    @apply cursor-default;
+  }
+}
+
+.file-uploader-content {
+  @apply flex flex-col items-center justify-center;
+}
+
+.file-uploader-loading-message {
+  @apply absolute z-10 inset-0 bg-gray-800/80 text-gray-300 pointer-events-none hidden flex-col items-center justify-center gap-4;
+}
+
+.dropzone.loading [data-input-file],
+[data-browse-button]:has(+.dropzone.loading) button {
+  @apply pointer-events-none;
+}
+
+[data-input-file].loading {
+  @apply pointer-events-none;
+
+  .file-uploader-content,
+  .dropzone__no-file,
+  .dropzone__has-file {
+    @apply opacity-0;
+  }
+
+  .file-uploader-loading-message {
+    @apply !flex;
+  }
+}

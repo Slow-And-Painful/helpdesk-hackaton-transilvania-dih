@@ -1,0 +1,14 @@
+.global-settings-number-input {
+  @apply flex items-center justify-between gap-x-2;
+
+  .input__label {
+    @apply flex-1 h-full m-0 p-0;
+  }
+
+  .input__container {
+    @apply w-24;
+    input {
+      @apply text-center
+    }
+  }
+}

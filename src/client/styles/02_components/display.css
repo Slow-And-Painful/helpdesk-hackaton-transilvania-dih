@@ -1,0 +1,16 @@
+.display-form__data-input {
+  @apply flex flex-row-reverse items-center justify-between gap-x-2 w-full;
+
+  .input__label {
+    @apply h-full text-gray-300 m-0 p-0;
+  }
+
+  .input__container {
+    @apply flex-1;
+  }
+}
+
+.display-form__tooltip {
+  @apply max-w-[300px];
+}
+

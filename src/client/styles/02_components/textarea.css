@@ -1,0 +1,91 @@
+.textarea__wrap {
+  @apply w-full;
+}
+
+.textarea__container {
+  @apply w-full relative;
+}
+
+.textarea__label {
+  @apply pr-4 mb-2
+  text-sm font-medium text-gray-300
+  flex items-center text-center gap-x-1;
+}
+
+.textarea-changed .textarea__label::after,
+.textarea-changed .select__label::after {
+  content: "";
+  @apply w-1.5 h-1.5 rounded-full bg-primary-600;
+}
+
+.textarea {
+  @apply w-full min-h-24 p-3
+    text-sm leading-tight text-white placeholder-gray-500
+    bg-transparent resize-none
+    border border-gray-700 rounded-[9px] outline-none
+    overflow-auto;
+}
+
+/* WebKit scrollbar customization */
+.textarea::-webkit-scrollbar-track {
+  @apply rounded-r-lg;
+  box-sizing: content-box;
+}
+
+.textarea::-webkit-scrollbar-thumb {
+  @apply bg-gray-600 rounded-full;
+  box-shadow: inset 0 8px 0 #303030, inset 0 -8px 0 #303030;
+}
+
+.textarea__caption {
+  @apply block text-sm text-gray-500 font-normal mt-1;
+  a {
+    @apply text-gray-700;
+  }
+}
+
+/* State */
+.textarea__wrap--disabled {
+  @apply opacity-40;
+}
+
+.textarea__wrap--error {
+  .textarea__label {
+    @apply text-danger-600;
+  }
+
+  .textarea {
+    @apply border-danger-500  focus:border-danger-800;
+  }
+
+  .textarea__caption {
+    @apply text-danger-500;
+    a,
+    strong {
+      @apply text-danger-500;
+    }
+  }
+}
+
+.textarea__wrap--readonly {
+  .textarea {
+    @apply bg-gray-900 border-gray-800 text-gray-500;
+  }
+
+  &.textarea__wrap--error {
+    .textarea__label {
+      @apply text-gray-900;
+    }
+
+    .textarea {
+      @apply bg-gray-800 placeholder-gray-500 border-gray-600;
+    }
+
+    .textarea__caption {
+      @apply text-gray-500;
+      a {
+        @apply text-gray-900;
+      }
+    }
+  }
+}

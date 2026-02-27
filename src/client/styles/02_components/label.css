@@ -1,0 +1,12 @@
+.label {
+  @apply text-sm block font-medium leading-5 text-gray-400;
+}
+
+.label--sm {
+  @apply text-xs font-normal text-gray-500;
+}
+
+.label:has(+ .input:focus),
+.label:has(+ .textarea:focus) {
+  @apply text-white;
+}

@@ -1,0 +1,20 @@
+.file-uploaded-item {
+  @apply flex items-center justify-between text-white text-sm font-normal gap-3 h-[36px] w-full p-2 border-gray-800 border-b-[1px];
+}
+
+.file-uploaded-item__name-container {
+  @apply flex items-center gap-2;
+}
+
+.file-uploaded-item .file-uploaded-item__name-container,
+.file-uploaded-item__name-container .file-uploaded-item__name {
+  @apply flex-1 truncate
+}
+
+.file-uploaded-item .checkbox__wrap {
+  @apply flex items-center justify-center
+}
+
+.file-uploaded-item .file-uploaded-item__button {
+  @apply w-7 flex items-center justify-end min-w-fit
+}

@@ -1,0 +1,46 @@
+.switch-org__container {
+  @apply w-full rounded-lg flex flex-col border border-gray-800;
+}
+
+.switch-org__item {
+  @apply flex items-center justify-between px-2 py-3 font-roboto-medium text-white;
+
+  &:not(:first-child) {
+    @apply border-t border-gray-800;
+  }
+
+  &:hover {
+    &:not(.switch-org__item--selected) {
+      &:not(.switch-org__item--disabled) {
+        @apply bg-gray-900 cursor-pointer hover:bg-gray-800;
+      }
+    }
+  }
+
+  &:first-child {
+    @apply rounded-t-md;
+  }
+
+  &:last-child {
+    @apply rounded-b-md;
+  }
+
+  &.switch-org__item--disabled {
+    @apply text-gray-400;
+  }
+
+  &.switch-org__item--selected {
+    @apply text-white;
+  }
+
+  &.switch-org__item--disabled,
+  &.switch-org__item--selected {
+    @apply pointer-events-none;
+  }
+}
+
+.switch-organization-modal {
+  .modal__title {
+    @apply text-base;
+  }
+}
