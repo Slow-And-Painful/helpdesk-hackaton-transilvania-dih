@@ -1,4 +1,4 @@
-import { pgTable, varchar, serial, integer, timestamp } from "drizzle-orm/pg-core"
+import { pgTable, varchar, serial, integer } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 import { departmentsTable } from "./Departments"
 import { TICKET_STATUS } from "$types/tickets"

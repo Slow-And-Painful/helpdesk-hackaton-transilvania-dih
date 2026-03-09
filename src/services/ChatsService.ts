@@ -1,4 +1,4 @@
-import BaseService, { MainQuery } from "$service/BaseService"
+import BaseService, { MainQuery } from "$services/BaseService"
 import DrizzleDB from "$components/DrizzleDB"
 import { container, inject, injectable } from "tsyringe"
 import { ChatsSchema, chatsTable, NewChatsSchema } from "$dbSchemas/Chats"
@@ -29,7 +29,7 @@ export default class ChatsService extends BaseService<
         super(drizzleDB)
     }
 
-    mainQuery: MainQuery<MAIN_QUERY__RESULT> = async ({db, ...options}) => {
+    mainQuery: MainQuery<MAIN_QUERY__RESULT> = async ({ db, ...options }) => {
         return db.query.chatsTable.findMany({
             ...options,
         })

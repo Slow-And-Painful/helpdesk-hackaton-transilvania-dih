@@ -36,7 +36,7 @@ export default class TicketsService extends BaseService<
     super(drizzleDB)
   }
 
- mainQuery: MainQuery<MAIN_QUERY_RESULT> = async ({ db, ...options }) => {
+  mainQuery: MainQuery<MAIN_QUERY_RESULT> = async ({ db, ...options }) => {
     return db.query.ticketsTable.findMany({
       ...options,
       with: {
