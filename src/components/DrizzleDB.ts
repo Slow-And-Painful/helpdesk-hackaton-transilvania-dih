@@ -12,6 +12,8 @@ import * as OrganizationsSchemas from "$dbSchemas/Organizations"
 import * as OrganizationUsersSchemas from "$dbSchemas/OrganizationUsers"
 import * as ProjectsSchemas from "$dbSchemas/Projects"
 import * as DepartmentsSchemas from "$dbSchemas/Departments"
+import * as TicketsSchemas from "$dbSchemas/Tickets"
+import * as ChatsSchemas from "$dbSchemas/Chats"
 
 import { Logger, sql } from "drizzle-orm"
 
@@ -26,7 +28,9 @@ const getDrizzle = (sql: Postgres.Sql, logger?: Logger) => {
       ...OrganizationsSchemas,
       ...OrganizationUsersSchemas,
       ...ProjectsSchemas,
-      ...DepartmentsSchemas
+      ...DepartmentsSchemas,
+      ...TicketsSchemas,
+      ...ChatsSchemas,
     },
   })
 
