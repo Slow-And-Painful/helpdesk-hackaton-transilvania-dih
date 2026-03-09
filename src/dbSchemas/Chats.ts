@@ -10,9 +10,7 @@ import { relations } from "drizzle-orm"
 export const chatsTable = pgTable("Chats", {
     id: serial().primaryKey(),
     departmentUserId: integer().notNull().references(() => departmentUsersTable.id, {onDelete: "cascade"}),
-}, (t) => [
-    unique().on(t.departmentUserId),
-])
+})
 
 export const chatsRelations = relations(
     chatsTable,
