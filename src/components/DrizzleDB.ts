@@ -4,6 +4,7 @@ import PostgresDB from "$components/PostgresDB"
 import Postgres from "postgres"
 import QueryLogger from "$components/QueryLogger"
 
+
 import * as UsersSchemas from "$dbSchemas/Users"
 import * as GlobalSettingsSchemas from "$dbSchemas/GlobalSettings"
 import * as CodesSchemas from "$dbSchemas/Codes"
@@ -11,6 +12,7 @@ import * as CodesUtilizationsSchemas from "$dbSchemas/CodesUtilizations"
 import * as OrganizationsSchemas from "$dbSchemas/Organizations"
 import * as OrganizationUsersSchemas from "$dbSchemas/OrganizationUsers"
 import * as ProjectsSchemas from "$dbSchemas/Projects"
+import * as TicketsSchemas from "$dbSchemas/Tickets"
 
 import { Logger, sql } from "drizzle-orm"
 
@@ -24,7 +26,8 @@ const getDrizzle = (sql: Postgres.Sql, logger?: Logger) => {
       ...GlobalSettingsSchemas,
       ...OrganizationsSchemas,
       ...OrganizationUsersSchemas,
-      ...ProjectsSchemas
+      ...ProjectsSchemas,
+      ...TicketsSchemas,
     },
   })
 
