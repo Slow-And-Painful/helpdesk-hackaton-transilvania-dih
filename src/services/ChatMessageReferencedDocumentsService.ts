@@ -1,15 +1,15 @@
-import BaseService, { MainQuery } from "$service/BaseService"
+import BaseService, { MainQuery } from "$services/BaseService"
 import DrizzleDB from "$components/DrizzleDB"
 import { container, inject, injectable } from "tsyringe"
-import { ChatMessageReferencedDocumentsSchema, chatMessageReferencedDocumentsTable, NewChatMessageReferencedDocumentsSchema } from "$dbSchemas/ChatMessageReferencedDocuments"
+import { ChatMessageReferencedDocumentSchema, chatMessageReferencedDocumentsTable, NewChatMessageReferencedDocumentSchema } from "$dbSchemas/ChatMessageReferencedDocuments"
 
-type ChatMessageReferencedDocuments = ChatMessageReferencedDocumentsSchema
+type ChatMessageReferencedDocuments = ChatMessageReferencedDocumentSchema
 
 type TABLE = typeof chatMessageReferencedDocumentsTable
 type PK_TYPE = number
 type MAIN_QUERY__RESULT = ChatMessageReferencedDocuments
 type POST_PROCESS_RESULT = ChatMessageReferencedDocuments
-export type PRE_INSERT_DATA = NewChatMessageReferencedDocumentsSchema
+export type PRE_INSERT_DATA = NewChatMessageReferencedDocumentSchema
 
 @injectable()
 export default class ChatMessageReferencedDocumentsService extends BaseService<
@@ -29,9 +29,12 @@ export default class ChatMessageReferencedDocumentsService extends BaseService<
         super(drizzleDB)
     }
 
-    mainQuery: MainQuery<MAIN_QUERY__RESULT> = async ({db, ...options}) => {
+    mainQuery: MainQuery<MAIN_QUERY__RESULT> = async ({ db, ...options }) => {
         return db.query.chatMessageReferencedDocumentsTable.findMany({
             ...options,
+            with: {
+                chatMessage: true,
+            }
         })
     }
 
