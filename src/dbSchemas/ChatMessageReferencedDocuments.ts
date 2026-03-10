@@ -1,8 +1,7 @@
 import {
     serial,
     pgTable,
-    integer,
-    unique
+    integer
 } from "drizzle-orm/pg-core"
 import { chatMessagesTable } from "./ChatMessages"
 import { relations } from "drizzle-orm"
@@ -10,11 +9,8 @@ import { relations } from "drizzle-orm"
 export const chatMessageReferencedDocumentsTable = pgTable("ChatMessageReferencedDocuments", {
     id: serial().primaryKey(),
     documentId: integer().notNull(),
-    chatMessageId: integer().notNull().references(() => chatMessagesTable.id, {onDelete: "cascade"}),
-}, (t) => [
-  unique().on(t.id, t.chatMessageId),
-])
-
+    chatMessageId: integer().notNull().references(() => chatMessagesTable.id, { onDelete: "cascade" }),
+})
 
 export const chatMessageReferencedDocumentsRelations = relations(
     chatMessageReferencedDocumentsTable,
@@ -26,5 +22,5 @@ export const chatMessageReferencedDocumentsRelations = relations(
     })
 )
 
-export type ChatMessageReferencedDocumentsSchema = typeof chatMessageReferencedDocumentsTable.$inferSelect
-export type NewChatMessageReferencedDocumentsSchema = typeof chatMessageReferencedDocumentsTable.$inferInsert
+export type ChatMessageReferencedDocumentSchema = typeof chatMessageReferencedDocumentsTable.$inferSelect
+export type NewChatMessageReferencedDocumentSchema = typeof chatMessageReferencedDocumentsTable.$inferInsert

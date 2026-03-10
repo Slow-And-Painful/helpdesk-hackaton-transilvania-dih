@@ -2,21 +2,17 @@ import {
     serial,
     pgTable,
     integer,
-    varchar,
-    unique
+    text
 } from "drizzle-orm/pg-core"
 import { chatsTable } from "./Chats"
 import { relations } from "drizzle-orm"
 
 export const chatMessagesTable = pgTable("ChatMessages", {
     id: serial().primaryKey(),
-    prompt: varchar().notNull(),
-    response: varchar().notNull(),
-    chatId: integer().notNull().references(() => chatsTable.id, {onDelete: "cascade"}),
-}, (t) => [
-  unique().on(t.id, t.chatId),
-])
-
+    prompt: text().notNull(),
+    response: text().notNull(),
+    chatId: integer().notNull().references(() => chatsTable.id, { onDelete: "cascade" }),
+})
 
 export const chatMessagesRelations = relations(
     chatMessagesTable,
@@ -28,5 +24,5 @@ export const chatMessagesRelations = relations(
     })
 )
 
-export type ChatMessagesSchema = typeof chatMessagesTable.$inferSelect
-export type NewChatMessagesSchema = typeof chatMessagesTable.$inferInsert
+export type ChatMessageSchema = typeof chatMessagesTable.$inferSelect
+export type NewChatMessageSchema = typeof chatMessagesTable.$inferInsert
