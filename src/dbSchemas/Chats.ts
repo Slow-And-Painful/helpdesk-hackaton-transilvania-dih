@@ -1,8 +1,7 @@
 import {
     serial,
     pgTable,
-    integer,
-    unique
+    integer
 } from "drizzle-orm/pg-core"
 import { departmentUsersTable } from "./DepartmentUsers"
 import { relations } from "drizzle-orm"
