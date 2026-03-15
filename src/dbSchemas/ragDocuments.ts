@@ -1,5 +1,6 @@
 import { pgTable, varchar, serial, integer, timestamp } from "drizzle-orm/pg-core"
 import { departmentsTable } from "./Departments"
+import { relations } from "drizzle-orm"
 
 export const ragDocumentsTable = pgTable("RAGDocuments", {
   id: serial().primaryKey(),
@@ -8,5 +9,15 @@ export const ragDocumentsTable = pgTable("RAGDocuments", {
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow()
 })
 
-export type RAGDocumentsSchema = typeof ragDocumentsTable.$inferSelect
-export type NewRAGDocumentsSchema = typeof ragDocumentsTable.$inferInsert
+export const ragDocumentsRelations = relations(
+  ragDocumentsTable,
+  ({ one }) => ({
+    department: one(departmentsTable, {
+      fields: [ragDocumentsTable.departmentId],
+      references: [departmentsTable.id]
+    })
+  }),
+)
+
+export type RAGDocumentSchema = typeof ragDocumentsTable.$inferSelect
+export type NewRAGDocumentSchema = typeof ragDocumentsTable.$inferInsert
