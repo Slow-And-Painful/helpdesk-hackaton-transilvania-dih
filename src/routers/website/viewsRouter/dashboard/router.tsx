@@ -1,4 +1,4 @@
-import { createRouter, getViewPath } from "../../utils"
+import { createRouter } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import USER_ROLE from "$types/USER_ROLES"

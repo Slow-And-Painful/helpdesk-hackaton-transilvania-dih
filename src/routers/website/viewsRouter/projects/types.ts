@@ -1,3 +1,0 @@
-export enum ROUTE {
-  LISTING = ""
-}

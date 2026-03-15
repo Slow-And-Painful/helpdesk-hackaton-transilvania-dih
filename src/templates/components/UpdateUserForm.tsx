@@ -1,5 +1,4 @@
-import { DESCRIPTION_CHARACTERS_LIMIT } from "$constants/descriptions"
-import { getActionPath } from "$routers/website/utils"
+// import { getActionPath } from "$routers/website/utils"
 import { User } from "$services/UsersService"
 import { FormCommonProps } from "$types/ui"
 import Button from "./Button"
@@ -32,7 +31,7 @@ const UpdateUserForm = ({ user, errors, values, initialValues, swapOOB }: Props)
       id={formId}
       method={"post"}
       hx-boost={"true"}
-      hx-post={getActionPath("users", "UPDATE", { targetUserId: user.id })}
+      // hx-post={getActionPath("users", "UPDATE", { targetUserId: user.id })}
       hx-target={`#${formId}`}
       hx-swap={"none"}
       class={
@@ -94,7 +93,8 @@ const UpdateUserForm = ({ user, errors, values, initialValues, swapOOB }: Props)
               label={"Description"}
               error={errors?.description}
               placeholder="Write here the description about your job task in order to help the AI"
-              maxLength={DESCRIPTION_CHARACTERS_LIMIT}
+              // maxLength={DESCRIPTION_CHARACTERS_LIMIT}
+              maxLength={1000}
               initialLength={values.description.length}
             >{values.description as "safe"}</Textarea>
           </FormControl>
