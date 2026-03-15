@@ -1,4 +1,3 @@
-import { getViewPath } from "$routers/website/utils"
 import { User } from "$services/UsersService"
 import { IconName } from "$templates/components/Icon"
 import USER_TYPE from "$types/USER_TYPE"
@@ -43,15 +42,9 @@ type SidebarLink = SidebarSimpleLink | SidebarDropdownLink
 
 // ==================== UTILS ==================== //
 
-const getBaseCustomerSidebarItems = (_user: User, routerName: SidebarProps["routerName"]): SidebarLink[] => {  
+const getBaseCustomerSidebarItems = (_user: User, _routerName: SidebarProps["routerName"]): SidebarLink[] => {  
   const items: SidebarLink[] = [
-    {
-      type: SIDEBAR_LINKS_TYPES.SIMPLE,
-      label: "Projects",
-      icon: "projects",
-      url: getViewPath("projects", "LISTING"),
-      isActive: routerName === getViewPath("projects", "LISTING")
-    }
+
   ]
 
   return items

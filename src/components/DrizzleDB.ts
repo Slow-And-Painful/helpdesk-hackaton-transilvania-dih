@@ -8,9 +8,6 @@ import * as UsersSchemas from "$dbSchemas/Users"
 import * as GlobalSettingsSchemas from "$dbSchemas/GlobalSettings"
 import * as CodesSchemas from "$dbSchemas/Codes"
 import * as CodesUtilizationsSchemas from "$dbSchemas/CodesUtilizations"
-import * as OrganizationsSchemas from "$dbSchemas/Organizations"
-import * as OrganizationUsersSchemas from "$dbSchemas/OrganizationUsers"
-import * as ProjectsSchemas from "$dbSchemas/Projects"
 import * as DepartmentsSchemas from "$dbSchemas/Departments"
 import * as TicketsSchemas from "$dbSchemas/Tickets"
 import * as ChatsSchemas from "$dbSchemas/Chats"
@@ -28,9 +25,6 @@ const getDrizzle = (sql: Postgres.Sql, logger?: Logger) => {
       ...CodesSchemas,
       ...CodesUtilizationsSchemas,
       ...GlobalSettingsSchemas,
-      ...OrganizationsSchemas,
-      ...OrganizationUsersSchemas,
-      ...ProjectsSchemas,
       ...DepartmentsSchemas,
       ...TicketsSchemas,
       ...ChatsSchemas,
