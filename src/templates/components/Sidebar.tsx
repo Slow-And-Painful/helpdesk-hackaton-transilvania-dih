@@ -14,6 +14,7 @@ const Sidebar = (props: Props) => {
   const {
     swapOOB,
     user,
+    activeDepartment,
   } = props
 
   const items = getSidebarItems(props)
@@ -28,6 +29,9 @@ const Sidebar = (props: Props) => {
         >
           <Logo class="sidebar__expanded-logo"/>
           <Logo class="sidebar__collapsed-logo" />
+          <div>
+            {activeDepartment?.name}
+          </div>
         </a>
         
         <button class={"sidebar__toggle"} onclick="toggleSidebar()">

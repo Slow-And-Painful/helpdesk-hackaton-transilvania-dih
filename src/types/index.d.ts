@@ -10,6 +10,7 @@ import type { User } from "$services/UsersService"
 import { ToolInstance } from "$services/ToolsInstancesService"
 import { Organization } from "$services/OrganizationsService"
 import USER_IN_ORGANIZATION_ROLES from "./USER_IN_ORGANIZATION_ROLES"
+import { Department } from "$services/DepartmentsService"
 
 export type JsonSchemaFastifyInstance = FastifyInstance<
   RawServerDefault,
@@ -46,6 +47,7 @@ export type LayoutProps = {
   withSidebar?: boolean
   timeZone?: string
   devMode: boolean
+  activeDepartment : Department
 } & LayoutAdditionalProps
 export type LayoutFn = (props: LayoutProps) => JSX.Element
 

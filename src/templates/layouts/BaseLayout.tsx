@@ -19,7 +19,8 @@ export function BaseLayout({
   routerName,
   withSidebar = false,
   user,
-  authenticatedUser
+  authenticatedUser,
+  activeDepartment
 }: LayoutProps) {
   if (isHtmxRequest) {
     return (
@@ -32,6 +33,7 @@ export function BaseLayout({
                 routerName={routerName}
                 authenticatedUser={authenticatedUser}
                 user={user}
+                activeDepartment={activeDepartment}
               /> : null
           }
 
@@ -60,6 +62,7 @@ export function BaseLayout({
                   routerName={routerName}
                   authenticatedUser={authenticatedUser}
                   user={user}
+                  activeDepartment={activeDepartment}
                 /> : null
             }
               

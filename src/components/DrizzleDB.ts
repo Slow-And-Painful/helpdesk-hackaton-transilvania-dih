@@ -12,13 +12,14 @@ import * as OrganizationsSchemas from "$dbSchemas/Organizations"
 import * as OrganizationUsersSchemas from "$dbSchemas/OrganizationUsers"
 import * as ProjectsSchemas from "$dbSchemas/Projects"
 import * as DepartmentsSchemas from "$dbSchemas/Departments"
+import * as DepartmentUsersSchema from "$dbSchemas/DepartmentUsers"
 import * as TicketsSchemas from "$dbSchemas/Tickets"
 import * as ChatsSchemas from "$dbSchemas/Chats"
 import * as ChatMessageReferencedDocumentsSchemas from "$dbSchemas/ChatMessageReferencedDocuments"
 import * as ChatMessagesSchemas from "$dbSchemas/ChatMessages"
 
 import { Logger, sql } from "drizzle-orm"
-
+ 
 const getDrizzle = (sql: Postgres.Sql, logger?: Logger) => {
   const d = drizzle(sql, {
     logger: logger || new QueryLogger(),
@@ -31,6 +32,7 @@ const getDrizzle = (sql: Postgres.Sql, logger?: Logger) => {
       ...OrganizationUsersSchemas,
       ...ProjectsSchemas,
       ...DepartmentsSchemas,
+      ...DepartmentUsersSchema,
       ...TicketsSchemas,
       ...ChatsSchemas,
       ...ChatMessageReferencedDocumentsSchemas,
