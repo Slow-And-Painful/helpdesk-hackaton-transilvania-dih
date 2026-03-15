@@ -60,6 +60,8 @@ import WinstonComponent from "$components/WinstonComponent"
 import { registerViewFunction } from "$utils/fastify"
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { setCallerUser } from "$utils/user"
+import { DepartmentsSchema } from "$dbSchemas/Departments"
+import DepartmentsService, { Department } from "$services/DepartmentsService"
 
 declare module "fastify" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -78,7 +80,10 @@ declare module "fastify" {
     drizzle: DrizzleWithSchemas
     services: {
       usersService: UsersService
+      departmentsService: DepartmentsService 
     }
+
+    activeDepartment: Department | null
 
     resources: {
       user: User | null
@@ -111,6 +116,7 @@ declare module "fastify" {
       callerUserId: number
       authenticatedUserId: number
       timezone: string
+      activeDepartmentId: number
     }
   }
 }
@@ -155,6 +161,8 @@ void (async () => {
   }
 
   const usersService = container.resolve<UsersService>(UsersService.token)
+  const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
+
 
   const server = Fastify({
     ajv: {
@@ -189,6 +197,7 @@ void (async () => {
 
     req.services = {
       usersService,
+      departmentsService,
     }
 
     // ========== AUTH ========== //
@@ -226,6 +235,13 @@ void (async () => {
       req.authenticatedUser = authenticatedUser
 
       await setCallerUser(req, res, user)
+
+      // ========== DEPARTMENTS ========== //
+      if (req.session.data.activeDepartmentId) {
+        const activeDepartment = await req.services.departmentsService.get(req.session.data.activeDepartmentId)
+        req.activeDepartment = activeDepartment
+        
+      }
     }
 
     // ========== GLOBAL RESOURCES ========== //

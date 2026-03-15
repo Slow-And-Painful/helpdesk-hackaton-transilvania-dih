@@ -1,4 +1,5 @@
 import { getViewPath } from "$routers/website/utils"
+import { Department } from "$services/DepartmentsService"
 import { User } from "$services/UsersService"
 import { IconName } from "$templates/components/Icon"
 import USER_TYPE from "$types/USER_TYPE"
@@ -19,6 +20,7 @@ export type SidebarProps = {
   swapOOB?: string
   user: User | null
   authenticatedUser: User | null
+  activeDepartment: Department
 }
 
 type SidebarSimpleLink = {

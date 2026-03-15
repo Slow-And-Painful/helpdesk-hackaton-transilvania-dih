@@ -31,6 +31,7 @@ export const registerViewFunction = (server: FastifyInstance) => {
           authenticatedUser: this.request.authenticatedUser,
           ...layoutAdditionalProps,
           devMode: this.request.authenticatedUser?.devMode ?? false,
+          activeDepartment: this.request.activeDepartment!
         })
       } else {
         out = jsx

@@ -11,9 +11,16 @@ import VerifyLoginCodeView, { VERIFY_LOGIN_CODE_ERROR } from "$templates/views/V
 import VerifyEmailCodeView, { VERIFY_EMAIL_CODE_ERROR } from "$templates/views/VerifyEmailView"
 import UsersComponent from "$components/UsersComponent"
 import { setCallerUser } from "$utils/user"
+import { DepartmentUserSchema, departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import { eq, inArray } from "drizzle-orm"
+import DepartmentsService from "$services/DepartmentsService"
+import { departmentsTable } from "$dbSchemas/Departments"
+import DepartmentUserService from "$services/DepartmentUsersService"
 
 const codesComponent = container.resolve<CodesComponent>(CodesComponent.token)
 const usersComponent = container.resolve<UsersComponent>(UsersComponent.token)
+const departmentService = container.resolve<DepartmentsService>(DepartmentsService.token)
+const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 
 export const router = createRouter("auth", (server) => {
   server.route({
@@ -99,10 +106,21 @@ export const router = createRouter("auth", (server) => {
 
       const user = await req.services.usersService.getOrFail(code.targetUserId)
 
+      const userDepartments = await departmentUsersService.list({
+        where: eq(departmentUsersTable.userId, user.id)
+      })
+
+      const departments = await departmentService.list({
+        where: inArray(departmentsTable.id, userDepartments.map(department => department.departmentId))
+      })
+
+      const activeDepartment = departments[0]
+
       req.session.data = {
         ...req.session.data,
         authenticatedUserId: user.id,
         callerUserId: user.id,
+        ...activeDepartment ? {activeDepartmentId: activeDepartment.id} : undefined,
       }
       await req.session.save()
 
@@ -161,12 +179,24 @@ export const router = createRouter("auth", (server) => {
         userId: code.targetUserId,
         codeId: code.id
       })
+
       const user = await req.services.usersService.getOrFail(code.targetUserId)
+
+      const userDepartments = await departmentUsersService.list({
+        where: eq(departmentUsersTable.userId, user.id)
+      })
+
+      const departments = await departmentService.list({
+        where: inArray(departmentsTable.id, userDepartments.map(department => department.departmentId))
+      })
+
+      const activeDepartment = departments[0]
 
       req.session.data = {
         ...req.session.data,
         authenticatedUserId: user.id,
         callerUserId: user.id,
+        ...activeDepartment ? {activeDepartmentId: activeDepartment.id} : undefined,
       }
       await req.session.save()
 
