@@ -1,4 +1,3 @@
-import { getViewPath } from "$routers/website/utils"
 import { Department } from "$services/DepartmentsService"
 import { Ticket } from "$services/TicketsService"
 import { User } from "$services/UsersService"
@@ -49,7 +48,11 @@ type SidebarLink = SidebarSimpleLink | SidebarDropdownLink
 // ==================== UTILS ==================== //
 
 const getBaseCustomerSidebarItems = (_user: User, _routerName: SidebarProps["routerName"]): SidebarLink[] => {  
-  return []
+  const items: SidebarLink[] = [
+
+  ]
+
+  return items
 }
 
 export const getSidebarItems = (options: SidebarProps): SidebarLink[] => {

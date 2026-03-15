@@ -23,9 +23,6 @@ import { GlobalResources } from "$types/assets"
 import { USERS_PARTIALS_ROUTE, usersPartialsRouterPrefix } from "./partialsRouter/users"
 import { AUTH_ACTIONS_ROUTE, authActionsRouterPrefix } from "./actionsRouter/auth"
 import { DASHBOARD_VIEW_ROUTE, dashboardViewsRouterPrefix } from "./viewsRouter/dashboard"
-import { PROJECTS_VIEW_ROUTE, projectsViewsRouterPrefix } from "./viewsRouter/projects"
-import { PROJECTS_PARTIALS_ROUTE, projectsPartialsRouterPrefix } from "./partialsRouter/projects"
-import { PROJECTS_ACTIONS_ROUTE, projectsActionsRouterPrefix } from "./actionsRouter/projects"
 
 // ==================== ROUTER ===================== //
 
@@ -88,12 +85,10 @@ export function registerActionsRouter(
 type ActionRouter = 
 | "users"
 | "auth"
-| "projects"
 
 type ActionRoutersPaths = {
   users: typeof USERS_PARTIALS_ROUTE
   auth: typeof AUTH_ACTIONS_ROUTE
-  projects: typeof PROJECTS_ACTIONS_ROUTE
 }
 
 type ActionRoutersParams = {
@@ -115,10 +110,6 @@ const actionRoutersConfig: {
   auth: {
     paths: AUTH_ACTIONS_ROUTE,
     prefix: authActionsRouterPrefix
-  },
-  projects: {
-    paths: PROJECTS_ACTIONS_ROUTE,
-    prefix: projectsActionsRouterPrefix
   },
 }
 
@@ -183,13 +174,11 @@ type PartialRouter =
 | "common"
 | "auth"
 | "users"
-| "projects"
 
 type PartialRoutersPaths = {
   common: typeof COMMON_PARTIALS_ROUTE,
   auth: typeof AUTH_PARTIALS_ROUTE,
   users: typeof USERS_PARTIALS_ROUTE,
-  projects: typeof PROJECTS_PARTIALS_ROUTE
 }
 
 type PartialRoutersParams = {
@@ -216,10 +205,6 @@ const partialRoutersConfig: {
     paths: USERS_PARTIALS_ROUTE,
     prefix: usersPartialsRouterPrefix
   },
-  projects: {
-    paths: PROJECTS_PARTIALS_ROUTE,
-    prefix: projectsPartialsRouterPrefix
-  }
 }
 
 export function getPartialPath<
@@ -273,13 +258,11 @@ type ViewRouter =
 | "public" 
 | "auth"
 | "dashboard"
-| "projects"
 
 type ViewRoutersPaths = {
   public: typeof PUBLIC_VIEW_ROUTE
   auth: typeof AUTH_VIEW_ROUTE
   dashboard: typeof DASHBOARD_VIEW_ROUTE
-  projects: typeof PROJECTS_VIEW_ROUTE
 }
 
 export type ViewRoute<R extends ViewRouter = ViewRouter> = [
@@ -299,7 +282,6 @@ export const viewsRouterPrefix: {
   public: "/",
   auth: "/",
   dashboard: dashboardViewsRouterPrefix,
-  projects: projectsViewsRouterPrefix
 }
 
 const viewRoutersConfig: {
@@ -318,10 +300,6 @@ const viewRoutersConfig: {
     paths: DASHBOARD_VIEW_ROUTE,
     prefix: dashboardViewsRouterPrefix
   },
-  projects: {
-    paths: PROJECTS_VIEW_ROUTE,
-    prefix: projectsViewsRouterPrefix
-  }
 }
 
 export function getViewPath<
