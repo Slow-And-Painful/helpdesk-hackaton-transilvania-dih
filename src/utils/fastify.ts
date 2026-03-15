@@ -1,11 +1,11 @@
 import { LayoutAdditionalProps, LayoutFn } from "$types"
 import { FastifyInstance } from "fastify"
 import { getFullRouterPath } from "./router"
-import { container } from "tsyringe"
-import Configs from "$components/Configs"
+// import { container } from "tsyringe"
+// import Configs from "$components/Configs"
 
 export const registerViewFunction = (server: FastifyInstance) => {
-  const { env } = container.resolve<Configs>(Configs.token)
+  // const { env } = container.resolve<Configs>(Configs.token)
 
   server.decorateReply(
     "view",
@@ -30,10 +30,10 @@ export const registerViewFunction = (server: FastifyInstance) => {
           user: this.request.callerUser,
           authenticatedUser: this.request.authenticatedUser,
           ...layoutAdditionalProps,
-          devMode: this.request.authenticatedUser?.devMode ?? false,
           activeDepartment: this.request.activeDepartment!,
           userDepartments: this.request.userDepartments || [],
           userTickets: this.request.userTickets || [],
+          devMode: false,
         })
       } else {
         out = jsx
