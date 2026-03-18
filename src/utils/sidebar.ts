@@ -1,5 +1,6 @@
 import { getViewPath } from "$routers/website/utils"
 import { Department } from "$services/DepartmentsService"
+import { Ticket } from "$services/TicketsService"
 import { User } from "$services/UsersService"
 import { IconName } from "$templates/components/Icon"
 import USER_TYPE from "$types/USER_TYPE"
@@ -21,6 +22,8 @@ export type SidebarProps = {
   user: User | null
   authenticatedUser: User | null
   activeDepartment: Department
+  userDepartments: Department[]
+  userTickets: Ticket[]
 }
 
 type SidebarSimpleLink = {
@@ -45,18 +48,8 @@ type SidebarLink = SidebarSimpleLink | SidebarDropdownLink
 
 // ==================== UTILS ==================== //
 
-const getBaseCustomerSidebarItems = (_user: User, routerName: SidebarProps["routerName"]): SidebarLink[] => {  
-  const items: SidebarLink[] = [
-    {
-      type: SIDEBAR_LINKS_TYPES.SIMPLE,
-      label: "Projects",
-      icon: "projects",
-      url: getViewPath("projects", "LISTING"),
-      isActive: routerName === getViewPath("projects", "LISTING")
-    }
-  ]
-
-  return items
+const getBaseCustomerSidebarItems = (_user: User, _routerName: SidebarProps["routerName"]): SidebarLink[] => {  
+  return []
 }
 
 export const getSidebarItems = (options: SidebarProps): SidebarLink[] => {
@@ -81,4 +74,13 @@ export const getSidebarItems = (options: SidebarProps): SidebarLink[] => {
     .exhaustive()
 
   return items
+}
+
+export function getDepartmentInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .map(word => word[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
 }

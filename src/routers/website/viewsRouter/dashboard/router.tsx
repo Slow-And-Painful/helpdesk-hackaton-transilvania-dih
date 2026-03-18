@@ -2,8 +2,8 @@ import { createRouter, getViewPath } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import USER_ROLE from "$types/USER_ROLES"
-// import { DashboardLayout } from "$templates/layouts/DashboardLayout"
-// import DashboardHomepage from "$templates/views/DashboardHomepage"
+import { DashboardLayout } from "$templates/layouts/DashboardLayout"
+import ChatbotView from "$templates/views/ChatbotView"
 
 export const routerPrefix = "/dashboard"
 
@@ -19,7 +19,10 @@ export const router = createRouter("dashboard", (server) => {
       authenticated: true
     },
     handler: (_req, res) => {
-      return res.redirect(getViewPath("projects", "LISTING"))
+      return res.view(
+        <ChatbotView />,
+        DashboardLayout
+      )
     }
   })
 })

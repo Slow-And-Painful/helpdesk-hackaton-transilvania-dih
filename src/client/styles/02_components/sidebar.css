@@ -249,3 +249,112 @@ html[data-sidebar-closed] {
 .sidebar__menu-item__dropdown-menu-toggle {
   @apply cursor-pointer !hidden
 }
+
+/* ==================== DEPARTMENT SWITCHER ==================== */
+
+.sidebar-departments {
+  @apply px-3 py-3 border-b border-gray-800;
+}
+
+.sidebar-departments__label {
+  @apply text-xs text-gray-500 uppercase tracking-wider mb-2 px-1;
+}
+
+.sidebar-departments__list {
+  @apply flex items-center gap-2 flex-wrap;
+}
+
+.sidebar-departments__item {
+  @apply w-9 h-9 rounded-lg flex items-center justify-center text-xs font-roboto-medium
+  bg-gray-800 text-gray-400 border border-gray-700
+  transition-all duration-200 cursor-default select-none;
+}
+
+.sidebar-departments__item--active {
+  @apply bg-primary-500 text-white border-primary-400 ring-2 ring-primary-500/30;
+}
+
+/* ==================== TICKETS LIST ==================== */
+
+.sidebar-tickets {
+  @apply flex-1 flex flex-col overflow-hidden px-3 py-3;
+}
+
+.sidebar-tickets__header {
+  @apply flex items-center justify-between text-xs text-gray-500 uppercase tracking-wider mb-2 px-1;
+}
+
+.sidebar-tickets__count {
+  @apply bg-gray-800 text-gray-400 text-xs rounded-full px-2 py-0.5 min-w-[1.25rem] text-center;
+}
+
+.sidebar-tickets__list {
+  @apply flex flex-col gap-1.5 overflow-y-auto flex-1 list-none p-0 m-0;
+}
+
+.sidebar-tickets__empty {
+  @apply text-sm text-gray-500 px-1 py-4 text-center;
+}
+
+.sidebar-tickets__item {
+  @apply px-2.5 py-2 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors duration-150 cursor-default;
+}
+
+.sidebar-tickets__item-header {
+  @apply flex items-center justify-between mb-1;
+}
+
+.sidebar-tickets__item-id {
+  @apply text-sm text-white font-roboto-medium;
+}
+
+.sidebar-ticket__status {
+  @apply text-xs px-2 py-0.5 rounded-full;
+}
+
+.sidebar-ticket__status--open {
+  @apply bg-green-500/15 text-green-400;
+}
+
+.sidebar-ticket__status--closed {
+  @apply bg-gray-600/30 text-gray-400;
+}
+
+.sidebar-tickets__item-departments {
+  @apply flex items-center gap-1 text-xs text-gray-500;
+}
+
+.sidebar-tickets__item-dept {
+  @apply truncate max-w-[5rem];
+}
+
+/* Collapsed sidebar: hide department labels and ticket details */
+html[data-sidebar-closed] {
+  .sidebar-departments__label,
+  .sidebar-tickets__header,
+  .sidebar-tickets__item-header,
+  .sidebar-tickets__item-departments,
+  .sidebar-tickets__empty {
+    @apply hidden;
+  }
+
+  .sidebar-departments {
+    @apply px-1 py-2;
+  }
+
+  .sidebar-departments__list {
+    @apply flex-col;
+  }
+
+  .sidebar-departments__item {
+    @apply w-8 h-8 text-[10px];
+  }
+
+  .sidebar-tickets {
+    @apply px-1 py-2;
+  }
+
+  .sidebar-tickets__item {
+    @apply px-1 py-1 flex items-center justify-center;
+  }
+}

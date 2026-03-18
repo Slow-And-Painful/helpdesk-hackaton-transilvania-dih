@@ -20,7 +20,9 @@ export function BaseLayout({
   withSidebar = false,
   user,
   authenticatedUser,
-  activeDepartment
+  activeDepartment,
+  userDepartments = [],
+  userTickets = [],
 }: LayoutProps) {
   if (isHtmxRequest) {
     return (
@@ -34,6 +36,8 @@ export function BaseLayout({
                 authenticatedUser={authenticatedUser}
                 user={user}
                 activeDepartment={activeDepartment}
+                userDepartments={userDepartments}
+                userTickets={userTickets}
               /> : null
           }
 
@@ -63,6 +67,8 @@ export function BaseLayout({
                   authenticatedUser={authenticatedUser}
                   user={user}
                   activeDepartment={activeDepartment}
+                  userDepartments={userDepartments}
+                  userTickets={userTickets}
                 /> : null
             }
               
