@@ -60,8 +60,14 @@ import WinstonComponent from "$components/WinstonComponent"
 import { registerViewFunction } from "$utils/fastify"
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { setCallerUser } from "$utils/user"
-import { DepartmentsSchema } from "$dbSchemas/Departments"
+import { DepartmentsSchema, departmentsTable } from "$dbSchemas/Departments"
 import DepartmentsService, { Department } from "$services/DepartmentsService"
+import DepartmentUserService from "$services/DepartmentUsersService"
+import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import TicketsService from "$services/TicketsService"
+import { Ticket } from "$services/TicketsService"
+import { eq, inArray, or } from "drizzle-orm"
+import { ticketsTable } from "$dbSchemas/Tickets"
 
 declare module "fastify" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -84,6 +90,8 @@ declare module "fastify" {
     }
 
     activeDepartment: Department | null
+    userDepartments: Department[]
+    userTickets: Ticket[]
 
     resources: {
       user: User | null
@@ -240,7 +248,34 @@ void (async () => {
       if (req.session.data.activeDepartmentId) {
         const activeDepartment = await req.services.departmentsService.get(req.session.data.activeDepartmentId)
         req.activeDepartment = activeDepartment
-        
+      }
+
+      // ========== USER DEPARTMENTS ========== //
+      const departmentUserService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
+      const userDepartmentLinks = await departmentUserService.list({
+        where: eq(departmentUsersTable.userId, user.id)
+      })
+      if (userDepartmentLinks.length > 0) {
+        const departments = await req.services.departmentsService.list({
+          where: inArray(departmentsTable.id, userDepartmentLinks.map(d => d.departmentId))
+        })
+        req.userDepartments = departments
+      } else {
+        req.userDepartments = []
+      }
+
+      // ========== USER TICKETS ========== //
+      const ticketsService = container.resolve<TicketsService>(TicketsService.token)
+      if (req.activeDepartment) {
+        const tickets = await ticketsService.list({
+          where: or(
+            eq(ticketsTable.senderDepartmentId, req.activeDepartment.id),
+            eq(ticketsTable.destinationDepartmentId, req.activeDepartment.id)
+          )
+        })
+        req.userTickets = tickets
+      } else {
+        req.userTickets = []
       }
     }
 
