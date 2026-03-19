@@ -4,6 +4,7 @@ import { schemas } from "./schemas"
 import USER_ROLE from "$types/USER_ROLES"
 import { DashboardLayout } from "$templates/layouts/DashboardLayout"
 import ChatbotView from "$templates/views/ChatbotView"
+import TicketsView from "$templates/views/TicketsView"
 
 export const routerPrefix = "/dashboard"
 
@@ -21,6 +22,27 @@ export const router = createRouter("dashboard", (server) => {
     handler: (_req, res) => {
       return res.view(
         <ChatbotView />,
+        DashboardLayout
+      )
+    }
+  })
+
+  server.route({
+    url: ROUTE.TICKETS,
+    method: "GET",
+    schema: schemas[ROUTE.TICKETS],
+    config: {
+      security: {
+        session: `${USER_ROLE.CUSTOMER_ACCOUNT}`
+      },
+      authenticated: true
+    },
+    handler: (req, res) => {
+      return res.view(
+        <TicketsView
+          tickets={req.userTickets || []}
+          activeDepartment={req.activeDepartment}
+        />,
         DashboardLayout
       )
     }

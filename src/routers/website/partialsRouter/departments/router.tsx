@@ -15,7 +15,7 @@ export const router = createRouter("departments", (server) => {
       return res
         .headers({
           "HX-Retarget": "#modal",
-          "HX-Reswap": "innerHTML",
+          "HX-Reswap": "beforeend",
         })
         .view(
           <DepartmentSwitcherModal
