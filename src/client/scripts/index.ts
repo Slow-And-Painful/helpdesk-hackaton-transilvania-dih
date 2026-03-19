@@ -19,6 +19,7 @@ import "./modules/textarea"
 import axios from "axios"
 import "./modules/card-slider"
 import "./modules/auth"
+import "./modules/chatbot"
 
 
 declare global {
@@ -55,6 +56,10 @@ declare global {
     }
     handleSwapScrollBeforeRequest: (elementId: string) => void
     handleSwapScrollAfterRequest: (elementId: string) => void
+    autoResizeTextarea: (el: HTMLTextAreaElement) => void
+    handleChatKeydown: (e: KeyboardEvent) => void
+    submitSuggestion: (btn: HTMLElement) => void
+    handleHelpdeskChat: (e: SubmitEvent) => boolean
   }
   interface HTMLElementEventMap {
     "htmx:beforeRequest": CustomEvent
