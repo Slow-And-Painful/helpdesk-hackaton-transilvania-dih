@@ -1,0 +1,89 @@
+.tickets-page__title {
+  @apply flex items-baseline gap-1;
+}
+
+.tickets-page__dept-name {
+  @apply text-gray-400 font-roboto-light;
+}
+
+.tickets-page__placeholder-notice {
+  @apply flex items-center gap-2 text-xs text-yellow-500 bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-3 py-2 mb-4;
+}
+
+.tickets-page__stats {
+  @apply flex items-center gap-4 mb-5;
+}
+
+.tickets-page__stat {
+  @apply flex flex-col items-center bg-gray-900 border border-gray-800 rounded-xl px-5 py-3 min-w-[80px];
+}
+
+.tickets-page__stat-value {
+  @apply text-2xl font-roboto-medium text-white;
+}
+
+.tickets-page__stat-value--open {
+  @apply text-green-400;
+}
+
+.tickets-page__stat-label {
+  @apply text-xs text-gray-500 mt-0.5;
+}
+
+.tickets-page__table-wrap {
+  @apply bg-gray-900 border border-gray-800 rounded-xl overflow-hidden;
+}
+
+/* ==================== TICKETS TABLE ==================== */
+
+.tickets-table {
+  @apply w-full text-sm;
+}
+
+.tickets-table__th {
+  @apply text-left text-xs text-gray-500 uppercase tracking-wider px-4 py-3 bg-gray-900 border-b border-gray-800 font-roboto-medium;
+}
+
+.tickets-table__row {
+  @apply border-b border-gray-800 last:border-0 transition-colors duration-150;
+
+  &:hover {
+    @apply bg-gray-800/50;
+  }
+}
+
+.tickets-table__cell {
+  @apply px-4 py-3 text-gray-300 align-middle;
+}
+
+.tickets-table__cell--id {
+  @apply w-24;
+}
+
+.tickets-table__cell--status {
+  @apply w-28;
+}
+
+.tickets-table__id {
+  @apply font-roboto-medium text-white;
+}
+
+.tickets-table__direction {
+  @apply flex;
+}
+
+.tickets-table__dept-flow {
+  @apply flex items-center gap-2;
+}
+
+.tickets-table__dept-name {
+  @apply text-gray-300;
+}
+
+.tickets-table__arrow {
+  @apply text-gray-600 shrink-0;
+}
+
+.tickets-table__counterpart {
+  @apply text-gray-400;
+}

@@ -10,31 +10,12 @@ import {
 } from "$utils/sidebar"
 import SidebarUser from "./SidebarUser"
 import { getPartialPath, getViewPath } from "$routers/website/utils"
-import { TICKET_STATUS } from "$types/tickets"
-
-const getStatusLabel = (status: TICKET_STATUS) => {
-  switch (status) {
-    case TICKET_STATUS.OPEN: return "Open"
-    case TICKET_STATUS.CLOSED: return "Closed"
-    default: return status
-  }
-}
-
-const getStatusClass = (status: TICKET_STATUS) => {
-  switch (status) {
-    case TICKET_STATUS.OPEN: return "sidebar-ticket__status--open"
-    case TICKET_STATUS.CLOSED: return "sidebar-ticket__status--closed"
-    default: return ""
-  }
-}
 
 const Sidebar = (props: Props) => {
   const {
     swapOOB,
     user,
     activeDepartment,
-    userDepartments = [],
-    userTickets = [],
   } = props
 
   const items = getSidebarItems(props)
@@ -79,39 +60,6 @@ const Sidebar = (props: Props) => {
           </div>
         </div>
       )}
-
-      {/* Tickets List */}
-      <div class="sidebar-tickets">
-        <div class="sidebar-tickets__header sidebar__menu-item-label">
-          <span>Tickets</span>
-          <span class="sidebar-tickets__count">{userTickets.length}</span>
-        </div>
-        <ul class="sidebar-tickets__list">
-          {userTickets.length === 0 ? (
-            <li class="sidebar-tickets__empty">No tickets yet</li>
-          ) : (
-            userTickets.map((ticket) => (
-              <li class="sidebar-tickets__item">
-                <div class="sidebar-tickets__item-header">
-                  <span class="sidebar-tickets__item-id" safe>#{String(ticket.id)}</span>
-                  <span class={classNames("sidebar-ticket__status", getStatusClass(ticket.status))}>
-                    {getStatusLabel(ticket.status)}
-                  </span>
-                </div>
-                <div class="sidebar-tickets__item-departments">
-                  <span class="sidebar-tickets__item-dept" safe>
-                    {(ticket as any).senderDepartment?.name ?? `Dept #${ticket.senderDepartmentId}`}
-                  </span>
-                  <Icon name="arrow-right" size={12} />
-                  <span class="sidebar-tickets__item-dept" safe>
-                    {(ticket as any).destinationDepartment?.name ?? `Dept #${ticket.destinationDepartmentId}`}
-                  </span>
-                </div>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
 
       {/* Regular menu items (if any remain) */}
       {items.length > 0 && (

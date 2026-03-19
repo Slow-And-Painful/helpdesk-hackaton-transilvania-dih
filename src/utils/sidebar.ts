@@ -4,6 +4,7 @@ import { User } from "$services/UsersService"
 import { IconName } from "$templates/components/Icon"
 import USER_TYPE from "$types/USER_TYPE"
 import { match } from "ts-pattern"
+import { getViewPath } from "$routers/website/utils"
 
 enum SIDEBAR_LINKS_GROUPS {
   BASE_CUSTOMER = "BASE_CUSTOMER",
@@ -47,9 +48,25 @@ type SidebarLink = SidebarSimpleLink | SidebarDropdownLink
 
 // ==================== UTILS ==================== //
 
-const getBaseCustomerSidebarItems = (_user: User, _routerName: SidebarProps["routerName"]): SidebarLink[] => {  
-  const items: SidebarLink[] = [
+const getBaseCustomerSidebarItems = (_user: User, routerName: SidebarProps["routerName"]): SidebarLink[] => {
+  const ticketsPath = getViewPath("dashboard", "TICKETS")
+  const homePath = getViewPath("dashboard", "HOME")
 
+  const items: SidebarLink[] = [
+    {
+      type: SIDEBAR_LINKS_TYPES.SIMPLE,
+      icon: "new-chat",
+      label: "Home",
+      url: homePath,
+      isActive: (routerName as string) === "" || routerName === homePath,
+    },
+    {
+      type: SIDEBAR_LINKS_TYPES.SIMPLE,
+      icon: "inbox",
+      label: "Tickets",
+      url: ticketsPath,
+      isActive: routerName === ticketsPath,
+    },
   ]
 
   return items
