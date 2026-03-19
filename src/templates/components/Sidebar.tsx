@@ -9,7 +9,7 @@ import {
   getDepartmentInitials,
 } from "$utils/sidebar"
 import SidebarUser from "./SidebarUser"
-import { getViewPath } from "$routers/website/utils"
+import { getPartialPath, getViewPath } from "$routers/website/utils"
 import { TICKET_STATUS } from "$types/tickets"
 
 const getStatusLabel = (status: TICKET_STATUS) => {
@@ -56,31 +56,26 @@ const Sidebar = (props: Props) => {
         </button>
       </div>
 
-      {/* Department Switcher */}
-      {userDepartments.length > 0 && (
+      {/* Department Switcher Widget */}
+      {activeDepartment && (
         <div class="sidebar-departments">
-          <div class="sidebar-departments__label sidebar__menu-item-label">Departments</div>
+          <div class="sidebar-departments__label sidebar__menu-item-label">Department</div>
           <div class="sidebar-departments__list">
-            {userDepartments.map((dept) => {
-              const isActive = activeDepartment?.id === dept.id
-              return (
-                <Tooltip
-                  content={dept.name}
-                  position="right"
-                  small
-                  text={
-                    <div
-                      class={classNames(
-                        "sidebar-departments__item",
-                        isActive && "sidebar-departments__item--active"
-                      )}
-                    >
-                      <span safe>{getDepartmentInitials(dept.name)}</span>
-                    </div>
-                  }
-                />
-              )
-            })}
+            <Tooltip
+              content={activeDepartment.name}
+              position="right"
+              small
+              text={
+                <button
+                  class="sidebar-departments__item sidebar-departments__item--active sidebar-departments__switcher-btn"
+                  hx-get={getPartialPath("departments", "DEPARTMENT_SWITCHER")}
+                  hx-target="#modal"
+                  hx-swap="innerHTML"
+                >
+                  <span safe>{getDepartmentInitials(activeDepartment.name)}</span>
+                </button>
+              }
+            />
           </div>
         </div>
       )}

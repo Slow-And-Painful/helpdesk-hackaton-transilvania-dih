@@ -21,7 +21,9 @@ import { AUTH_VIEW_ROUTE } from "./viewsRouter/auth/index"
 
 import { GlobalResources } from "$types/assets"
 import { USERS_PARTIALS_ROUTE, usersPartialsRouterPrefix } from "./partialsRouter/users"
+import { DEPARTMENTS_PARTIALS_ROUTE, departmentsPartialsRouterPrefix } from "./partialsRouter/departments"
 import { AUTH_ACTIONS_ROUTE, authActionsRouterPrefix } from "./actionsRouter/auth"
+import { DEPARTMENTS_ACTIONS_ROUTE, departmentsActionsRouterPrefix } from "./actionsRouter/departments"
 import { DASHBOARD_VIEW_ROUTE, dashboardViewsRouterPrefix } from "./viewsRouter/dashboard"
 
 // ==================== ROUTER ===================== //
@@ -82,13 +84,15 @@ export function registerActionsRouter(
   )
 }
 
-type ActionRouter = 
+type ActionRouter =
 | "users"
 | "auth"
+| "departments"
 
 type ActionRoutersPaths = {
   users: typeof USERS_PARTIALS_ROUTE
   auth: typeof AUTH_ACTIONS_ROUTE
+  departments: typeof DEPARTMENTS_ACTIONS_ROUTE
 }
 
 type ActionRoutersParams = {
@@ -110,6 +114,10 @@ const actionRoutersConfig: {
   auth: {
     paths: AUTH_ACTIONS_ROUTE,
     prefix: authActionsRouterPrefix
+  },
+  departments: {
+    paths: DEPARTMENTS_ACTIONS_ROUTE,
+    prefix: departmentsActionsRouterPrefix
   },
 }
 
@@ -170,15 +178,17 @@ export function registerPartialsRouter(
   )
 }
 
-type PartialRouter = 
+type PartialRouter =
 | "common"
 | "auth"
 | "users"
+| "departments"
 
 type PartialRoutersPaths = {
   common: typeof COMMON_PARTIALS_ROUTE,
   auth: typeof AUTH_PARTIALS_ROUTE,
   users: typeof USERS_PARTIALS_ROUTE,
+  departments: typeof DEPARTMENTS_PARTIALS_ROUTE,
 }
 
 type PartialRoutersParams = {
@@ -204,6 +214,10 @@ const partialRoutersConfig: {
   users: {
     paths: USERS_PARTIALS_ROUTE,
     prefix: usersPartialsRouterPrefix
+  },
+  departments: {
+    paths: DEPARTMENTS_PARTIALS_ROUTE,
+    prefix: departmentsPartialsRouterPrefix
   },
 }
 

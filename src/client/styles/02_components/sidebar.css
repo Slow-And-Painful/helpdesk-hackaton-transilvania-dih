@@ -274,6 +274,10 @@ html[data-sidebar-closed] {
   @apply bg-primary-500 text-white border-primary-400 ring-2 ring-primary-500/30;
 }
 
+.sidebar-departments__switcher-btn {
+  @apply cursor-pointer hover:ring-4 hover:ring-primary-500/40 transition-all duration-150;
+}
+
 /* ==================== TICKETS LIST ==================== */
 
 .sidebar-tickets {
