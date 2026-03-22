@@ -38,9 +38,20 @@ export const router = createRouter("dashboard", (server) => {
       authenticated: true
     },
     handler: (req, res) => {
+      const allTickets = req.userTickets || []
+      const activeDeptId = req.activeDepartment?.id
+
+      const incomingTickets = activeDeptId
+        ? allTickets.filter(t => t.destinationDepartmentId === activeDeptId)
+        : []
+      const outgoingTickets = activeDeptId
+        ? allTickets.filter(t => t.senderDepartmentId === activeDeptId)
+        : []
+
       return res.view(
         <TicketsView
-          tickets={req.userTickets || []}
+          incomingTickets={incomingTickets}
+          outgoingTickets={outgoingTickets}
           activeDepartment={req.activeDepartment}
         />,
         DashboardLayout
