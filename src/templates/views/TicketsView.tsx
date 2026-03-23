@@ -21,11 +21,25 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
   return (
     <DashboardPage
       title={
-        <div class="tickets-page__title">
-          <span>Tickets</span>
-          {activeDepartment && (
-            <span class="tickets-page__dept-name" safe> — {activeDepartment.name}</span>
-          )}
+        <div class="w-full flex justify-between items-center">
+          <div>
+            <span>Tickets</span>
+            {activeDepartment && (
+              <span class="tickets-page__dept-name" safe> — {activeDepartment.name}</span>
+            )}
+          </div>
+
+          <Button
+            preset="primary"
+            size="sm"
+            icon="plus"
+            hx-get={getPartialPath("tickets", "CREATE_TICKET_MODAL")}
+            hx-target="#modal"
+            hx-swap="innerHTML"
+            iconPosition="right"
+          >
+            Create new
+          </Button>
         </div>
       }
     >
@@ -44,19 +58,6 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
           baseUrl={baseUrl}
           activeDepartment={activeDepartment}
         />
-
-        <div class="tickets-create-btn-wrap">
-          <Button
-            preset="primary"
-            size="sm"
-            icon="plus"
-            hx-get={getPartialPath("tickets", "CREATE_TICKET_MODAL")}
-            hx-target="#modal"
-            hx-swap="innerHTML"
-          >
-            Create Ticket
-          </Button>
-        </div>
       </div>
     </DashboardPage>
   )

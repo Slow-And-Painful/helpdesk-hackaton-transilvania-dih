@@ -1,7 +1,3 @@
-.tickets-page__title {
-  @apply flex items-baseline gap-1;
-}
-
 .tickets-page__dept-name {
   @apply text-gray-400 font-roboto-light;
 }
@@ -100,16 +96,4 @@
 
 .tickets-status-badge--closed {
   @apply bg-gray-500/15 text-gray-400;
-}
-
-/* ==================== CREATE BUTTON ==================== */
-
-.tickets-create-btn-wrap {
-  @apply flex justify-end mt-4;
-}
-
-/* ==================== CREATE TICKET MODAL ==================== */
-
-#create-ticket-modal .modal__content {
-  overflow: visible;
 }

@@ -21,10 +21,7 @@ export const router = createRouter("tickets", (server) => {
       },
     },
     handler: async (req, res) => {
-      const { name, destinationDepartmentId } = req.body as {
-        name: string
-        destinationDepartmentId: number
-      }
+      const { name, destinationDepartmentId, summary } = req.body
 
       const activeDepartment = req.activeDepartment
       if (!activeDepartment) {
@@ -33,6 +30,7 @@ export const router = createRouter("tickets", (server) => {
 
       await ticketsService.sInsert({
         name,
+        summary,
         senderDepartmentId: activeDepartment.id,
         destinationDepartmentId,
       })

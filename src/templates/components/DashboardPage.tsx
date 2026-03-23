@@ -41,7 +41,7 @@ const DashboardPage = ({
         { ...props.titleContainerId && { id: props.titleContainerId } }
       >
         <div class="flex w-full justify-between items-center">
-          <div class={"truncate line-clamp-1"}>{title as "safe"}</div>
+          <div class={"truncate line-clamp-1 flex-1"}>{title as "safe"}</div>
           {props.dropdownConfig ? 
             <div>
               <DropdownTrigger

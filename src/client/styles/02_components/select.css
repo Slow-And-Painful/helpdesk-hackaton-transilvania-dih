@@ -13,7 +13,10 @@
 }
 
 .select {
-  @apply h-7 pl-2 pr-6 m-0 appearance-none bg-transparent border border-gray-600 rounded-lg text-sm text-white focus:outline-none text-ellipsis overflow-hidden whitespace-nowrap focus:border-gray-400;
+  @apply pl-2 pr-6 m-0 appearance-none bg-gray-900/50 border border-gray-800 rounded-lg text-sm text-white focus:outline-none text-ellipsis overflow-hidden whitespace-nowrap hover:border-gray-700 focus:border-gray-600 focus:bg-gray-900/70;
+  transition:
+    border-color 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
 }
 
 .select--icon-hidden {
@@ -41,6 +44,10 @@
 }
 
 /* Sizes */
+.select--sm {
+  @apply h-8 pl-3;
+}
+
 .select--md {
   @apply h-9 pl-3;
 }
@@ -57,23 +64,23 @@
 
 .select__wrap--error {
   .select__label {
-    @apply text-danger-600;
+    @apply text-red-400;
   }
 
   .select__icon {
-    @apply text-danger-500;
+    @apply text-red-500;
   }
 
   .select {
-    @apply border-danger-500 placeholder-red-500 text-danger-500 focus:border-danger-800;
+    @apply border-red-900/50 bg-red-950/20 hover:border-red-800/50 focus:border-red-700/50 focus:bg-red-950/30;
   }
 
   .select__caption {
-    @apply text-danger-500;
+    @apply text-red-400;
 
     a,
     strong {
-      @apply text-danger-500;
+      @apply text-red-300;
     }
   }
 }
