@@ -381,6 +381,33 @@ void (async () => {
   server.addHook("preHandler", authenticatedHook(authenticatedRequestHandler))
   server.addHook("preHandler", securityHook(securityHandlers))
 
+  // ========== DEPARTMENT GUARD ========== //
+  // Authenticated users with no department may only access /waiting-room and public/auth paths.
+  // Authenticated users WITH a department are redirected away from /waiting-room.
+  server.addHook("preHandler", async (req, res) => {
+    const user = req.callerUser
+    if (!user) return
+
+    const hasDepartment = req.userDepartments && req.userDepartments.length > 0
+    const url = req.url.split("?")[0]
+
+    const isDashboard = url.startsWith("/dashboard")
+
+    if (isDashboard && !hasDepartment) {
+      if (req.headers["hx-request"]?.toString().toLowerCase() === "true") {
+        return res.header("HX-Redirect", "/waiting-room").send()
+      }
+      return res.redirect("/waiting-room")
+    }
+
+    if (url === "/waiting-room" && hasDepartment) {
+      if (req.headers["hx-request"]?.toString().toLowerCase() === "true") {
+        return res.header("HX-Redirect", "/dashboard").send()
+      }
+      return res.redirect("/dashboard")
+    }
+  })
+
   await server.register(fastifyFormBody)
   await server.register(fastifyStatic, {
     root: join(__dirname, "public"),
