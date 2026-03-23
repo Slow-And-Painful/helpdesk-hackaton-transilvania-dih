@@ -4,8 +4,8 @@ import { schemas } from "./schemas"
 import USER_ROLE from "$types/USER_ROLES"
 import { DashboardLayout } from "$templates/layouts/DashboardLayout"
 import ChatbotView from "$templates/views/ChatbotView"
-import TicketsView, { ticketsTableId } from "$templates/views/TicketsView"
-import TicketsTable from "$templates/views/TicketsTable"
+import TicketsView from "$templates/views/TicketsView"
+import TicketsTable, { ticketsTableId } from "$templates/components/tables/TicketsTable"
 import { container } from "tsyringe"
 import TicketsService from "$services/TicketsService"
 import { ticketsTable } from "$dbSchemas/Tickets"
@@ -54,7 +54,6 @@ export const router = createRouter("dashboard", (server) => {
         return res.view(
           <TicketsView
             items={[]}
-            pagination={{ page: 1, totalPages: 0, totalItems: 0, itemsPerPage: 10, filters: {}, baseUrl: "" }}
             activeDepartment={null}
             tab={tab}
             baseUrl={baseUrl}

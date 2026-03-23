@@ -3,8 +3,17 @@ import DrizzleDB from "$components/DrizzleDB"
 import { container, inject, injectable } from "tsyringe"
 import { ticketsTable, TicketSchema, NewTicketSchema } from "$dbSchemas/Tickets"
 import { desc } from "drizzle-orm"
+import { Department } from "./DepartmentsService"
 
-export type Ticket = TicketSchema
+type WithSenderDepartment<T> = T & {
+  senderDepartment?: Department
+}
+
+type WithDestinationDepartment<T> = T & {
+  destinationDepartment?: Department
+}
+
+export type Ticket = WithSenderDepartment<WithDestinationDepartment<TicketSchema>>
 
 type TABLE = typeof ticketsTable
 type PK_TYPE = number

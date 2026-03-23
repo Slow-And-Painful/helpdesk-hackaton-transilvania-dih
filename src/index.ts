@@ -60,14 +60,11 @@ import WinstonComponent from "$components/WinstonComponent"
 import { registerViewFunction } from "$utils/fastify"
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { setCallerUser } from "$utils/user"
-import { DepartmentsSchema, departmentsTable } from "$dbSchemas/Departments"
+import { departmentsTable } from "$dbSchemas/Departments"
 import DepartmentsService, { Department } from "$services/DepartmentsService"
 import DepartmentUserService from "$services/DepartmentUsersService"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
-import TicketsService from "$services/TicketsService"
-import { Ticket } from "$services/TicketsService"
-import { eq, inArray, or } from "drizzle-orm"
-import { ticketsTable } from "$dbSchemas/Tickets"
+import { eq, inArray } from "drizzle-orm"
 
 declare module "fastify" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -91,7 +88,6 @@ declare module "fastify" {
 
     activeDepartment: Department | null
     userDepartments: Department[]
-    userTickets: Ticket[]
 
     resources: {
       user: User | null
@@ -262,20 +258,6 @@ void (async () => {
         req.userDepartments = departments
       } else {
         req.userDepartments = []
-      }
-
-      // ========== USER TICKETS ========== //
-      const ticketsService = container.resolve<TicketsService>(TicketsService.token)
-      if (req.activeDepartment) {
-        const tickets = await ticketsService.list({
-          where: or(
-            eq(ticketsTable.senderDepartmentId, req.activeDepartment.id),
-            eq(ticketsTable.destinationDepartmentId, req.activeDepartment.id)
-          )
-        })
-        req.userTickets = tickets
-      } else {
-        req.userTickets = []
       }
     }
 

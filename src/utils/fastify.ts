@@ -32,7 +32,6 @@ export const registerViewFunction = (server: FastifyInstance) => {
           ...layoutAdditionalProps,
           activeDepartment: this.request.activeDepartment!,
           userDepartments: this.request.userDepartments || [],
-          userTickets: this.request.userTickets || [],
           devMode: false,
         })
       } else {

@@ -11,7 +11,6 @@ import { ToolInstance } from "$services/ToolsInstancesService"
 import { Organization } from "$services/OrganizationsService"
 import USER_IN_ORGANIZATION_ROLES from "./USER_IN_ORGANIZATION_ROLES"
 import { Department } from "$services/DepartmentsService"
-import { Ticket } from "$services/TicketsService"
 
 export type JsonSchemaFastifyInstance = FastifyInstance<
   RawServerDefault,
@@ -50,7 +49,6 @@ export type LayoutProps = {
   devMode: boolean
   activeDepartment : Department
   userDepartments: Department[]
-  userTickets: Ticket[]
 } & LayoutAdditionalProps
 export type LayoutFn = (props: LayoutProps) => JSX.Element
 

@@ -1,25 +1,26 @@
-/// <reference types="@kitajs/html/htmx.d.ts" />
-
 import Table, { TableConfig, TablePagination } from "$templates/components/tables/Table"
 import { Department } from "$services/DepartmentsService"
 import { Ticket } from "$services/TicketsService"
-import { ticketsTableId } from "./TicketsView"
-
-type TicketWithDepts = Ticket & {
-  senderDepartment?: Department | null
-  destinationDepartment?: Department | null
-}
+import TicketStatusBadge from "$templates/components/TicketStatusBadge"
+import { TicketsViewTab } from "$templates/views/TicketsView"
 
 type Props = {
-  items: TicketWithDepts[]
-  pagination: TablePagination
-  tab: "incoming" | "outgoing"
+  items: Ticket[]
+  pagination?: TablePagination
+  tab: TicketsViewTab
   baseUrl: string
   activeDepartment: Department | null
 }
 
-const TicketsTable = ({ items, pagination, tab, baseUrl, activeDepartment }: Props) => {
-  const config: TableConfig<TicketWithDepts>[] = [
+export const ticketsTableId = "tickets-table"
+
+const tabTypeToTabDisplayValueMapping: { [key in TicketsViewTab]: string  } = {
+  incoming: "incoming",
+  outgoing: "ongoing",
+}
+
+const TicketsTable = ({ items, pagination, tab, baseUrl }: Props) => {
+  const config: TableConfig<Ticket>[] = [
     {
       accessor: "id",
       heading: <>#</>,
@@ -46,11 +47,7 @@ const TicketsTable = ({ items, pagination, tab, baseUrl, activeDepartment }: Pro
       heading: <>Status</>,
       sortable: true,
       width: "120px",
-      render: (row) => (
-        <span class={`tickets-status-badge tickets-status-badge--${row.status}`} safe>
-          {row.status}
-        </span>
-      ),
+      render: (row) => <TicketStatusBadge status={row.status} />,
     },
     {
       accessor: "createdAt",
@@ -78,8 +75,8 @@ const TicketsTable = ({ items, pagination, tab, baseUrl, activeDepartment }: Pro
       baseUrl={baseUrl}
       additionalQueryParams={{ tab }}
       noDataProps={{
-        noDataMessage: `No ${tab} tickets`,
-        noDataFoundMessage: `No ${tab} tickets found`,
+        noDataMessage: `No ${tabTypeToTabDisplayValueMapping[tab]} tickets`,
+        noDataFoundMessage: `No ${tabTypeToTabDisplayValueMapping[tab]} tickets found`,
       }}
     />
   )
