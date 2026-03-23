@@ -240,12 +240,6 @@ void (async () => {
 
       await setCallerUser(req, res, user)
 
-      // ========== DEPARTMENTS ========== //
-      if (req.session.data.activeDepartmentId) {
-        const activeDepartment = await req.services.departmentsService.get(req.session.data.activeDepartmentId)
-        req.activeDepartment = activeDepartment
-      }
-
       // ========== USER DEPARTMENTS ========== //
       const departmentUserService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
       const userDepartmentLinks = await departmentUserService.list({
@@ -258,6 +252,35 @@ void (async () => {
         req.userDepartments = departments
       } else {
         req.userDepartments = []
+      }
+
+      // ========== DEPARTMENTS ========== //
+      if (req.session.data.activeDepartmentId) {
+        const activeDepartment = req.userDepartments.find(d => d.id === req.session.data.activeDepartmentId) ?? null
+
+        if (activeDepartment) {
+          req.activeDepartment = activeDepartment
+        } else if (req.userDepartments.length > 0) {
+          // Session department doesn't belong to this user — reset to their first department
+          const firstDepartment = req.userDepartments[0]
+          req.session.data = {
+            ...req.session.data,
+            activeDepartmentId: firstDepartment.id,
+          }
+          await req.session.save()
+          req.activeDepartment = firstDepartment
+        } else {
+          req.session.data = { ...req.session.data, activeDepartmentId: undefined! }
+          await req.session.save()
+        }
+      } else if (req.userDepartments.length > 0) {
+        const firstDepartment = req.userDepartments[0]
+        req.session.data = {
+          ...req.session.data,
+          activeDepartmentId: firstDepartment.id,
+        }
+        await req.session.save()
+        req.activeDepartment = firstDepartment
       }
     }
 
