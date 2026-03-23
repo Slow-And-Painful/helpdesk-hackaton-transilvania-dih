@@ -8,6 +8,7 @@ export const schemas = {
       properties: {
         name: { type: "string", minLength: 1, maxLength: 255 },
         destinationDepartmentId: { type: "integer" },
+        summary: { type: "string" },
       },
       required: ["name", "destinationDepartmentId"],
     },

@@ -6,6 +6,7 @@ import { TICKET_STATUS } from "$types/tickets"
 export const ticketsTable = pgTable("Tickets", {
   id: serial().primaryKey(),
   name: varchar({ length: 255 }).notNull(),
+  summary: varchar({ length: 1000 }),
   senderDepartmentId: integer().notNull().references(() => departmentsTable.id, { onDelete: "cascade" }),
   destinationDepartmentId: integer().notNull().references(() => departmentsTable.id, { onDelete: "cascade" }),
   status: varchar({ length: 255 }).notNull().default(TICKET_STATUS.OPEN).$type<TICKET_STATUS>(),

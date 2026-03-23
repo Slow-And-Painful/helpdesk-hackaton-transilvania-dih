@@ -1,0 +1,1 @@
+ALTER TABLE "Tickets" ADD COLUMN "summary" varchar(1000);
