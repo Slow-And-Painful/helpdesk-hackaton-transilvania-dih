@@ -11,11 +11,12 @@ import VerifyLoginCodeView, { VERIFY_LOGIN_CODE_ERROR } from "$templates/views/V
 import VerifyEmailCodeView, { VERIFY_EMAIL_CODE_ERROR } from "$templates/views/VerifyEmailView"
 import UsersComponent from "$components/UsersComponent"
 import { setCallerUser } from "$utils/user"
-import { DepartmentUserSchema, departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 import { eq, inArray } from "drizzle-orm"
 import DepartmentsService from "$services/DepartmentsService"
 import { departmentsTable } from "$dbSchemas/Departments"
 import DepartmentUserService from "$services/DepartmentUsersService"
+import Homepage from "$templates/views/Homepage"
 
 const codesComponent = container.resolve<CodesComponent>(CodesComponent.token)
 const usersComponent = container.resolve<UsersComponent>(UsersComponent.token)
@@ -212,7 +213,14 @@ export const router = createRouter("auth", (server) => {
     url: ROUTE.LOGOUT,
     handler: async (req, res) => {
       await req.session.destroy()
-      return res.redirect(getViewPath("public", "HOME"))
+      return res.headers({
+        "HX-Push-Url": "/",
+        "HX-Reswap": "outerHTML",
+        "HX-Retarget": "#page",
+      }).view(
+        <Homepage callerUser={null}/>,
+        BaseLayout
+      )
     }
   })
 })
