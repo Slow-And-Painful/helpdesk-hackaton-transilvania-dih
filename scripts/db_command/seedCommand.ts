@@ -3,13 +3,19 @@ import Configs from "$components/Configs"
 
 import { fakerIT as faker } from "@faker-js/faker"
 
-
-
 import UsersService from "$services/UsersService"
+import DepartmentsService from "$services/DepartmentsService"
+import DepartmentUserService from "$services/DepartmentUsersService"
+import TicketsService from "$services/TicketsService"
 import PostgresDB from "$components/PostgresDB"
 import { CommandHandler } from "./index"
 import USER_TYPE from "$types/USER_TYPE"
-import GlobalSettingsService from "$services/GlobalSettingsService"
+import { TICKET_STATUS } from "$types/tickets"
+
+const STAFF_COUNT = 10
+const CUSTOMER_COUNT = 30
+const DEPARTMENT_COUNT = 10
+const TICKETS_PER_DEPARTMENT = 2
 
 const seed = async () => {
   const { env } = container.resolve<Configs>(Configs.token)
@@ -19,7 +25,82 @@ const seed = async () => {
   }
 
   const usersService = container.resolve<UsersService>(UsersService.token)
-  const globalSettingsService = container.resolve<GlobalSettingsService>(GlobalSettingsService.token)
+  const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
+  const departmentUserService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
+  const ticketsService = container.resolve<TicketsService>(TicketsService.token)
+
+  // Staff users
+  console.log(`Seeding ${STAFF_COUNT} staff users...`)
+  const staffUsers = await usersService.insert(
+    Array.from({ length: STAFF_COUNT }, () => ({
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      email: faker.internet.email().toLowerCase(),
+      password: "password123",
+      type: USER_TYPE.STAFF,
+      privacyPolicyAcceptance: true,
+      termsConditionsAcceptance: true,
+      emailVerified: true,
+    }))
+  )
+
+  // Customer users
+  console.log(`Seeding ${CUSTOMER_COUNT} customer users...`)
+  const customerUsers = await usersService.insert(
+    Array.from({ length: CUSTOMER_COUNT }, () => ({
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      email: faker.internet.email().toLowerCase(),
+      password: "password123",
+      type: USER_TYPE.CUSTOMER,
+      privacyPolicyAcceptance: true,
+      termsConditionsAcceptance: true,
+      emailVerified: true,
+    }))
+  )
+
+  // Departments
+  console.log(`Seeding ${DEPARTMENT_COUNT} departments...`)
+  const departments = await departmentsService.insert(
+    Array.from({ length: DEPARTMENT_COUNT }, () => ({
+      name: faker.commerce.department(),
+    }))
+  )
+
+  // Assign each staff user to a department (round-robin)
+  console.log("Assigning staff to departments...")
+  await departmentUserService.insert(
+    staffUsers.map((user, i) => ({
+      userId: user.id,
+      departmentId: departments[i % departments.length].id,
+    }))
+  )
+
+  // Assign each customer to a department (round-robin)
+  console.log("Assigning customers to departments...")
+  await departmentUserService.insert(
+    customerUsers.map((user, i) => ({
+      userId: user.id,
+      departmentId: departments[i % departments.length].id,
+    }))
+  )
+
+  // Tickets: TICKETS_PER_DEPARTMENT per department, sender and destination are different departments
+  console.log(`Seeding ${TICKETS_PER_DEPARTMENT} tickets per department...`)
+  await ticketsService.insert(
+    departments.flatMap((dept, i) =>
+      Array.from({ length: TICKETS_PER_DEPARTMENT }, () => {
+        const destinationDept = departments[(i + 1 + Math.floor(Math.random() * (departments.length - 1))) % departments.length]
+        return {
+          name: faker.lorem.sentence({ min: 3, max: 6 }),
+          summary: faker.lorem.paragraph(),
+          senderDepartmentId: dept.id,
+          destinationDepartmentId: destinationDept.id,
+          status: Math.random() > 0.5 ? TICKET_STATUS.OPEN : TICKET_STATUS.CLOSED,
+        }
+      })
+    )
+  )
 
   console.log("Seeding completed.")
 }

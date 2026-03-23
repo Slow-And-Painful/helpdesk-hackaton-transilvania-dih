@@ -56,7 +56,7 @@ const getBaseCustomerSidebarItems = (_user: User, routerName: SidebarProps["rout
       icon: "new-chat",
       label: "Home",
       url: homePath,
-      isActive: (routerName as string) === "" || routerName === homePath,
+      isActive: (routerName as string).replace(/\/$/, "") === homePath.replace(/\/$/, ""),
     },
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
