@@ -22,8 +22,10 @@ import { AUTH_VIEW_ROUTE } from "./viewsRouter/auth/index"
 import { GlobalResources } from "$types/assets"
 import { USERS_PARTIALS_ROUTE, usersPartialsRouterPrefix } from "./partialsRouter/users"
 import { DEPARTMENTS_PARTIALS_ROUTE, departmentsPartialsRouterPrefix } from "./partialsRouter/departments"
+import { TICKETS_PARTIALS_ROUTE, ticketsPartialsRouterPrefix } from "./partialsRouter/tickets"
 import { AUTH_ACTIONS_ROUTE, authActionsRouterPrefix } from "./actionsRouter/auth"
 import { DEPARTMENTS_ACTIONS_ROUTE, departmentsActionsRouterPrefix } from "./actionsRouter/departments"
+import { TICKETS_ACTIONS_ROUTE, ticketsActionsRouterPrefix } from "./actionsRouter/tickets"
 import { DASHBOARD_VIEW_ROUTE, dashboardViewsRouterPrefix } from "./viewsRouter/dashboard"
 
 // ==================== ROUTER ===================== //
@@ -88,11 +90,13 @@ type ActionRouter =
 | "users"
 | "auth"
 | "departments"
+| "tickets"
 
 type ActionRoutersPaths = {
   users: typeof USERS_PARTIALS_ROUTE
   auth: typeof AUTH_ACTIONS_ROUTE
   departments: typeof DEPARTMENTS_ACTIONS_ROUTE
+  tickets: typeof TICKETS_ACTIONS_ROUTE
 }
 
 type ActionRoutersParams = {
@@ -118,6 +122,10 @@ const actionRoutersConfig: {
   departments: {
     paths: DEPARTMENTS_ACTIONS_ROUTE,
     prefix: departmentsActionsRouterPrefix
+  },
+  tickets: {
+    paths: TICKETS_ACTIONS_ROUTE,
+    prefix: ticketsActionsRouterPrefix
   },
 }
 
@@ -183,12 +191,14 @@ type PartialRouter =
 | "auth"
 | "users"
 | "departments"
+| "tickets"
 
 type PartialRoutersPaths = {
   common: typeof COMMON_PARTIALS_ROUTE,
   auth: typeof AUTH_PARTIALS_ROUTE,
   users: typeof USERS_PARTIALS_ROUTE,
   departments: typeof DEPARTMENTS_PARTIALS_ROUTE,
+  tickets: typeof TICKETS_PARTIALS_ROUTE,
 }
 
 type PartialRoutersParams = {
@@ -218,6 +228,10 @@ const partialRoutersConfig: {
   departments: {
     paths: DEPARTMENTS_PARTIALS_ROUTE,
     prefix: departmentsPartialsRouterPrefix
+  },
+  tickets: {
+    paths: TICKETS_PARTIALS_ROUTE,
+    prefix: ticketsPartialsRouterPrefix
   },
 }
 
