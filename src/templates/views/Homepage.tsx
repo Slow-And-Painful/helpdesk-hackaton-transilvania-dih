@@ -1,16 +1,31 @@
 import { getViewPath } from "$routers/website/utils"
+import { translations, type Language } from "$constants/translations"
 import { User } from "$services/UsersService"
 import Button from "$templates/components/Button"
 import Icon from "$templates/components/Icon"
 
 type Props = {
   callerUser: User | null
+  lang?: Language
 }
 
-const Homepage = (props: Props) => {
+const Homepage = ({ callerUser, lang = "en" }: Props) => {
+  const t = translations[lang]
+  const otherLang = lang === "ro" ? "en" : "ro"
+
   return (
     <div class="container h-full">
       <div class="min-h-full flex flex-col items-center justify-center px-4">
+        <div class="w-full flex justify-end pt-6">
+          <a
+            href={`${getViewPath("public", "HOME")}?lang=${otherLang}`}
+            hx-boost="true"
+            class="text-sm text-gray-400 hover:text-gray-300 transition-colors"
+          >
+            {lang === "ro" ? "English" : "Română"}
+          </a>
+        </div>
+
         {/* Hero Section */}
         <div class="flex flex-col items-center gap-y-8 max-w-4xl text-center">
           {/* Icon/Logo */}
@@ -21,42 +36,42 @@ const Homepage = (props: Props) => {
           {/* Headline */}
           <div class="flex flex-col gap-y-4">
             <h1 class="text-6xl md:text-7xl font-roboto-bold text-white leading-tight">
-              Transilvania Digital Innovation Hub
+              {t.homeTitle}
             </h1>
             <p class="text-xl text-gray-400 max-w-2xl">
-              Experience the power of intelligent assistance. Get answers, automate tasks, and boost your productivity.
+              {t.homeSubtitle}
             </p>
           </div>
 
           {/* CTA Buttons */}
           <div class="flex items-center justify-center gap-x-3 mt-4">
-            {props.callerUser !== null
+            {callerUser !== null
               ? <a
-                  href={getViewPath("dashboard", "HOME")}
+                  href={`${getViewPath("dashboard", "HOME")}?lang=${lang}`}
                   hx-boost="true"
                 >
                   <Button
                     preset="primary"
                     class="px-8 py-3 text-base"
                   >
-                    Go to your dashboard
+                    {t.goToDashboard}
                   </Button>
                 </a>
               : <>
                 <a
-                  href={getViewPath("auth", "SIGNUP")}
+                  href={`${getViewPath("auth", "SIGNUP", undefined)}?lang=${lang}`}
                   hx-boost="true"
                 >
                   <Button
                     preset="primary"
                     class="px-8 py-3 text-base"
                   >
-                    Get Started
+                    {t.getStarted}
                   </Button>
                 </a>
 
                 <a
-                  href={getViewPath("auth", "LOGIN", undefined)}
+                  href={`${getViewPath("auth", "LOGIN", undefined)}?lang=${lang}`}
                   hx-boost="true"
                 >
                   <Button
@@ -64,7 +79,7 @@ const Homepage = (props: Props) => {
                     outline
                     class="px-8 py-3 text-base"
                   >
-                    Sign In
+                    {t.signIn}
                   </Button>
                 </a>
               </>
@@ -78,9 +93,9 @@ const Homepage = (props: Props) => {
             <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-950/30 border border-blue-900/50">
               <Icon name="zap" size={24} class="text-blue-400" />
             </div>
-            <h3 class="text-lg font-roboto-semibold text-white">Lightning Fast</h3>
+            <h3 class="text-lg font-roboto-semibold text-white">{t.lightningFast}</h3>
             <p class="text-sm text-gray-400">
-              Get instant responses powered by cutting-edge AI technology
+              {t.lightningFastDescription}
             </p>
           </div>
 
@@ -88,9 +103,9 @@ const Homepage = (props: Props) => {
             <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-purple-950/30 border border-purple-900/50">
               <Icon name="shield" size={24} class="text-purple-400" />
             </div>
-            <h3 class="text-lg font-roboto-semibold text-white">Secure & Private</h3>
+            <h3 class="text-lg font-roboto-semibold text-white">{t.securePrivate}</h3>
             <p class="text-sm text-gray-400">
-              Your data is protected with enterprise-grade security
+              {t.securePrivateDescription}
             </p>
           </div>
 
@@ -98,9 +113,9 @@ const Homepage = (props: Props) => {
             <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-green-950/30 border border-green-900/50">
               <Icon name="trending-up" size={24} class="text-green-400" />
             </div>
-            <h3 class="text-lg font-roboto-semibold text-white">Always Learning</h3>
+            <h3 class="text-lg font-roboto-semibold text-white">{t.alwaysLearning}</h3>
             <p class="text-sm text-gray-400">
-              Continuously improving to serve you better every day
+              {t.alwaysLearningDescription}
             </p>
           </div>
         </div>

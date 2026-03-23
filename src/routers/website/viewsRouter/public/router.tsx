@@ -3,6 +3,7 @@ import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import Homepage from "$templates/views/Homepage"
 import { BaseLayout } from "$templates/layouts"
+import { getLanguage } from "$utils/i18n"
 
 export const router = createRouter("public", (server) => {
   server.route({
@@ -13,7 +14,10 @@ export const router = createRouter("public", (server) => {
       const callerUser = req.callerUser
 
       return res.view(
-        <Homepage callerUser={callerUser} />,
+        <Homepage
+        callerUser={callerUser}
+        lang={getLanguage((req.query as { lang?: string }).lang)}
+      />,
         BaseLayout
       )
     }

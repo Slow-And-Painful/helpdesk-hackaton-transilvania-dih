@@ -11,7 +11,6 @@ export type GlobalResourcesFavicon = {
   "apple-touch-icon.png": string
   "favicon-16x16.png": string
   "favicon-32x32.png": string
-  "favicon-96x96.png": string
   "favicon.ico": string
   "site.webmanifest": string
 }
@@ -30,14 +29,7 @@ export type GlobalResourcesFonts = {
 }
 
 export type GlobalResourcesImages = {
-  "authBg": string
-  "challengesEmpty": string
-  "grid": string
-  "heroBg": string
-  "homeHeroBg": string
-  "homeHero": string
-  "homeOverview": string
-  "resultsEmpty": string
+  "261 RIGHT": string
 }
 
 export type GlobalResourcesScripts = {

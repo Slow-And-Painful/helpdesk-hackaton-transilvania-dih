@@ -11,11 +11,12 @@ import VerifyLoginCodeView, { VERIFY_LOGIN_CODE_ERROR } from "$templates/views/V
 import VerifyEmailCodeView, { VERIFY_EMAIL_CODE_ERROR } from "$templates/views/VerifyEmailView"
 import UsersComponent from "$components/UsersComponent"
 import { setCallerUser } from "$utils/user"
-import { DepartmentUserSchema, departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 import { eq, inArray } from "drizzle-orm"
 import DepartmentsService from "$services/DepartmentsService"
 import { departmentsTable } from "$dbSchemas/Departments"
 import DepartmentUserService from "$services/DepartmentUsersService"
+import { getLanguage } from "$utils/i18n"
 
 const codesComponent = container.resolve<CodesComponent>(CodesComponent.token)
 const usersComponent = container.resolve<UsersComponent>(UsersComponent.token)
@@ -35,7 +36,7 @@ export const router = createRouter("auth", (server) => {
       }
 
       return res.view(
-        <LoginView />,
+        <LoginView lang={getLanguage((req.query as { lang?: string }).lang)} />,
         BaseLayout
       )
     }
@@ -53,7 +54,7 @@ export const router = createRouter("auth", (server) => {
       }
 
       return res.view(
-        <SignupView />,
+        <SignupView lang={getLanguage((req.query as { lang?: string }).lang)} />,
         BaseLayout
       )
     }
@@ -125,7 +126,7 @@ export const router = createRouter("auth", (server) => {
       await req.session.save()
 
       await setCallerUser(req, res, user)
-      
+
       return res.redirect(getViewPath("dashboard", "HOME"))
     }
   })
@@ -205,7 +206,7 @@ export const router = createRouter("auth", (server) => {
       return res.redirect(getViewPath("dashboard", "HOME"))
     }
   })
-  
+
   server.route({
     method: "GET",
     schema: schemas[ROUTE.LOGOUT],
