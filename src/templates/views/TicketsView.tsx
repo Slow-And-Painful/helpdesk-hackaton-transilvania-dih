@@ -1,24 +1,17 @@
-/// <reference types="@kitajs/html/htmx.d.ts" />
-
 import DashboardPage from "$templates/components/DashboardPage"
 import { Department } from "$services/DepartmentsService"
 import { Ticket } from "$services/TicketsService"
 import { TablePagination } from "$templates/components/tables/Table"
-import TicketsTable from "./TicketsTable"
-import classNames from "classnames"
+import TicketsTable from "$templates/components/tables/TicketsTable"
+import Tabs from "$templates/components/Tabs"
 
-export const ticketsTableId = "tickets-table"
-
-type TicketWithDepts = Ticket & {
-  senderDepartment?: Department | null
-  destinationDepartment?: Department | null
-}
+export type TicketsViewTab = "incoming" | "outgoing"
 
 type Props = {
-  items: TicketWithDepts[]
-  pagination: TablePagination
+  items: Ticket[]
+  pagination?: TablePagination
   activeDepartment: Department | null
-  tab: "incoming" | "outgoing"
+  tab: TicketsViewTab
   baseUrl: string
 }
 
@@ -34,30 +27,22 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
         </div>
       }
     >
-      <div class="tickets-tabs">
-        <a
-          class={classNames("tickets-tabs__tab", { "tickets-tabs__tab--active": tab === "incoming" })}
-          href={`${baseUrl}?tab=incoming`}
-          hx-boost="true"
-        >
-          Incoming
-        </a>
-        <a
-          class={classNames("tickets-tabs__tab", { "tickets-tabs__tab--active": tab === "outgoing" })}
-          href={`${baseUrl}?tab=outgoing`}
-          hx-boost="true"
-        >
-          Outgoing
-        </a>
-      </div>
+      <div class={"flex flex-col gap-y-6"}>
+        <Tabs
+          items={[
+            { title: "Incoming", href: `${baseUrl}?tab=incoming`, active: tab === "incoming" },
+            { title: "Outgoing", href: `${baseUrl}?tab=outgoing`, active: tab === "outgoing" },
+          ]}
+        />
 
-      <TicketsTable
-        items={items}
-        pagination={pagination}
-        tab={tab}
-        baseUrl={baseUrl}
-        activeDepartment={activeDepartment}
-      />
+        <TicketsTable
+          items={items}
+          pagination={pagination}
+          tab={tab}
+          baseUrl={baseUrl}
+          activeDepartment={activeDepartment}
+        />
+      </div>
     </DashboardPage>
   )
 }

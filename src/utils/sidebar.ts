@@ -1,5 +1,4 @@
 import { Department } from "$services/DepartmentsService"
-import { Ticket } from "$services/TicketsService"
 import { User } from "$services/UsersService"
 import { IconName } from "$templates/components/Icon"
 import USER_TYPE from "$types/USER_TYPE"
@@ -23,7 +22,6 @@ export type SidebarProps = {
   authenticatedUser: User | null
   activeDepartment: Department
   userDepartments: Department[]
-  userTickets: Ticket[]
 }
 
 type SidebarSimpleLink = {
