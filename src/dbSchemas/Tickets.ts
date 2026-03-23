@@ -1,13 +1,15 @@
-import { pgTable, varchar, serial, integer } from "drizzle-orm/pg-core"
+import { pgTable, varchar, serial, integer, timestamp } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 import { departmentsTable } from "./Departments"
 import { TICKET_STATUS } from "$types/tickets"
 
 export const ticketsTable = pgTable("Tickets", {
   id: serial().primaryKey(),
+  name: varchar({ length: 255 }).notNull(),
   senderDepartmentId: integer().notNull().references(() => departmentsTable.id, { onDelete: "cascade" }),
   destinationDepartmentId: integer().notNull().references(() => departmentsTable.id, { onDelete: "cascade" }),
   status: varchar({ length: 255 }).notNull().default(TICKET_STATUS.OPEN).$type<TICKET_STATUS>(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 })
 
 export const ticketsRelations = relations(
