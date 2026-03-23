@@ -1,20 +1,21 @@
-/// <reference types="@kitajs/html/htmx.d.ts" />
-
 import DashboardPage from "$templates/components/DashboardPage"
 import { Department } from "$services/DepartmentsService"
 import { Ticket } from "$services/TicketsService"
+import { TablePagination } from "$templates/components/tables/Table"
+import TicketsTable from "$templates/components/tables/TicketsTable"
+import Tabs from "$templates/components/Tabs"
 
-type TicketWithDepts = Ticket & {
-  senderDepartment?: Department | null
-  destinationDepartment?: Department | null
-}
+export type TicketsViewTab = "incoming" | "outgoing"
 
 type Props = {
-  tickets: TicketWithDepts[]
+  items: Ticket[]
+  pagination?: TablePagination
   activeDepartment: Department | null
+  tab: TicketsViewTab
+  baseUrl: string
 }
 
-const TicketsView = ({ tickets: _tickets, activeDepartment }: Props) => {
+const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Props) => {
   return (
     <DashboardPage
       title={
@@ -26,7 +27,22 @@ const TicketsView = ({ tickets: _tickets, activeDepartment }: Props) => {
         </div>
       }
     >
+      <div class={"flex flex-col gap-y-6"}>
+        <Tabs
+          items={[
+            { title: "Incoming", href: `${baseUrl}?tab=incoming`, active: tab === "incoming" },
+            { title: "Outgoing", href: `${baseUrl}?tab=outgoing`, active: tab === "outgoing" },
+          ]}
+        />
 
+        <TicketsTable
+          items={items}
+          pagination={pagination}
+          tab={tab}
+          baseUrl={baseUrl}
+          activeDepartment={activeDepartment}
+        />
+      </div>
     </DashboardPage>
   )
 }

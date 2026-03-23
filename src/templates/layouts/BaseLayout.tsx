@@ -22,7 +22,6 @@ export function BaseLayout({
   authenticatedUser,
   activeDepartment,
   userDepartments = [],
-  userTickets = [],
 }: LayoutProps) {
   if (isHtmxRequest) {
     return (
@@ -37,7 +36,6 @@ export function BaseLayout({
                 user={user}
                 activeDepartment={activeDepartment}
                 userDepartments={userDepartments}
-                userTickets={userTickets}
               /> : null
           }
 
@@ -68,7 +66,6 @@ export function BaseLayout({
                   user={user}
                   activeDepartment={activeDepartment}
                   userDepartments={userDepartments}
-                  userTickets={userTickets}
                 /> : null
             }
               

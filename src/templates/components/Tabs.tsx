@@ -31,7 +31,7 @@ const Tabs = ({
               </div>
               :
               title as "safe"
-            
+
             return (
               <li
                 class={classNames("tabs__item", {

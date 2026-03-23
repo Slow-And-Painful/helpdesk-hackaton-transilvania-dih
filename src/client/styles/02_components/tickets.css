@@ -87,3 +87,17 @@
 .tickets-table__counterpart {
   @apply text-gray-400;
 }
+
+/* ==================== STATUS BADGE ==================== */
+
+.tickets-status-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-roboto-medium;
+}
+
+.tickets-status-badge--open {
+  @apply bg-green-500/15 text-green-400;
+}
+
+.tickets-status-badge--closed {
+  @apply bg-gray-500/15 text-gray-400;
+}
