@@ -3,6 +3,11 @@
 import DashboardPage from "$templates/components/DashboardPage"
 import { Department } from "$services/DepartmentsService"
 import { Ticket } from "$services/TicketsService"
+import { TablePagination } from "$templates/components/tables/Table"
+import TicketsTable from "./TicketsTable"
+import classNames from "classnames"
+
+export const ticketsTableId = "tickets-table"
 
 type TicketWithDepts = Ticket & {
   senderDepartment?: Department | null
@@ -10,12 +15,14 @@ type TicketWithDepts = Ticket & {
 }
 
 type Props = {
-  incomingTickets: TicketWithDepts[]
-  outgoingTickets: TicketWithDepts[]
+  items: TicketWithDepts[]
+  pagination: TablePagination
   activeDepartment: Department | null
+  tab: "incoming" | "outgoing"
+  baseUrl: string
 }
 
-const TicketsView = ({ incomingTickets, outgoingTickets, activeDepartment }: Props) => {
+const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Props) => {
   return (
     <DashboardPage
       title={
@@ -27,47 +34,30 @@ const TicketsView = ({ incomingTickets, outgoingTickets, activeDepartment }: Pro
         </div>
       }
     >
-      <div class="tickets-page__section">
-        <h2>Incoming Tickets</h2>
-        {incomingTickets.length === 0 ? (
-          <p class="tickets-page__empty">No incoming tickets</p>
-        ) : (
-          <ul class="tickets-page__list">
-            {incomingTickets.map(ticket => (
-              <li class="tickets-page__item" data-status={ticket.status}>
-                <span class="tickets-page__item-id">#{ticket.id}</span>
-                <span class="tickets-page__item-from" safe>
-                  From: {ticket.senderDepartment?.name ?? 'Unknown'}
-                </span>
-                <span class={`tickets-page__item-status tickets-page__item-status--${ticket.status}`} safe>
-                  {ticket.status}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
+      <div class="tickets-tabs">
+        <a
+          class={classNames("tickets-tabs__tab", { "tickets-tabs__tab--active": tab === "incoming" })}
+          href={`${baseUrl}?tab=incoming`}
+          hx-boost="true"
+        >
+          Incoming
+        </a>
+        <a
+          class={classNames("tickets-tabs__tab", { "tickets-tabs__tab--active": tab === "outgoing" })}
+          href={`${baseUrl}?tab=outgoing`}
+          hx-boost="true"
+        >
+          Outgoing
+        </a>
       </div>
 
-      <div class="tickets-page__section">
-        <h2>Outgoing Tickets</h2>
-        {outgoingTickets.length === 0 ? (
-          <p class="tickets-page__empty">No outgoing tickets</p>
-        ) : (
-          <ul class="tickets-page__list">
-            {outgoingTickets.map(ticket => (
-              <li class="tickets-page__item" data-status={ticket.status}>
-                <span class="tickets-page__item-id">#{ticket.id}</span>
-                <span class="tickets-page__item-to" safe>
-                  To: {ticket.destinationDepartment?.name ?? 'Unknown'}
-                </span>
-                <span class={`tickets-page__item-status tickets-page__item-status--${ticket.status}`} safe>
-                  {ticket.status}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <TicketsTable
+        items={items}
+        pagination={pagination}
+        tab={tab}
+        baseUrl={baseUrl}
+        activeDepartment={activeDepartment}
+      />
     </DashboardPage>
   )
 }

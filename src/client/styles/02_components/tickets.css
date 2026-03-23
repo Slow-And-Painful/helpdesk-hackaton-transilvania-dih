@@ -87,3 +87,39 @@
 .tickets-table__counterpart {
   @apply text-gray-400;
 }
+
+/* ==================== TABS ==================== */
+
+.tickets-tabs {
+  @apply flex gap-1 mb-5 bg-gray-900 border border-gray-800 rounded-xl p-1 w-fit;
+}
+
+.tickets-tabs__tab {
+  @apply px-5 py-2 text-sm rounded-lg text-gray-400 transition-all duration-200 cursor-pointer font-roboto-medium;
+
+  &:hover {
+    @apply text-white bg-gray-800;
+  }
+}
+
+.tickets-tabs__tab--active {
+  @apply bg-primary-700 text-white;
+
+  &:hover {
+    @apply bg-primary-600;
+  }
+}
+
+/* ==================== STATUS BADGE ==================== */
+
+.tickets-status-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-roboto-medium;
+}
+
+.tickets-status-badge--open {
+  @apply bg-green-500/15 text-green-400;
+}
+
+.tickets-status-badge--closed {
+  @apply bg-gray-500/15 text-gray-400;
+}
