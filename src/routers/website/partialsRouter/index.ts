@@ -5,6 +5,7 @@ import { commonPartialsRouterPrefix, commonRouter } from "./common"
 import { authPartialsRouterPrefix, authRouter } from "./auth"
 import { usersPartialsRouter, usersPartialsRouterPrefix } from "./users"
 import { departmentsPartialsRouter, departmentsPartialsRouterPrefix } from "./departments"
+import { ticketsPartialsRouter, ticketsPartialsRouterPrefix } from "./tickets"
 
 const routerPrefix = "/partials"
 
@@ -13,6 +14,7 @@ const router: FastifyPluginCallback = (server, _, done) => {
   registerPartialsRouter(server, authRouter, authPartialsRouterPrefix)
   registerPartialsRouter(server, usersPartialsRouter, usersPartialsRouterPrefix)
   registerPartialsRouter(server, departmentsPartialsRouter, departmentsPartialsRouterPrefix)
+  registerPartialsRouter(server, ticketsPartialsRouter, ticketsPartialsRouterPrefix)
 
   return done()
 }

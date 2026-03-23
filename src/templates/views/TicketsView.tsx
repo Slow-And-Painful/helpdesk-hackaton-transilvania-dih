@@ -4,6 +4,8 @@ import { Ticket } from "$services/TicketsService"
 import { TablePagination } from "$templates/components/tables/Table"
 import TicketsTable from "$templates/components/tables/TicketsTable"
 import Tabs from "$templates/components/Tabs"
+import Button from "$templates/components/Button"
+import { getPartialPath } from "$routers/website/utils"
 
 export type TicketsViewTab = "incoming" | "outgoing"
 
@@ -42,6 +44,19 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
           baseUrl={baseUrl}
           activeDepartment={activeDepartment}
         />
+
+        <div class="tickets-create-btn-wrap">
+          <Button
+            preset="primary"
+            size="sm"
+            icon="plus"
+            hx-get={getPartialPath("tickets", "CREATE_TICKET_MODAL")}
+            hx-target="#modal"
+            hx-swap="innerHTML"
+          >
+            Create Ticket
+          </Button>
+        </div>
       </div>
     </DashboardPage>
   )
