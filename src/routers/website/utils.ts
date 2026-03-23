@@ -27,6 +27,7 @@ import { AUTH_ACTIONS_ROUTE, authActionsRouterPrefix } from "./actionsRouter/aut
 import { DEPARTMENTS_ACTIONS_ROUTE, departmentsActionsRouterPrefix } from "./actionsRouter/departments"
 import { TICKETS_ACTIONS_ROUTE, ticketsActionsRouterPrefix } from "./actionsRouter/tickets"
 import { DASHBOARD_VIEW_ROUTE, dashboardViewsRouterPrefix } from "./viewsRouter/dashboard"
+import { WAITING_ROOM_VIEW_ROUTE } from "./viewsRouter/waitingRoom"
 
 // ==================== ROUTER ===================== //
 
@@ -282,15 +283,17 @@ export function registerViewsRouter(
   )
 }
 
-type ViewRouter = 
-| "public" 
+type ViewRouter =
+| "public"
 | "auth"
 | "dashboard"
+| "waitingRoom"
 
 type ViewRoutersPaths = {
   public: typeof PUBLIC_VIEW_ROUTE
   auth: typeof AUTH_VIEW_ROUTE
   dashboard: typeof DASHBOARD_VIEW_ROUTE
+  waitingRoom: typeof WAITING_ROOM_VIEW_ROUTE
 }
 
 export type ViewRoute<R extends ViewRouter = ViewRouter> = [
@@ -327,6 +330,9 @@ const viewRoutersConfig: {
   dashboard: {
     paths: DASHBOARD_VIEW_ROUTE,
     prefix: dashboardViewsRouterPrefix
+  },
+  waitingRoom: {
+    paths: WAITING_ROOM_VIEW_ROUTE,
   },
 }
 
