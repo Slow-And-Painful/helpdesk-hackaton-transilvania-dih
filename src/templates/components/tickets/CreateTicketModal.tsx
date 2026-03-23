@@ -4,6 +4,7 @@ import Form from "$templates/components/Form"
 import FormControl from "$templates/components/FormControl"
 import Input from "$templates/components/Input"
 import Select, { SelectOptions } from "$templates/components/Select"
+import Textarea from "$templates/components/Textarea"
 import { Department } from "$services/DepartmentsService"
 import { getActionPath } from "$routers/website/utils"
 
@@ -50,8 +51,8 @@ export default function CreateTicketModal({ departments, activeDepartmentId }: P
           ["hx-on::before-request"]: "onFormBeforeRequest(event.target)",
         }}
         hx-target-error={`#${formId}`}
-        values={{ name: "", destinationDepartmentId: departmentOptions[0]?.value?.toString() ?? "" }}
-        initialValues={{ name: "", destinationDepartmentId: departmentOptions[0]?.value?.toString() ?? "" }}
+        values={{ name: "", summary: "", destinationDepartmentId: departmentOptions[0]?.value?.toString() ?? "" }}
+        initialValues={{ name: "", summary: "", destinationDepartmentId: departmentOptions[0]?.value?.toString() ?? "" }}
         render={({ errors, values, formId }) => (
           <div class="flex flex-col gap-y-4">
             <FormControl name="name" formId={formId} showChanged={false}>
@@ -64,7 +65,20 @@ export default function CreateTicketModal({ departments, activeDepartmentId }: P
                 error={errors?.name}
                 value={values?.name}
                 placeholder="Enter ticket name"
+                size={"sm"}
               />
+            </FormControl>
+
+            <FormControl name="summary" formId={formId} showChanged={false}>
+              <Textarea
+                id={`${formId}-summary`}
+                label="Summary"
+                name="summary"
+                placeholder="Enter ticket summary"
+                error={errors?.summary}
+                maxLength={1000}
+                initialLength={values?.summary?.length ?? 0}
+              >{values?.summary}</Textarea>
             </FormControl>
 
             <FormControl name="destinationDepartmentId" formId={formId} showChanged={false}>
