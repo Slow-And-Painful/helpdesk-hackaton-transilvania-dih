@@ -97,15 +97,3 @@
 .tickets-status-badge--closed {
   @apply bg-gray-500/15 text-gray-400;
 }
-
-/* ==================== CREATE BUTTON ==================== */
-
-.tickets-create-btn-wrap {
-  @apply flex justify-end mt-4;
-}
-
-/* ==================== CREATE TICKET MODAL ==================== */
-
-#create-ticket-modal .modal__content {
-  overflow: visible;
-}

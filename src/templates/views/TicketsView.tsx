@@ -58,19 +58,6 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
           baseUrl={baseUrl}
           activeDepartment={activeDepartment}
         />
-
-        <div class="tickets-create-btn-wrap">
-          <Button
-            preset="primary"
-            size="sm"
-            icon="plus"
-            hx-get={getPartialPath("tickets", "CREATE_TICKET_MODAL")}
-            hx-target="#modal"
-            hx-swap="innerHTML"
-          >
-            Create Ticket
-          </Button>
-        </div>
       </div>
     </DashboardPage>
   )
