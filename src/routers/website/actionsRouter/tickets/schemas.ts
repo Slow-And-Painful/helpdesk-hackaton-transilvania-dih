@@ -13,4 +13,13 @@ export const schemas = {
       required: ["name", "destinationDepartmentId"],
     },
   } as const satisfies FastifySchema,
+  [ROUTE.CLOSE]: {
+    body: {
+      type: "object",
+      properties: {
+        ticketId: { type: "integer" },
+      },
+      required: ["ticketId"],
+    },
+  } as const satisfies FastifySchema,
 }

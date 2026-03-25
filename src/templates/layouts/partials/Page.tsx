@@ -19,6 +19,7 @@ export function Page({ children, toasts }: Props) {
       </div>
       <div id="tooltip" />
       <div id="modal" />
+      <div id="drawer" />
     </div>
   )
 }
