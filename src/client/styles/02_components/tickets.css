@@ -97,3 +97,99 @@
 .tickets-status-badge--closed {
   @apply bg-gray-500/15 text-gray-400;
 }
+
+/* ==================== TICKET DETAIL DRAWER ==================== */
+
+.ticket-drawer {
+  @apply fixed inset-0 z-50 pointer-events-none;
+
+  &.is-open {
+    @apply pointer-events-auto;
+  }
+}
+
+.ticket-drawer__overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm cursor-pointer;
+  animation: drawer-overlay-in 0.2s ease-out forwards;
+}
+
+.ticket-drawer__panel {
+  @apply fixed top-0 right-0 h-full w-[420px] max-w-[90vw]
+    bg-gray-900 border-l border-gray-800
+    flex flex-col shadow-2xl;
+  animation: drawer-slide-in 0.25s ease-out forwards;
+}
+
+.ticket-drawer__header {
+  @apply flex items-center justify-between px-6 py-4 border-b border-gray-800;
+}
+
+.ticket-drawer__title {
+  @apply text-lg font-roboto-medium text-gray-100;
+}
+
+.ticket-drawer__close {
+  @apply text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-800;
+}
+
+.ticket-drawer__body {
+  @apply flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-y-4;
+}
+
+.ticket-drawer__id {
+  @apply flex items-center gap-3;
+}
+
+.ticket-drawer__name {
+  @apply text-xl font-roboto-medium text-white leading-snug;
+}
+
+.ticket-drawer__section {
+  @apply flex flex-col gap-y-1.5;
+}
+
+.ticket-drawer__label {
+  @apply text-xs uppercase tracking-wider text-gray-500 font-roboto-medium;
+}
+
+.ticket-drawer__text {
+  @apply text-sm text-gray-300 leading-relaxed whitespace-pre-wrap;
+}
+
+.ticket-drawer__divider {
+  @apply border-t border-gray-800 my-1;
+}
+
+.ticket-drawer__details {
+  @apply flex flex-col gap-y-3;
+}
+
+.ticket-drawer__detail-row {
+  @apply flex items-center justify-between;
+}
+
+.ticket-drawer__value {
+  @apply text-sm text-gray-200;
+}
+
+.ticket-drawer__footer {
+  @apply flex items-center justify-end px-6 py-4 border-t border-gray-800;
+}
+
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawer-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

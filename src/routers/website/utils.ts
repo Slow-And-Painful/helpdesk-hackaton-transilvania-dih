@@ -206,6 +206,9 @@ type PartialRoutersParams = {
   auth: {
     TEST: { targetEntityId: number }
   }
+  tickets: {
+    TICKET_DETAIL: { ticketId: number }
+  }
 }
 
 const partialRoutersConfig: {

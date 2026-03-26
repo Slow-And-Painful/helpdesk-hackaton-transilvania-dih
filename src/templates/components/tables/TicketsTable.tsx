@@ -3,6 +3,7 @@ import { Department } from "$services/DepartmentsService"
 import { Ticket } from "$services/TicketsService"
 import TicketStatusBadge from "$templates/components/TicketStatusBadge"
 import { TicketsViewTab } from "$templates/views/TicketsView"
+import { getPartialPath } from "$routers/website/utils"
 
 type Props = {
   items: Ticket[]
@@ -32,6 +33,17 @@ const TicketsTable = ({ items, pagination, tab, baseUrl }: Props) => {
       accessor: "name",
       heading: <>Name</>,
       sortable: true,
+      render: (row) => (
+        <button
+          type="button"
+          class="text-left text-primary-500 hover:text-primary-400 transition-colors cursor-pointer"
+          hx-get={getPartialPath("tickets", "TICKET_DETAIL", { ticketId: row.id })}
+          hx-target="#drawer"
+          hx-swap="innerHTML"
+        >
+          <span safe>{row.name}</span>
+        </button>
+      ),
     },
     {
       accessor: tab === "incoming" ? "senderDepartmentId" : "destinationDepartmentId",
@@ -47,7 +59,7 @@ const TicketsTable = ({ items, pagination, tab, baseUrl }: Props) => {
       heading: <>Status</>,
       sortable: true,
       width: "120px",
-      render: (row) => <TicketStatusBadge status={row.status} />,
+      render: (row) => <span id={`ticket-row-status-${row.id}`}><TicketStatusBadge status={row.status} /></span>,
     },
     {
       accessor: "createdAt",
