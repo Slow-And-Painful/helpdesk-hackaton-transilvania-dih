@@ -5,6 +5,9 @@ import USER_ROLE from "$types/USER_ROLES"
 import { DashboardLayout } from "$templates/layouts/DashboardLayout"
 import ChatbotView from "$templates/views/ChatbotView"
 import TicketsView from "$templates/views/TicketsView"
+import DepartmentUsersView from "$templates/views/DepartmentUsersView"
+import DepartmentSettingsView from "$templates/views/DepartmentSettingsView"
+import DepartmentDocumentsView from "$templates/views/DepartmentDocumentsView"
 import TicketsTable, { ticketsTableId } from "$templates/components/tables/TicketsTable"
 import { container } from "tsyringe"
 import TicketsService from "$services/TicketsService"
@@ -99,6 +102,60 @@ export const router = createRouter("dashboard", (server) => {
           tab={tab}
           baseUrl={baseUrl}
         />,
+        DashboardLayout
+      )
+    }
+  })
+
+  server.route({
+    url: ROUTE.USERS,
+    method: "GET",
+    schema: schemas[ROUTE.USERS],
+    config: {
+      security: {
+        session: `${USER_ROLE.DEPARTMENT_ADMIN}`
+      },
+      authenticated: true
+    },
+    handler: (req, res) => {
+      return res.view(
+        <DepartmentUsersView activeDepartment={req.activeDepartment} />,
+        DashboardLayout
+      )
+    }
+  })
+
+  server.route({
+    url: ROUTE.DEPARTMENT,
+    method: "GET",
+    schema: schemas[ROUTE.DEPARTMENT],
+    config: {
+      security: {
+        session: `${USER_ROLE.DEPARTMENT_ADMIN}`
+      },
+      authenticated: true
+    },
+    handler: (req, res) => {
+      return res.view(
+        <DepartmentSettingsView activeDepartment={req.activeDepartment} />,
+        DashboardLayout
+      )
+    }
+  })
+
+  server.route({
+    url: ROUTE.DOCUMENTS,
+    method: "GET",
+    schema: schemas[ROUTE.DOCUMENTS],
+    config: {
+      security: {
+        session: `${USER_ROLE.DEPARTMENT_ADMIN}`
+      },
+      authenticated: true
+    },
+    handler: (req, res) => {
+      return res.view(
+        <DepartmentDocumentsView activeDepartment={req.activeDepartment} />,
         DashboardLayout
       )
     }

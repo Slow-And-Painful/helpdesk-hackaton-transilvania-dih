@@ -11,6 +11,7 @@ import PostgresDB from "$components/PostgresDB"
 import { CommandHandler } from "./index"
 import USER_TYPE from "$types/USER_TYPE"
 import { TICKET_STATUS } from "$types/tickets"
+import { DEPARTMENT_USER_ROLE } from "$types/departments"
 
 const STAFF_COUNT = 10
 const CUSTOMER_COUNT = 30
@@ -31,7 +32,7 @@ const seed = async () => {
 
   // Staff users
   console.log(`Seeding ${STAFF_COUNT} staff users...`)
-  const staffUsers = await usersService.insert(
+  await usersService.insert(
     Array.from({ length: STAFF_COUNT }, () => ({
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
@@ -46,7 +47,20 @@ const seed = async () => {
 
   // Customer users
   console.log(`Seeding ${CUSTOMER_COUNT} customer users...`)
-  const customerUsers = await usersService.insert(
+  const customerUsersMembers = await usersService.insert(
+    Array.from({ length: CUSTOMER_COUNT }, () => ({
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      email: faker.internet.email().toLowerCase(),
+      password: "password123",
+      type: USER_TYPE.CUSTOMER,
+      privacyPolicyAcceptance: true,
+      termsConditionsAcceptance: true,
+      emailVerified: true,
+    }))
+  )
+
+  const customerUsersAdmins = await usersService.insert(
     Array.from({ length: CUSTOMER_COUNT }, () => ({
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
@@ -69,19 +83,28 @@ const seed = async () => {
 
   // Assign each staff user to a department (round-robin)
   console.log("Assigning staff to departments...")
-  await departmentUserService.insert(
-    staffUsers.map((user, i) => ({
-      userId: user.id,
-      departmentId: departments[i % departments.length].id,
-    }))
-  )
+  // await departmentUserService.insert(
+  //   staffUsers.map((user, i) => ({
+  //     userId: user.id,
+  //     departmentId: departments[i % departments.length].id,
+  //   }))
+  // )
 
   // Assign each customer to a department (round-robin)
-  console.log("Assigning customers to departments...")
+  console.log("Assigning member customers to departments...")
   await departmentUserService.insert(
-    customerUsers.map((user, i) => ({
+    customerUsersMembers.map((user, i) => ({
       userId: user.id,
       departmentId: departments[i % departments.length].id,
+      role: DEPARTMENT_USER_ROLE.MEMBER
+    }))
+  )
+  console.log("Assigning admin customers to departments...")
+  await departmentUserService.insert(
+    customerUsersAdmins.map((user, i) => ({
+      userId: user.id,
+      departmentId: departments[i % departments.length].id,
+      role: DEPARTMENT_USER_ROLE.ADMIN
     }))
   )
 

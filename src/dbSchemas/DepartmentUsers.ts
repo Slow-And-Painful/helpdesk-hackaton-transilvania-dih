@@ -1,8 +1,9 @@
-import { pgTable, serial, timestamp, integer, unique } from "drizzle-orm/pg-core"
+import { pgTable, serial, timestamp, integer, unique, varchar } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 // import { ORGANIZATION_USER_ROLE } from "$types/organization"
 import { usersTable } from "./Users"
 import { departmentsTable } from "./Departments"
+import { DEPARTMENT_USER_ROLE } from "$types/departments"
 
 export const departmentUsersTable = pgTable("DepartmentUsers", {
   id: serial().primaryKey(),
@@ -11,6 +12,8 @@ export const departmentUsersTable = pgTable("DepartmentUsers", {
   departmentId: integer().notNull().references(() => departmentsTable.id, { onDelete: "cascade" }),
   // blocked: boolean().notNull().default(false),
   userId: integer().notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+
+  role: varchar({ length: 255 }).notNull().$type<DEPARTMENT_USER_ROLE>(),
 }, (t) => [
   unique().on(t.departmentId, t.userId),
 ])
