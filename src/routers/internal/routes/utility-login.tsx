@@ -49,7 +49,7 @@ const route: RegisterRoutes = (server) => {
         where: inArray(departmentsTable.id, userDepartments.map((d) => d.departmentId)),
       })
 
-      // const activeDepartment = departments[0]
+      const activeDepartment = departments[0]
 
       const sessionId = randomUUID()
 
@@ -58,7 +58,7 @@ const route: RegisterRoutes = (server) => {
         authenticatedUserId: user.id,
         callerUserId: user.id,
         sessionId,
-        // ...activeDepartment ? { activeDepartmentId: activeDepartment.id } : undefined,
+        ...activeDepartment ? { activeDepartmentId: activeDepartment.id } : undefined,
       }
 
       await req.session.save()

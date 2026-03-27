@@ -22,6 +22,7 @@ export function BaseLayout({
   authenticatedUser,
   activeDepartment,
   userDepartments = [],
+  activeDepartmentUserRole,
 }: LayoutProps) {
   if (isHtmxRequest) {
     return (
@@ -36,6 +37,7 @@ export function BaseLayout({
                 user={user}
                 activeDepartment={activeDepartment}
                 userDepartments={userDepartments}
+                activeDepartmentUserRole={activeDepartmentUserRole}
               /> : null
           }
 
@@ -66,6 +68,7 @@ export function BaseLayout({
                   user={user}
                   activeDepartment={activeDepartment}
                   userDepartments={userDepartments}
+                  activeDepartmentUserRole={activeDepartmentUserRole}
                 /> : null
             }
               

@@ -1,0 +1,4 @@
+export enum DEPARTMENT_USER_ROLE {
+  ADMIN = "ADMIN",
+  MEMBER = "MEMBER"
+}

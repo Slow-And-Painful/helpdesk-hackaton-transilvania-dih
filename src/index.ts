@@ -64,6 +64,7 @@ import { departmentsTable } from "$dbSchemas/Departments"
 import DepartmentsService, { Department } from "$services/DepartmentsService"
 import DepartmentUserService from "$services/DepartmentUsersService"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import { DEPARTMENT_USER_ROLE } from "$types/departments"
 import { eq, inArray } from "drizzle-orm"
 
 declare module "fastify" {
@@ -84,10 +85,12 @@ declare module "fastify" {
     services: {
       usersService: UsersService
       departmentsService: DepartmentsService 
+      departmentUsersService: DepartmentUserService
     }
 
     activeDepartment: Department | null
     userDepartments: Department[]
+    activeDepartmentUserRole: DEPARTMENT_USER_ROLE | null
 
     resources: {
       user: User | null
@@ -166,7 +169,7 @@ void (async () => {
 
   const usersService = container.resolve<UsersService>(UsersService.token)
   const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
-
+  const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 
   const server = Fastify({
     ajv: {
@@ -180,6 +183,8 @@ void (async () => {
   }).withTypeProvider<TypeBoxTypeProvider>()
 
   await server.register(createFaviconRouter(globalResources))
+
+  server.decorateRequest("activeDepartmentUserRole", null)
 
   server.addHook("preHandler", async (req, res) => {
     const user = req.callerUser
@@ -202,6 +207,7 @@ void (async () => {
     req.services = {
       usersService,
       departmentsService,
+      departmentUsersService
     }
 
     // ========== AUTH ========== //
@@ -254,12 +260,16 @@ void (async () => {
         req.userDepartments = []
       }
 
+      req.activeDepartmentUserRole = null
+
       // ========== DEPARTMENTS ========== //
       if (req.session.data.activeDepartmentId) {
         const activeDepartment = req.userDepartments.find(d => d.id === req.session.data.activeDepartmentId) ?? null
 
         if (activeDepartment) {
           req.activeDepartment = activeDepartment
+          const activeDepartmentLink = userDepartmentLinks.find(l => l.departmentId === activeDepartment.id)
+          req.activeDepartmentUserRole = activeDepartmentLink?.role ?? null
         } else if (req.userDepartments.length > 0) {
           // Session department doesn't belong to this user — reset to their first department
           const firstDepartment = req.userDepartments[0]
@@ -269,6 +279,8 @@ void (async () => {
           }
           await req.session.save()
           req.activeDepartment = firstDepartment
+          const firstDepartmentLink = userDepartmentLinks.find(l => l.departmentId === firstDepartment.id)
+          req.activeDepartmentUserRole = firstDepartmentLink?.role ?? null
         } else {
           req.session.data = { ...req.session.data, activeDepartmentId: undefined! }
           await req.session.save()
@@ -281,6 +293,8 @@ void (async () => {
         }
         await req.session.save()
         req.activeDepartment = firstDepartment
+        const firstDepartmentLink = userDepartmentLinks.find(l => l.departmentId === firstDepartment.id)
+        req.activeDepartmentUserRole = firstDepartmentLink?.role ?? null
       }
     }
 

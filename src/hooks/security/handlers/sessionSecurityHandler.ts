@@ -4,6 +4,9 @@ import { HandlerFunction, HandlerResponse } from "$types/hook"
 import { container } from "tsyringe"
 import WinstonComponent from "$components/WinstonComponent"
 import USER_TYPE from "$types/USER_TYPE"
+import { and, eq } from "drizzle-orm"
+import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import { DEPARTMENT_USER_ROLE } from "$types/departments"
 
 const winstonComponent = container.resolve<WinstonComponent>(WinstonComponent.token)
 
@@ -18,6 +21,19 @@ export const getUserRoles = async (
   const authenticatedUser = await req.services.usersService.get(
     req.session.data.authenticatedUserId,
   )
+
+
+  const activeDepartmentId = req.session.data.activeDepartmentId
+
+  const matchingDepartmentUsers = await req.services.departmentUsersService.list({
+    limit: 1,
+    where: and(
+      eq(departmentUsersTable.departmentId, activeDepartmentId),
+      eq(departmentUsersTable.userId, callerUser?.id ?? -1)
+    )
+  })
+
+  const activeDepartmentUser = matchingDepartmentUsers[0]
 
   const targetUser = req.resources.user
 
@@ -44,6 +60,16 @@ export const getUserRoles = async (
     roles.push(USER_ROLE.STAFF_ACCOUNT)
   } else if (callerUser.type === USER_TYPE.CUSTOMER) {
     roles.push(USER_ROLE.CUSTOMER_ACCOUNT)
+  }
+
+  if (activeDepartmentUser) {
+    if (activeDepartmentUser.role === DEPARTMENT_USER_ROLE.ADMIN) {
+      roles.push(USER_ROLE.DEPARTMENT_ADMIN)
+    }
+  
+    if (activeDepartmentUser.role === DEPARTMENT_USER_ROLE.MEMBER) {
+      roles.push(USER_ROLE.DEPARTMENT_MEMBER)
+    }
   }
 
   return roles
