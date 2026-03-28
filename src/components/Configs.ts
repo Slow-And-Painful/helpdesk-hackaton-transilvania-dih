@@ -97,6 +97,7 @@ const envJsonSchema = {
     MAX_FILE_SIZE: { type: "number" },
 
     BEDROCK_MODEL_ID: { type: "string" },
+    GEMINI_API_KEY: { type: "string" },
 
     DESCRIPTION_CHARACTERS_LIMIT: { type: "number" },
 
@@ -147,7 +148,8 @@ const envJsonSchema = {
     "MAX_FILE_SIZE",
     "EXPERIMENTAL",
     "DEFAULT_TIMEZONE",
-    "LANDING_DOMAIN_WHITELIST"
+    "LANDING_DOMAIN_WHITELIST",
+    "GEMINI_API_KEY"
   ],
 } as const
 
@@ -256,6 +258,7 @@ export default class Configs {
       MAX_FILE_SIZE: +(process.env.MAX_FILE_SIZE || "10000000" /* 10MB */),
 
       BEDROCK_MODEL_ID: process.env.BEDROCK_MODEL_ID,
+      GEMINI_API_KEY: process.env.GEMINI_API_KEY,
 
       DESCRIPTION_CHARACTERS_LIMIT: +(process.env.DESCRIPTION_CHARACTERS_LIMIT || "1000"),
 

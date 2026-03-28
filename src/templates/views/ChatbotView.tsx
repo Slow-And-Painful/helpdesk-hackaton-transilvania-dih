@@ -1,5 +1,6 @@
 /// <reference types="@kitajs/html/htmx.d.ts" />
 
+import Form from "$templates/components/Form"
 import Icon from "$templates/components/Icon"
 import ChatSuggestion from "$templates/components/chatbot/ChatSuggestion"
 

@@ -100,6 +100,7 @@
     "@fastify/swagger": "^9.5.1",
     "@fastify/type-provider-json-schema-to-ts": "^5.0.0",
     "@fastify/type-provider-typebox": "^6.1.0",
+    "@google/genai": "^1.46.0",
     "@kitajs/html": "^4.2.9",
     "@langchain/textsplitters": "^0.1.0",
     "@sentry/node": "^9.40.0",
