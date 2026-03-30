@@ -7,6 +7,7 @@ export const schemas = {
       type: "object",
       properties: {
         message: { type: "string", minLength: 1, maxLength: 4000 },
+        chatId: { type: "string" },
       },
       required: ["message"],
     },

@@ -3,12 +3,21 @@
 import Icon from "$templates/components/Icon"
 import ChatSuggestion from "$templates/components/chatbot/ChatSuggestion"
 import ChatbotForm from "$templates/components/chatbot/ChatbotForm"
+import ChatMessage from "$templates/components/chatbot/ChatMessage"
+import { ChatMessageSchema } from "$dbSchemas/ChatMessages"
 
-const ChatbotView = () => {
+type Props = {
+  chatId?: string
+  messages?: ChatMessageSchema[]
+}
+
+const ChatbotView = ({ chatId, messages }: Props) => {
+  const hasMessages = messages && messages.length > 0
+
   return (
     <div class="hd-chat" id="helpdesk-chat">
-      {/* Empty state / welcome — visible when no messages yet */}
-      <div class="hd-chat__welcome" id="hd-chat-welcome">
+      {/* Empty state / welcome — hidden when resuming an existing chat */}
+      <div class="hd-chat__welcome" id="hd-chat-welcome" style={hasMessages ? "display:none" : undefined}>
         <div class="hd-chat__welcome-icon">
           <Icon name="zap" size={28} />
         </div>
@@ -36,14 +45,18 @@ const ChatbotView = () => {
         </div>
       </div>
 
-      {/* Messages area — grows as conversation happens */}
-      <div class="hd-chat__messages" id="hd-chat-messages"></div>
+      {/* Messages area — pre-populated when resuming a chat */}
+      <div class={`hd-chat__messages${hasMessages ? " hd-chat__messages--active" : ""}`} id="hd-chat-messages">
+        {hasMessages && messages.map((msg) => (
+          <ChatMessage message={msg.prompt} reply={msg.response} />
+        ))}
+      </div>
 
       {/* Input area — always at the bottom */}
       <div class="hd-chat__input-wrapper">
         <ChatbotForm
-          values={{ message: "" }}
-          initialValues={{ message: "" }}
+          values={{ message: "", chatId: chatId ?? "" }}
+          initialValues={{ message: "", chatId: chatId ?? "" }}
         />
         <p class="hd-chat__disclaimer">
           AI assistant for public procurement guidance. Responses are informational only.

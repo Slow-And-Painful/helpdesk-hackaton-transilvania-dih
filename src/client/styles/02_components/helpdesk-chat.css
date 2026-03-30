@@ -1,7 +1,17 @@
 /* ==================== HELPDESK CHATBOT — Claude-inspired ==================== */
 
+/* When the chat view is active, prevent the page content area from scrolling —
+   only .hd-chat__messages should scroll internally */
+.page__content:has(#helpdesk-chat) {
+  @apply overflow-hidden;
+}
+
+.page__content:has(#helpdesk-chat) > div {
+  @apply overflow-hidden pb-0;
+}
+
 .hd-chat {
-  @apply flex flex-col h-full w-full relative;
+  @apply flex flex-col h-full w-full relative overflow-hidden;
 }
 
 /* ===== WELCOME SCREEN ===== */
@@ -49,7 +59,7 @@
 /* ===== MESSAGES ===== */
 
 .hd-chat__messages {
-  @apply hidden flex-col gap-0 overflow-y-auto px-4;
+  @apply hidden flex-col gap-0 overflow-y-auto px-4 scrollbar-none;
   scroll-behavior: smooth;
   flex: 1;
 }
@@ -141,7 +151,7 @@
 /* ===== INPUT ===== */
 
 .hd-chat__input-wrapper {
-  @apply px-4 pb-4 pt-2;
+  @apply px-4 pb-4 pt-2 shrink-0;
   max-width: 720px;
   width: 100%;
   margin: 0 auto;

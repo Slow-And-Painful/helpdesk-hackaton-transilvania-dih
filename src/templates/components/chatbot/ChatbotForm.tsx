@@ -5,6 +5,7 @@ import { FormCommonProps } from "$types/ui"
 
 type FormData = {
   message: string
+  chatId: string
 }
 
 type Props = FormCommonProps<FormData>
@@ -22,11 +23,16 @@ const ChatbotForm = (props: Props) => (
       ["hx-on::before-request"]:
         "document.getElementById('hd-chat-welcome')?.style.setProperty('display','none'); document.getElementById('hd-chat-messages')?.classList.add('hd-chat__messages--active');",
       ["hx-on::after-request"]:
-        "this.reset(); const i=document.getElementById('hd-chat-input'); if(i){i.style.height='auto';} document.getElementById('hd-chat-send')?.classList.remove('hd-chat__send--active'); document.getElementById('hd-chat-messages').scrollTop=document.getElementById('hd-chat-messages').scrollHeight;",
+        "this.reset(); const chatId=new URLSearchParams(window.location.search).get('chat'); const h=this.querySelector('[name=chatId]'); if(h&&chatId)h.value=chatId; const i=document.getElementById('hd-chat-input'); if(i){i.style.height='auto';} document.getElementById('hd-chat-send')?.classList.remove('hd-chat__send--active'); document.getElementById('hd-chat-messages').scrollTop=document.getElementById('hd-chat-messages').scrollHeight;",
     }}
   
     render={() => {
-      return <ChatPrompt />
+      return (
+        <>
+          <input type="hidden" name="chatId" value={props.values.chatId} />
+          <ChatPrompt />
+        </>
+      )
     }}
   />
 )

@@ -1,13 +1,15 @@
 import {
     serial,
     pgTable,
-    integer
+    integer,
+    uuid
 } from "drizzle-orm/pg-core"
 import { departmentUsersTable } from "./DepartmentUsers"
 import { relations } from "drizzle-orm"
 
 export const chatsTable = pgTable("Chats", {
     id: serial().primaryKey(),
+    uuid: uuid().defaultRandom().notNull().unique(),
     departmentUserId: integer().notNull().references(() => departmentUsersTable.id, {onDelete: "cascade"}),
 })
 

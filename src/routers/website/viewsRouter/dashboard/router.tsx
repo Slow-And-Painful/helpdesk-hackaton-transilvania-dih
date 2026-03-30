@@ -11,12 +11,18 @@ import DepartmentDocumentsView from "$templates/views/DepartmentDocumentsView"
 import TicketsTable, { ticketsTableId } from "$templates/components/tables/TicketsTable"
 import { container } from "tsyringe"
 import TicketsService from "$services/TicketsService"
+import ChatsService from "$services/ChatsService"
+import ChatMessagesService from "$services/ChatsMessagesService"
 import { ticketsTable } from "$dbSchemas/Tickets"
+import { chatsTable } from "$dbSchemas/Chats"
+import { chatMessagesTable } from "$dbSchemas/ChatMessages"
 import { eq } from "drizzle-orm"
 
 export const routerPrefix = "/dashboard"
 
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
+const chatsService = container.resolve<ChatsService>(ChatsService.token)
+const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesService.token)
 
 export const router = createRouter("dashboard", (server) => {
   server.route({
@@ -29,7 +35,29 @@ export const router = createRouter("dashboard", (server) => {
       },
       authenticated: true
     },
-    handler: (_req, res) => {
+    handler: async (req, res) => {
+      const { chat: chatUuid } = req.query as { chat?: string }
+
+      const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+      if (chatUuid && UUID_REGEX.test(chatUuid)) {
+        const chats = await chatsService.list({
+          limit: 1,
+          where: eq(chatsTable.uuid, chatUuid),
+        })
+        const chat = chats[0]
+
+        if (chat) {
+          const messages = await chatMessagesService.list({
+            where: eq(chatMessagesTable.chatId, chat.id),
+          })
+          return res.view(
+            <ChatbotView chatId={chatUuid} messages={messages} />,
+            DashboardLayout
+          )
+        }
+      }
+
       return res.view(
         <ChatbotView />,
         DashboardLayout
