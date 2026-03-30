@@ -1,8 +1,8 @@
 /// <reference types="@kitajs/html/htmx.d.ts" />
 
-import Form from "$templates/components/Form"
 import Icon from "$templates/components/Icon"
 import ChatSuggestion from "$templates/components/chatbot/ChatSuggestion"
+import ChatbotForm from "$templates/components/chatbot/ChatbotForm"
 
 const ChatbotView = () => {
   return (
@@ -41,26 +41,10 @@ const ChatbotView = () => {
 
       {/* Input area — always at the bottom */}
       <div class="hd-chat__input-wrapper">
-        <form
-          id="hd-chat-form"
-          class="hd-chat__form"
-          onsubmit="return handleHelpdeskChat(event)"
-        >
-          <div class="hd-chat__input-container">
-            <textarea
-              name="message"
-              id="hd-chat-input"
-              class="hd-chat__input"
-              placeholder="Ask about public procurement..."
-              rows="1"
-              onkeydown="handleChatKeydown(event)"
-              {...{ oninput: "autoResizeTextarea(this)" }}
-            ></textarea>
-            <button type="submit" class="hd-chat__send" id="hd-chat-send">
-              <Icon name="arrow-up" size={18} />
-            </button>
-          </div>
-        </form>
+        <ChatbotForm
+          values={{ message: "" }}
+          initialValues={{ message: "" }}
+        />
         <p class="hd-chat__disclaimer">
           AI assistant for public procurement guidance. Responses are informational only.
         </p>

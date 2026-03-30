@@ -26,6 +26,7 @@ import { TICKETS_PARTIALS_ROUTE, ticketsPartialsRouterPrefix } from "./partialsR
 import { AUTH_ACTIONS_ROUTE, authActionsRouterPrefix } from "./actionsRouter/auth"
 import { DEPARTMENTS_ACTIONS_ROUTE, departmentsActionsRouterPrefix } from "./actionsRouter/departments"
 import { TICKETS_ACTIONS_ROUTE, ticketsActionsRouterPrefix } from "./actionsRouter/tickets"
+import { CHATBOT_ACTIONS_ROUTE, chatbotActionsRouterPrefix } from "./actionsRouter/chatbot"
 import { DASHBOARD_VIEW_ROUTE, dashboardViewsRouterPrefix } from "./viewsRouter/dashboard"
 import { WAITING_ROOM_VIEW_ROUTE } from "./viewsRouter/waitingRoom"
 
@@ -92,12 +93,14 @@ type ActionRouter =
 | "auth"
 | "departments"
 | "tickets"
+| "chatbot"
 
 type ActionRoutersPaths = {
   users: typeof USERS_PARTIALS_ROUTE
   auth: typeof AUTH_ACTIONS_ROUTE
   departments: typeof DEPARTMENTS_ACTIONS_ROUTE
   tickets: typeof TICKETS_ACTIONS_ROUTE
+  chatbot: typeof CHATBOT_ACTIONS_ROUTE
 }
 
 type ActionRoutersParams = {
@@ -127,6 +130,10 @@ const actionRoutersConfig: {
   tickets: {
     paths: TICKETS_ACTIONS_ROUTE,
     prefix: ticketsActionsRouterPrefix
+  },
+  chatbot: {
+    paths: CHATBOT_ACTIONS_ROUTE,
+    prefix: chatbotActionsRouterPrefix,
   },
 }
 
