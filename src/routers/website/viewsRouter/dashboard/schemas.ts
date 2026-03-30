@@ -11,6 +11,13 @@ export const schemas = {
   },
   [ROUTE.TICKETS]: {},
   [ROUTE.USERS]: {},
-  [ROUTE.DEPARTMENT]: {},
+  [ROUTE.DEPARTMENT]: {
+    querystring: {
+      type: "object",
+      properties: {
+        tab: { type: "string" },
+      },
+    },
+  },
   [ROUTE.DOCUMENTS]: {},
 }

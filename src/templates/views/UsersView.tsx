@@ -3,22 +3,27 @@ import { User } from "$services/UsersService"
 import { TablePagination } from "$templates/components/tables/Table"
 import UsersTable, { usersTableId } from "$templates/components/tables/UsersTable"
 import TableFilters from "$templates/components/tables/TableFilters"
+import { Department } from "$services/DepartmentsService"
 
 type Props = {
   items: User[]
   pagination?: TablePagination
   baseUrl: string
+  activeDepartment: Department
 }
 
-const UsersView = ({ items, pagination, baseUrl }: Props) => {
+const UsersView = ({ items, pagination, baseUrl, activeDepartment }: Props) => {
   return (
     <DashboardPage
       title={
-        <div class="w-full flex justify-between items-center">
-          <div>
-            <span>Users</span>
-          </div>
-        </div>
+        <span>
+          Users
+          {activeDepartment && (
+            <span class="tickets-page__dept-name" safe>
+              {" "} — {activeDepartment.name}
+            </span>
+          )}
+        </span>
       }
     >
       <div class="flex flex-col gap-y-6">
