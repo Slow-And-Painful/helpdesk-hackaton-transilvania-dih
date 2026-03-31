@@ -1,7 +1,8 @@
 import DashboardPage from "$templates/components/DashboardPage"
 import { User } from "$services/UsersService"
 import { TablePagination } from "$templates/components/tables/Table"
-import UsersTable from "$templates/components/tables/UsersTable"
+import UsersTable, { usersTableId } from "$templates/components/tables/UsersTable"
+import TableFilters from "$templates/components/tables/TableFilters"
 
 type Props = {
   items: User[]
@@ -21,6 +22,14 @@ const UsersView = ({ items, pagination, baseUrl }: Props) => {
       }
     >
       <div class="flex flex-col gap-y-6">
+        {pagination && (
+          <TableFilters
+            tableId={usersTableId}
+            pagination={pagination}
+            baseUrl={baseUrl}
+            filters={[]}
+          />
+        )}
         <UsersTable
           items={items}
           pagination={pagination}

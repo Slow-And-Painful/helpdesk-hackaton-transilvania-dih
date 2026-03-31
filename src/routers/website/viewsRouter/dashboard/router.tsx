@@ -16,13 +16,17 @@ import ChatMessagesService from "$services/ChatsMessagesService"
 import UsersService from "$services/UsersService"
 import { ticketsTable } from "$dbSchemas/Tickets"
 import { chatMessagesTable } from "$dbSchemas/ChatMessages"
-import { eq } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
+import DepartmentUserService from "$services/DepartmentUsersService"
+import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import { usersTable } from "$dbSchemas/Users"
 
 export const routerPrefix = "/dashboard"
 
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
 const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesService.token)
 const usersService = container.resolve<UsersService>(UsersService.token)
+const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 
 export const router = createRouter("dashboard", (server) => {
   server.route({
@@ -147,7 +151,19 @@ export const router = createRouter("dashboard", (server) => {
       const query = req.query as Record<string, string>
       const baseUrl = getViewPath("dashboard", "USERS")
 
-      const { items, pagination } = await usersService.getTableItems(query)
+      const activeDepartmentId = req.activeDepartment?.id
+
+      if (!activeDepartmentId) {
+        return res.status(404).send()
+      }
+
+      const departmentUsers = await departmentUsersService.list({
+        where: eq(departmentUsersTable.departmentId, activeDepartmentId)
+      })
+
+      const userIds = departmentUsers.map((du) => du.userId)
+
+      const { items, pagination } = await usersService.getTableItems(query, inArray(usersTable.id, userIds))
 
       const tableOnly = req.headers["hx-template"] === "table"
 

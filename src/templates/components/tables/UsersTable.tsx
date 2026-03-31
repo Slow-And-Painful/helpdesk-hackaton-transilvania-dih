@@ -1,6 +1,5 @@
 import Table, { TableConfig, TablePagination } from "$templates/components/tables/Table"
 import { User } from "$services/UsersService"
-import USER_TYPE from "$types/USER_TYPE"
 
 type Props = {
   items: User[]
@@ -9,17 +8,6 @@ type Props = {
 }
 
 export const usersTableId = "users-table"
-
-const getUserTypeLabel = (type: USER_TYPE) => {
-  switch (type) {
-    case USER_TYPE.STAFF:
-      return "Staff"
-    case USER_TYPE.CUSTOMER:
-      return "Customer"
-    default:
-      return String(type)
-  }
-}
 
 const UsersTable = ({ items, pagination, baseUrl }: Props) => {
   const config: TableConfig<User>[] = [
@@ -32,28 +20,17 @@ const UsersTable = ({ items, pagination, baseUrl }: Props) => {
     },
     {
       accessor: "firstName",
-      heading: <>First name</>,
+      heading: <>Name</>,
       sortable: true,
-      render: (row) => <span safe>{row.firstName}</span>,
-    },
-    {
-      accessor: "lastName",
-      heading: <>Last name</>,
-      sortable: true,
-      render: (row) => <span safe>{row.lastName}</span>,
+      render: (row) => <span safe>{row.firstName} {row.lastName}</span>,
+      width: "150px",
     },
     {
       accessor: "email",
       heading: <>Email</>,
       sortable: true,
       render: (row) => <span safe>{row.email}</span>,
-    },
-    {
-      accessor: "type",
-      heading: <>Role</>,
-      sortable: true,
-      width: "120px",
-      render: (row) => <span safe>{getUserTypeLabel(row.type)}</span>,
+      width: "250px",
     },
     {
       accessor: "blocked",
