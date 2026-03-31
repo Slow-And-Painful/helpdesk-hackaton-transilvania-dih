@@ -5,21 +5,28 @@ import USER_ROLE from "$types/USER_ROLES"
 import { DashboardLayout } from "$templates/layouts/DashboardLayout"
 import ChatbotView from "$templates/views/ChatbotView"
 import TicketsView from "$templates/views/TicketsView"
-import DepartmentUsersView from "$templates/views/DepartmentUsersView"
+import UsersView from "$templates/views/UsersView"
 import DepartmentSettingsView from "$templates/views/DepartmentSettingsView"
 import DepartmentDocumentsView from "$templates/views/DepartmentDocumentsView"
 import TicketsTable, { ticketsTableId } from "$templates/components/tables/TicketsTable"
+import UsersTable, { usersTableId } from "$templates/components/tables/UsersTable"
 import { container } from "tsyringe"
 import TicketsService from "$services/TicketsService"
 import ChatMessagesService from "$services/ChatsMessagesService"
+import UsersService from "$services/UsersService"
 import { ticketsTable } from "$dbSchemas/Tickets"
 import { chatMessagesTable } from "$dbSchemas/ChatMessages"
-import { eq } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
+import DepartmentUserService from "$services/DepartmentUsersService"
+import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import { usersTable } from "$dbSchemas/Users"
 
 export const routerPrefix = "/dashboard"
 
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
 const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesService.token)
+const usersService = container.resolve<UsersService>(UsersService.token)
+const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 
 export const router = createRouter("dashboard", (server) => {
   server.route({
@@ -28,9 +35,9 @@ export const router = createRouter("dashboard", (server) => {
     schema: schemas[ROUTE.HOME],
     config: {
       security: {
-        session: `${USER_ROLE.CUSTOMER_ACCOUNT}`
+        session: `${USER_ROLE.CUSTOMER_ACCOUNT}`,
       },
-      authenticated: true
+      authenticated: true,
     },
     handler: async (req, res) => {
       const { chat: chatUuid } = req.query as { chat?: string }
@@ -44,6 +51,7 @@ export const router = createRouter("dashboard", (server) => {
           const messages = await chatMessagesService.list({
             where: eq(chatMessagesTable.chatId, chat.id),
           })
+
           return res.view(
             <ChatbotView chatId={chatUuid} messages={messages} />,
             DashboardLayout,
@@ -56,7 +64,7 @@ export const router = createRouter("dashboard", (server) => {
         <ChatbotView />,
         DashboardLayout,
       )
-    }
+    },
   })
 
   server.route({
@@ -65,9 +73,9 @@ export const router = createRouter("dashboard", (server) => {
     schema: schemas[ROUTE.TICKETS],
     config: {
       security: {
-        session: `${USER_ROLE.CUSTOMER_ACCOUNT}`
+        session: `${USER_ROLE.CUSTOMER_ACCOUNT}`,
       },
-      authenticated: true
+      authenticated: true,
     },
     handler: async (req, res) => {
       const activeDepartment = req.activeDepartment
@@ -126,7 +134,7 @@ export const router = createRouter("dashboard", (server) => {
         />,
         DashboardLayout
       )
-    }
+    },
   })
 
   server.route({
@@ -135,16 +143,55 @@ export const router = createRouter("dashboard", (server) => {
     schema: schemas[ROUTE.USERS],
     config: {
       security: {
-        session: `${USER_ROLE.DEPARTMENT_ADMIN}`
+        session: `${USER_ROLE.DEPARTMENT_ADMIN}`,
       },
-      authenticated: true
+      authenticated: true,
     },
-    handler: (req, res) => {
+    handler: async (req, res) => {
+      const query = req.query as Record<string, string>
+      const baseUrl = getViewPath("dashboard", "USERS")
+
+      const activeDepartmentId = req.activeDepartment?.id
+
+      if (!activeDepartmentId) {
+        return res.status(404).send()
+      }
+
+      const departmentUsers = await departmentUsersService.list({
+        where: eq(departmentUsersTable.departmentId, activeDepartmentId)
+      })
+
+      const userIds = departmentUsers.map((du) => du.userId)
+
+      const { items, pagination } = await usersService.getTableItems(query, inArray(usersTable.id, userIds))
+
+      const tableOnly = req.headers["hx-template"] === "table"
+
+      if (tableOnly) {
+        return res
+          .headers({
+            "HX-Reswap": "outerHTML",
+            "HX-Retarget": `#${usersTableId}`,
+            "HX-Push-Url": `${baseUrl}${pagination.baseUrl ? `?${pagination.baseUrl}&page=${pagination.page}` : `?page=${pagination.page}`}`,
+          })
+          .view(
+            <UsersTable
+              items={items}
+              pagination={pagination}
+              baseUrl={baseUrl}
+            />
+          )
+      }
+
       return res.view(
-        <DepartmentUsersView activeDepartment={req.activeDepartment} />,
+        <UsersView
+          items={items}
+          pagination={pagination}
+          baseUrl={baseUrl}
+        />,
         DashboardLayout
       )
-    }
+    },
   })
 
   server.route({
@@ -153,16 +200,16 @@ export const router = createRouter("dashboard", (server) => {
     schema: schemas[ROUTE.DEPARTMENT],
     config: {
       security: {
-        session: `${USER_ROLE.DEPARTMENT_ADMIN}`
+        session: `${USER_ROLE.DEPARTMENT_ADMIN}`,
       },
-      authenticated: true
+      authenticated: true,
     },
     handler: (req, res) => {
       return res.view(
         <DepartmentSettingsView activeDepartment={req.activeDepartment} />,
         DashboardLayout
       )
-    }
+    },
   })
 
   server.route({
@@ -171,15 +218,15 @@ export const router = createRouter("dashboard", (server) => {
     schema: schemas[ROUTE.DOCUMENTS],
     config: {
       security: {
-        session: `${USER_ROLE.DEPARTMENT_ADMIN}`
+        session: `${USER_ROLE.DEPARTMENT_ADMIN}`,
       },
-      authenticated: true
+      authenticated: true,
     },
     handler: (req, res) => {
       return res.view(
         <DepartmentDocumentsView activeDepartment={req.activeDepartment} />,
         DashboardLayout
       )
-    }
+    },
   })
 })

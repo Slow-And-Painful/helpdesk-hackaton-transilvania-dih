@@ -12,7 +12,7 @@
     "makemigrations": "drizzle-kit generate",
     "dropmigration": "drizzle-kit drop",
     "custommigration": "drizzle-kit generate --custom",
-    "start": "node --enable-source-maps dist/index.js",
+    "start": "node -r dotenv/config --enable-source-maps dist/index.js",
     "xss:scan": "xss-scan",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
