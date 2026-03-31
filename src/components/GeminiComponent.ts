@@ -1,7 +1,8 @@
-import { inject } from "tsyringe"
-import { GoogleGenAI, CreateChatParameters, SendMessageParameters} from "@google/genai"
+import { container, inject, injectable } from "tsyringe"
+import { GoogleGenAI, type Content } from "@google/genai"
 import Configs from "$components/Configs"
 
+@injectable()
 export default class GeminiComponent {
   client: GoogleGenAI
   model: string
@@ -16,14 +17,16 @@ export default class GeminiComponent {
     this.model = "gemini-2.5-flash-lite"
   }
 
-  async createChat() {
-    const chat = this.client.chats.create({ model: this.model });
-    return chat;
-  } 
-
-  async generateContent(prompt: string) {
-    const chat = await this.createChat();
-    const response = await chat.sendMessage({ message: prompt });
-    return response.text;
+  async sendMessage(prompt: string, history?: Content[]) {
+    const chat = this.client.chats.create({
+      model: this.model,
+      history,
+    })
+    const response = await chat.sendMessage({ message: prompt })
+    return response.text
   }
+
+  static token = Symbol("GeminiComponent")
 }
+
+container.register(GeminiComponent.token, GeminiComponent)

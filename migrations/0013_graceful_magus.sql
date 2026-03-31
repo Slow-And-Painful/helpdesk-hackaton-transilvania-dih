@@ -1,0 +1,1 @@
+ALTER TABLE "Chats" ADD COLUMN "geminiChatId" text;
