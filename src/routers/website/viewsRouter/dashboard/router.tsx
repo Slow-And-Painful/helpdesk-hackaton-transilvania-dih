@@ -11,17 +11,14 @@ import DepartmentDocumentsView from "$templates/views/DepartmentDocumentsView"
 import TicketsTable, { ticketsTableId } from "$templates/components/tables/TicketsTable"
 import { container } from "tsyringe"
 import TicketsService from "$services/TicketsService"
-import ChatsService from "$services/ChatsService"
 import ChatMessagesService from "$services/ChatsMessagesService"
 import { ticketsTable } from "$dbSchemas/Tickets"
-import { chatsTable } from "$dbSchemas/Chats"
 import { chatMessagesTable } from "$dbSchemas/ChatMessages"
 import { eq } from "drizzle-orm"
 
 export const routerPrefix = "/dashboard"
 
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
-const chatsService = container.resolve<ChatsService>(ChatsService.token)
 const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesService.token)
 
 export const router = createRouter("dashboard", (server) => {
@@ -41,11 +38,7 @@ export const router = createRouter("dashboard", (server) => {
       const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
       if (chatUuid && UUID_REGEX.test(chatUuid)) {
-        const chats = await chatsService.list({
-          limit: 1,
-          where: eq(chatsTable.uuid, chatUuid),
-        })
-        const chat = chats[0]
+        const chat = req.userChats.find((c) => c.uuid === chatUuid)
 
         if (chat) {
           const messages = await chatMessagesService.list({
@@ -53,14 +46,15 @@ export const router = createRouter("dashboard", (server) => {
           })
           return res.view(
             <ChatbotView chatId={chatUuid} messages={messages} />,
-            DashboardLayout
+            DashboardLayout,
+            { activeChatUuid: chatUuid }
           )
         }
       }
 
       return res.view(
         <ChatbotView />,
-        DashboardLayout
+        DashboardLayout,
       )
     }
   })

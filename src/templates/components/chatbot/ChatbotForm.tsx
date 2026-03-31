@@ -20,10 +20,8 @@ const ChatbotForm = (props: Props) => (
     hx-target="#hd-chat-messages"
     hx-swap="beforeend"
     {...{
-      ["hx-on::before-request"]:
-        "document.getElementById('hd-chat-welcome')?.style.setProperty('display','none'); document.getElementById('hd-chat-messages')?.classList.add('hd-chat__messages--active');",
-      ["hx-on::after-request"]:
-        "this.reset(); const chatId=new URLSearchParams(window.location.search).get('chat'); const h=this.querySelector('[name=chatId]'); if(h&&chatId)h.value=chatId; const i=document.getElementById('hd-chat-input'); if(i){i.style.height='auto';} document.getElementById('hd-chat-send')?.classList.remove('hd-chat__send--active'); document.getElementById('hd-chat-messages').scrollTop=document.getElementById('hd-chat-messages').scrollHeight;",
+      ["hx-on::before-request"]: "onChatBeforeRequest()",
+      ["hx-on::after-request"]: "onChatAfterRequest(event)",
     }}
   
     render={() => {

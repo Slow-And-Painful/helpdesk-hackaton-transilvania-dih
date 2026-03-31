@@ -23,6 +23,8 @@ export function BaseLayout({
   activeDepartment,
   userDepartments = [],
   activeDepartmentUserRole,
+  userChats = [],
+  activeChatUuid,
 }: LayoutProps) {
   if (isHtmxRequest) {
     return (
@@ -38,6 +40,8 @@ export function BaseLayout({
                 activeDepartment={activeDepartment}
                 userDepartments={userDepartments}
                 activeDepartmentUserRole={activeDepartmentUserRole}
+                userChats={userChats}
+                activeChatUuid={activeChatUuid}
               /> : null
           }
 
@@ -69,6 +73,8 @@ export function BaseLayout({
                   activeDepartment={activeDepartment}
                   userDepartments={userDepartments}
                   activeDepartmentUserRole={activeDepartmentUserRole}
+                  userChats={userChats}
+                  activeChatUuid={activeChatUuid}
                 /> : null
             }
               

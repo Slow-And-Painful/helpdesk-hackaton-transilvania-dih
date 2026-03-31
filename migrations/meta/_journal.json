@@ -92,6 +92,13 @@
       "when": 1774872042034,
       "tag": "0012_solid_warpath",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1774992692280,
+      "tag": "0013_striped_saracen",
+      "breakpoints": true
     }
   ]
 }

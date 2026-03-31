@@ -12,6 +12,7 @@ import { Organization } from "$services/OrganizationsService"
 import USER_IN_ORGANIZATION_ROLES from "./USER_IN_ORGANIZATION_ROLES"
 import { Department } from "$services/DepartmentsService"
 import { DEPARTMENT_USER_ROLE } from "./departments"
+import { ChatsSchema } from "$dbSchemas/Chats"
 
 export type JsonSchemaFastifyInstance = FastifyInstance<
   RawServerDefault,
@@ -37,6 +38,8 @@ export type LayoutAdditionalProps = {
   withPadding?: boolean
   alertData?: UsageAlertData | null
   swapChat?: boolean
+  userChats?: ChatsSchema[]
+  activeChatUuid?: string
 }
 export type LayoutProps = {
   children: JSX.Element

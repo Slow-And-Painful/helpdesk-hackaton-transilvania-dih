@@ -20,6 +20,7 @@ import axios from "axios"
 import "./modules/card-slider"
 import "./modules/auth"
 import "./modules/chatbot"
+import "./modules/sidebar-chats"
 
 
 declare global {
