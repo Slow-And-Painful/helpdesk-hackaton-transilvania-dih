@@ -5,6 +5,7 @@ import classNames from "classnames"
 type TooltipProps = JSX.HtmlTag &
   PropsWithChildren<{
     content: JSX.Element | string
+    contentId?: string
     icon?: IconName
     text?: JSX.Element
     tooltipClass?: string
@@ -16,6 +17,7 @@ type TooltipProps = JSX.HtmlTag &
 
 const Tooltip = ({
   content,
+  contentId,
   icon,
   text,
   tooltipClass,
@@ -34,15 +36,16 @@ const Tooltip = ({
       ) : null}
       {text ? <div class="tooltip__text">{text}</div> : null}
 
-      <div 
+      <div
+        {...contentId && { id: contentId }}
         class={classNames(
-          "tooltip", 
+          "tooltip",
           `tooltip--${position}`,
-          tooltipClass, 
-          { 
+          tooltipClass,
+          {
             "tooltip--small": small,
           }
-        )} 
+        )}
         data-position={position}
       >{content}</div>
     </div>

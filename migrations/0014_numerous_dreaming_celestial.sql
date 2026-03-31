@@ -1,0 +1,1 @@
+ALTER TABLE "Departments" ADD COLUMN "systemPrompt" text DEFAULT '' NOT NULL;

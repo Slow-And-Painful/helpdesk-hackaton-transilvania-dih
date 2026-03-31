@@ -151,14 +151,14 @@ export const router = createRouter("dashboard", (server) => {
       const query = req.query as Record<string, string>
       const baseUrl = getViewPath("dashboard", "USERS")
 
-      const activeDepartmentId = req.activeDepartment?.id
+      const activeDepartment = req.activeDepartment
 
-      if (!activeDepartmentId) {
+      if (!activeDepartment) {
         return res.status(404).send()
       }
 
       const departmentUsers = await departmentUsersService.list({
-        where: eq(departmentUsersTable.departmentId, activeDepartmentId)
+        where: eq(departmentUsersTable.departmentId, activeDepartment.id)
       })
 
       const userIds = departmentUsers.map((du) => du.userId)
@@ -188,6 +188,7 @@ export const router = createRouter("dashboard", (server) => {
           items={items}
           pagination={pagination}
           baseUrl={baseUrl}
+          activeDepartment={activeDepartment}
         />,
         DashboardLayout
       )
@@ -205,8 +206,16 @@ export const router = createRouter("dashboard", (server) => {
       authenticated: true,
     },
     handler: (req, res) => {
+      const { tab: tabParam } = req.query as Record<string, string>
+      const tab = tabParam === "ai-settings" ? "ai-settings" : "general"
+      const baseUrl = getViewPath("dashboard", "DEPARTMENT")
+
       return res.view(
-        <DepartmentSettingsView activeDepartment={req.activeDepartment} />,
+        <DepartmentSettingsView
+          activeDepartment={req.activeDepartment}
+          tab={tab}
+          baseUrl={baseUrl}
+        />,
         DashboardLayout
       )
     },

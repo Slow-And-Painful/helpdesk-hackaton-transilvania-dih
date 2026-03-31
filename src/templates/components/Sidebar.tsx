@@ -42,11 +42,12 @@ const Sidebar = (props: Props) => {
 
       {/* Department Switcher Widget */}
       {activeDepartment && (
-        <div class="sidebar-departments">
+        <div id="sidebar-departments" class="sidebar-departments">
           <div class="sidebar-departments__label sidebar__menu-item-label">Department</div>
           <div class="sidebar-departments__list">
             <Tooltip
               content={activeDepartment.name}
+              contentId="sidebar-dept-tooltip"
               position="right"
               small
               text={
@@ -56,7 +57,7 @@ const Sidebar = (props: Props) => {
                   hx-target="#modal"
                   hx-swap="innerHTML"
                 >
-                  <span safe>{getDepartmentInitials(activeDepartment.name)}</span>
+                  <span id="sidebar-dept-initials" safe>{getDepartmentInitials(activeDepartment.name)}</span>
                 </button>
               }
             />
