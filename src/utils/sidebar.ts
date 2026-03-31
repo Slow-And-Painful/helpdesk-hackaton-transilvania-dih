@@ -5,6 +5,7 @@ import USER_TYPE from "$types/USER_TYPE"
 import { DEPARTMENT_USER_ROLE } from "$types/departments"
 import { match } from "ts-pattern"
 import { getViewPath } from "$routers/website/utils"
+import { ChatsSchema } from "$dbSchemas/Chats"
 
 enum SIDEBAR_LINKS_GROUPS {
   BASE_CUSTOMER = "BASE_CUSTOMER",
@@ -24,6 +25,8 @@ export type SidebarProps = {
   activeDepartment: Department
   userDepartments: Department[]
   activeDepartmentUserRole?: DEPARTMENT_USER_ROLE | null
+  userChats?: ChatsSchema[]
+  activeChatUuid?: string
 }
 
 type SidebarSimpleLink = {

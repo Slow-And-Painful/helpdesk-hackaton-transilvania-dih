@@ -332,6 +332,102 @@ html[data-sidebar-closed] {
   @apply truncate max-w-[5rem];
 }
 
+/* ==================== CHAT HISTORY LIST ==================== */
+
+.sidebar-chats {
+  @apply flex flex-col overflow-hidden px-3 py-3 border-b border-gray-800;
+  max-height: 18rem;
+}
+
+.sidebar-chats__header {
+  @apply flex items-center justify-between text-xs text-gray-500 uppercase tracking-wider mb-2 px-1;
+}
+
+.sidebar-chats__label {
+  @apply truncate;
+}
+
+.sidebar-chats__new-btn {
+  @apply text-gray-500 hover:text-gray-300 transition-colors duration-150 shrink-0;
+}
+
+.sidebar-chats__search {
+  @apply mb-2;
+
+  .input__container {
+    @apply border-gray-700;
+  }
+
+  .input__icon--prepend .icon {
+    @apply text-gray-500;
+  }
+}
+
+.sidebar-chats__search-input {
+  @apply !text-xs !py-1;
+}
+
+.sidebar-chats__list {
+  @apply flex flex-col gap-1 overflow-y-auto flex-1 list-none p-0 m-0 scrollbar-none;
+}
+
+.sidebar-chats__item--hidden {
+  display: none !important;
+}
+
+.sidebar-chats__item {
+  @apply rounded-lg transition-colors duration-150;
+
+  &:hover:not(.sidebar-chats__item--active) {
+    @apply bg-gray-800;
+  }
+
+  &.sidebar-chats__item--active {
+    @apply bg-gray-700;
+  }
+}
+
+.sidebar-chats__item-link {
+  @apply flex items-center gap-2 px-2 py-1.5 w-full cursor-pointer;
+
+  .icon {
+    @apply text-gray-500 shrink-0;
+  }
+}
+
+.sidebar-chats__item--active .sidebar-chats__item-link .icon {
+  @apply text-gray-300;
+}
+
+.sidebar-chats__item-label {
+  @apply text-xs text-gray-400 truncate;
+}
+
+.sidebar-chats__item--active .sidebar-chats__item-label {
+  @apply text-white;
+}
+
+/* Collapsed sidebar */
+html[data-sidebar-closed] {
+  .sidebar-chats__header,
+  .sidebar-chats__label,
+  .sidebar-chats__search {
+    @apply hidden;
+  }
+
+  .sidebar-chats {
+    @apply px-1 py-2;
+  }
+
+  .sidebar-chats__item-link {
+    @apply px-1 justify-center;
+  }
+
+  .sidebar-chats__item-label {
+    @apply hidden;
+  }
+}
+
 /* Collapsed sidebar: hide department labels and ticket details */
 html[data-sidebar-closed] {
   .sidebar-departments__label,

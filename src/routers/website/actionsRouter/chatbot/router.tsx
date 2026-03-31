@@ -1,7 +1,7 @@
 import { createRouter } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
-import ChatMessage from "$templates/components/chatbot/ChatMessage"
+import ChatBotReply from "$templates/components/chatbot/ChatBotReply"
 import { container } from "tsyringe"
 import ChatsService from "$services/ChatsService"
 import ChatMessagesService from "$services/ChatsMessagesService"
@@ -11,6 +11,7 @@ import { chatMessagesTable } from "$dbSchemas/ChatMessages"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 import { and, eq } from "drizzle-orm"
 import type { Content } from "@google/genai"
+import Sidebar from "$templates/components/Sidebar"
 
 export const routerPrefix = "/chatbot"
 
@@ -47,7 +48,7 @@ export const router = createRouter("chatbot", (server) => {
       }
 
       let chatUuid: string
-      let history: Content[] = []
+      const history: Content[] = []
 
       if (!chatId) {
         // New conversation — create a chat row
@@ -59,9 +60,26 @@ export const router = createRouter("chatbot", (server) => {
 
         await chatMessagesService.sInsert({ chatId: newChat.id, prompt: message, response: reply })
 
+        const updatedChats = [newChat, ...req.userChats]
+
         return res
           .header("HX-Push-Url", `/dashboard/?chat=${chatUuid}`)
-          .view(<ChatMessage message={message} reply={reply} />)
+          .view(
+            <>
+              <ChatBotReply reply={reply} />
+              <Sidebar
+                swapOOB="true"
+                routerName="/dashboard/"
+                user={req.callerUser}
+                authenticatedUser={req.authenticatedUser}
+                activeDepartment={req.activeDepartment!}
+                userDepartments={req.userDepartments}
+                activeDepartmentUserRole={req.activeDepartmentUserRole}
+                userChats={updatedChats}
+                activeChatUuid={chatUuid}
+              />
+            </>
+          )
       } else {
         // Existing conversation — find the chat and build history
         const existingChats = await chatsService.list({
@@ -94,7 +112,7 @@ export const router = createRouter("chatbot", (server) => {
 
         return res
           .header("HX-Push-Url", `/dashboard/?chat=${chatUuid}`)
-          .view(<ChatMessage message={message} reply={reply} />)
+          .view(<ChatBotReply reply={reply} />)
       }
     },
   })

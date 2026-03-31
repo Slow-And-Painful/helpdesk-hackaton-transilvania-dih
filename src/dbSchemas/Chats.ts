@@ -3,7 +3,7 @@ import {
     pgTable,
     integer,
     uuid,
-    text
+    varchar,
 } from "drizzle-orm/pg-core"
 import { departmentUsersTable } from "./DepartmentUsers"
 import { relations } from "drizzle-orm"
@@ -11,8 +11,8 @@ import { relations } from "drizzle-orm"
 export const chatsTable = pgTable("Chats", {
     id: serial().primaryKey(),
     uuid: uuid().defaultRandom().notNull().unique(),
-    geminiChatId: text(),
     departmentUserId: integer().notNull().references(() => departmentUsersTable.id, {onDelete: "cascade"}),
+    name: varchar({ length: 255 }),
 })
 
 export const chatsRelations = relations(

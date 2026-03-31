@@ -29,6 +29,7 @@ export const registerViewFunction = (server: FastifyInstance) => {
           routerName: getFullRouterPath(url),
           user: this.request.callerUser,
           authenticatedUser: this.request.authenticatedUser,
+          userChats: this.request.userChats || [],
           ...layoutAdditionalProps,
           activeDepartment: this.request.activeDepartment!,
           userDepartments: this.request.userDepartments || [],

@@ -52,6 +52,8 @@ const ChatbotView = ({ chatId, messages }: Props) => {
         ))}
       </div>
 
+      {hasMessages && <script>{"initChatScroll()"}</script>}
+
       {/* Input area — always at the bottom */}
       <div class="hd-chat__input-wrapper">
         <ChatbotForm

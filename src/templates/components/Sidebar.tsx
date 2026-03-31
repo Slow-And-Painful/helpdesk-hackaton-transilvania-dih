@@ -10,12 +10,15 @@ import {
 } from "$utils/sidebar"
 import SidebarUser from "./SidebarUser"
 import { getPartialPath, getViewPath } from "$routers/website/utils"
+import Input from "./Input"
 
 const Sidebar = (props: Props) => {
   const {
     swapOOB,
     user,
     activeDepartment,
+    userChats = [],
+    activeChatUuid,
   } = props
 
   const items = getSidebarItems(props)
@@ -58,6 +61,53 @@ const Sidebar = (props: Props) => {
               }
             />
           </div>
+        </div>
+      )}
+
+      {/* Chat history */}
+      {userChats.length > 0 && (
+        <div class="sidebar-chats">
+          <div class="sidebar-chats__header">
+            <span class="sidebar-chats__label sidebar__menu-item-label">Chats</span>
+            <a
+              class="sidebar-chats__new-btn"
+              href={getViewPath("dashboard", "HOME")}
+              hx-boost="true"
+              title="New chat"
+            >
+              <Icon name="new-chat" size={14} />
+            </a>
+          </div>
+          <Input
+            id="sidebar-chats-search"
+            class="sidebar-chats__search"
+            inputClass="sidebar-chats__search-input"
+            type="text"
+            size="sm"
+            placeholder="Search chats..."
+            prepend={<Icon name="search" size={12} />}
+            autocomplete="off"
+            {...{ oninput: "filterSidebarChats(this.value)" }}
+          />
+          <ul class="sidebar-chats__list">
+            {userChats.map((chat, i) => (
+              <li
+                class={classNames("sidebar-chats__item", {
+                  "sidebar-chats__item--active": chat.uuid === activeChatUuid,
+                })}
+                data-chat-label={`Chat ${userChats.length - i}`}
+              >
+                <a
+                  class="sidebar-chats__item-link"
+                  href={`${getViewPath("dashboard", "HOME")}?chat=${chat.uuid}`}
+                  hx-boost="true"
+                >
+                  <Icon name="message-square" size={14} />
+                  <span class="sidebar-chats__item-label">Chat {userChats.length - i}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

@@ -1,6 +1,6 @@
 /// <reference types="@kitajs/html/htmx.d.ts" />
 
-import Icon from "$templates/components/Icon"
+import ChatBotReply from "$templates/components/chatbot/ChatBotReply"
 
 type Props = {
   message: string
@@ -14,14 +14,7 @@ const ChatMessage = ({ message, reply }: Props) => (
         <div class="hd-chat__msg-bubble">{message as "safe"}</div>
       </div>
     </div>
-    <div class="hd-chat__msg hd-chat__msg--bot">
-      <div class="hd-chat__msg-avatar">
-        <Icon name="zap" size={16} />
-      </div>
-      <div class="hd-chat__msg-content">
-        <div class="hd-chat__msg-bubble">{reply}</div>
-      </div>
-    </div>
+    <ChatBotReply reply={reply} />
   </>
 )
 

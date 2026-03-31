@@ -50,6 +50,8 @@ import { Metafile } from "esbuild"
 import meta from "./meta.json"
 
 import UsersService, { User } from "$services/UsersService"
+import ChatsService from "$services/ChatsService"
+import { ChatsSchema, chatsTable } from "$dbSchemas/Chats"
 
 // SECURITY
 import securityHook from "$hooks/security/securityHook"
@@ -91,6 +93,7 @@ declare module "fastify" {
     activeDepartment: Department | null
     userDepartments: Department[]
     activeDepartmentUserRole: DEPARTMENT_USER_ROLE | null
+    userChats: ChatsSchema[]
 
     resources: {
       user: User | null
@@ -170,6 +173,7 @@ void (async () => {
   const usersService = container.resolve<UsersService>(UsersService.token)
   const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
   const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
+  const chatsService = container.resolve<ChatsService>(ChatsService.token)
 
   const server = Fastify({
     ajv: {
@@ -442,6 +446,23 @@ void (async () => {
         return res.header("HX-Redirect", "/dashboard").send()
       }
       return res.redirect("/dashboard")
+    }
+  })
+
+  // ========== USER CHATS ========== //
+  server.addHook("preHandler", async (req) => {
+    const user = req.callerUser
+    req.userChats = []
+    if (!user) return
+
+    const departmentUserLinks = await departmentUsersService.list({
+      where: eq(departmentUsersTable.userId, user.id),
+    })
+    const departmentUserIds = departmentUserLinks.map((l) => l.id)
+    if (departmentUserIds.length > 0) {
+      req.userChats = await chatsService.list({
+        where: inArray(chatsTable.departmentUserId, departmentUserIds),
+      })
     }
   })
 

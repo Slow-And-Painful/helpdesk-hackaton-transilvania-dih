@@ -1,5 +1,5 @@
 {
-  "id": "632499a7-c68f-4aed-bae6-e929b0753c13",
+  "id": "f9f96ecb-ce9b-48fc-bc9e-2ec418002ef9",
   "prevId": "6ec68621-6980-42bc-b028-4ba2b2afb797",
   "version": "7",
   "dialect": "postgresql",
@@ -117,17 +117,17 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "geminiChatId": {
-          "name": "geminiChatId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "departmentUserId": {
           "name": "departmentUserId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
