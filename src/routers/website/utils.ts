@@ -21,6 +21,7 @@ import { AUTH_VIEW_ROUTE } from "./viewsRouter/auth/index"
 
 import { GlobalResources } from "$types/assets"
 import { USERS_PARTIALS_ROUTE, usersPartialsRouterPrefix } from "./partialsRouter/users"
+import { USERS_ACTIONS_ROUTE, usersActionsRouterPrefix } from "./actionsRouter/users"
 import { DEPARTMENTS_PARTIALS_ROUTE, departmentsPartialsRouterPrefix } from "./partialsRouter/departments"
 import { TICKETS_PARTIALS_ROUTE, ticketsPartialsRouterPrefix } from "./partialsRouter/tickets"
 import { AUTH_ACTIONS_ROUTE, authActionsRouterPrefix } from "./actionsRouter/auth"
@@ -96,7 +97,7 @@ type ActionRouter =
 | "chatbot"
 
 type ActionRoutersPaths = {
-  users: typeof USERS_PARTIALS_ROUTE
+  users: typeof USERS_ACTIONS_ROUTE
   auth: typeof AUTH_ACTIONS_ROUTE
   departments: typeof DEPARTMENTS_ACTIONS_ROUTE
   tickets: typeof TICKETS_ACTIONS_ROUTE
@@ -116,8 +117,8 @@ const actionRoutersConfig: {
   }
 } = {
   users: {
-    paths: USERS_PARTIALS_ROUTE,
-    prefix: usersPartialsRouterPrefix
+    paths: USERS_ACTIONS_ROUTE,
+    prefix: usersActionsRouterPrefix,
   },
   auth: {
     paths: AUTH_ACTIONS_ROUTE,
