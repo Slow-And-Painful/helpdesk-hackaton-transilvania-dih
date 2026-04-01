@@ -51,6 +51,39 @@ type SidebarLink = SidebarSimpleLink | SidebarDropdownLink
 
 // ==================== UTILS ==================== //
 
+const getBaseStaffSidebarItems = (_user: User, routerName: SidebarProps["routerName"]): SidebarLink[] => {
+  const departmentsPath = getViewPath("staff", "DEPARTMENTS")
+  const usersPath = getViewPath("staff", "USERS")
+  const aiSettingsPath = getViewPath("staff", "AI_SETTINGS")
+
+  const normalize = (p: string) => p.replace(/\/$/, "")
+  const current = normalize(routerName as string)
+
+  return [
+    {
+      type: SIDEBAR_LINKS_TYPES.SIMPLE,
+      icon: "inbox",
+      label: "Departments",
+      url: departmentsPath,
+      isActive: current === normalize(departmentsPath) || current.startsWith(normalize(departmentsPath) + "/"),
+    },
+    {
+      type: SIDEBAR_LINKS_TYPES.SIMPLE,
+      icon: "users",
+      label: "Users",
+      url: usersPath,
+      isActive: current === normalize(usersPath),
+    },
+    {
+      type: SIDEBAR_LINKS_TYPES.SIMPLE,
+      icon: "settings",
+      label: "AI Settings",
+      url: aiSettingsPath,
+      isActive: current === normalize(aiSettingsPath),
+    },
+  ]
+}
+
 const getBaseCustomerSidebarItems = (_user: User, routerName: SidebarProps["routerName"], isDepartmentAdmin: boolean): SidebarLink[] => {
   const homePath = getViewPath("dashboard", "HOME")
   const ticketsPath = getViewPath("dashboard", "TICKETS")
@@ -117,13 +150,11 @@ export const getSidebarItems = (options: SidebarProps): SidebarLink[] => {
 
   const group = match({ isCustomer })
     .with({ isCustomer: true }, () => SIDEBAR_LINKS_GROUPS.BASE_CUSTOMER)
-    .otherwise(() => {
-      throw new Error("Unknown user type for sidebar group");
-    })
+    .otherwise(() => SIDEBAR_LINKS_GROUPS.BASE_STAFF)
 
   const items = match(group)
     .with(SIDEBAR_LINKS_GROUPS.BASE_CUSTOMER, () => getBaseCustomerSidebarItems(user, routerName, isDepartmentAdmin))
-    .with(SIDEBAR_LINKS_GROUPS.BASE_STAFF, () => [])
+    .with(SIDEBAR_LINKS_GROUPS.BASE_STAFF, () => getBaseStaffSidebarItems(user, routerName))
     .exhaustive()
 
   return items

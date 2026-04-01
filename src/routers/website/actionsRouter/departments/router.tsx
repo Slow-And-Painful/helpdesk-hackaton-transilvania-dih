@@ -1,4 +1,4 @@
-import { createRouter } from "../../utils"
+import { createRouter, getViewPath } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import { container } from "tsyringe"
@@ -8,6 +8,9 @@ import DepartmentAiPromptForm, { getDepartmentAiPromptFormId } from "$templates/
 import DepartmentGeneralForm, { getDepartmentGeneralFormId } from "$templates/components/departments/DepartmentGeneralForm"
 import { departmentSettingsTitleId } from "$templates/views/DepartmentSettingsView"
 import { getDepartmentInitials } from "$utils/sidebar"
+import DepartmentsTable, { departmentsTableId } from "$templates/components/tables/DepartmentsTable"
+import CreateDepartmentForm, { createDepartmentFormId } from "$templates/components/departments/CreateDepartmentForm"
+import { createDepartmentModalId } from "$templates/components/departments/CreateDepartmentModal"
 
 export const routerPrefix = "/departments"
 
@@ -72,6 +75,54 @@ export const router = createRouter("departments", (server) => {
             errors={{}}
           />
         )
+    },
+  })
+
+  server.route({
+    method: "POST",
+    url: ROUTE.CREATE,
+    schema: schemas[ROUTE.CREATE],
+    config: {
+      authenticated: true,
+      security: { session: `${USER_ROLE.STAFF_ACCOUNT}` },
+    },
+    handler: async (req, res) => {
+      const { name } = req.body as { name: string }
+
+      const existing = await departmentsService.list({ where: undefined })
+      const duplicate = existing.find((d) => d.name.toLowerCase() === name.toLowerCase())
+      if (duplicate) {
+        return res
+          .headers({
+            "HX-Retarget": `#${createDepartmentFormId}`,
+            "HX-Reswap": "outerHTML",
+          })
+          .view(
+            <CreateDepartmentForm
+              values={{ name }}
+              initialValues={{ name }}
+              errors={{ name: <>A department with this name already exists</> }}
+            />
+          )
+      }
+
+      await departmentsService.sInsert({ name, systemPrompt: "" })
+
+      const baseUrl = getViewPath("staff", "DEPARTMENTS")
+      const { items, pagination } = await departmentsService.getTableItems(
+        req.query as Record<string, string>,
+      )
+
+      return res
+        .headers({
+          "HX-Reswap": "outerHTML",
+          "HX-Retarget": `#${departmentsTableId}`,
+          "HX-Trigger-After-Settle": JSON.stringify({
+            closeModal: createDepartmentModalId,
+            showSuccessToast: "Department created successfully",
+          }),
+        })
+        .view(<DepartmentsTable items={items} pagination={pagination} baseUrl={baseUrl} />)
     },
   })
 

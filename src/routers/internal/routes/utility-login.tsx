@@ -65,7 +65,7 @@ const route: RegisterRoutes = (server) => {
 
       const redirectUrl = match(user.type)
         .with(USER_TYPE.CUSTOMER, () => getViewPath("dashboard", "HOME"))
-        .with(USER_TYPE.STAFF, () => getViewPath("public", "HOME"))
+        .with(USER_TYPE.STAFF, () => getViewPath("staff", "DEPARTMENTS"))
         .exhaustive()
 
       return res.redirect(redirectUrl)

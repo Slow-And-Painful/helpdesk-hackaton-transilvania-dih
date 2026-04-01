@@ -48,7 +48,7 @@ export const router = createRouter("tickets", (server) => {
     config: {
       authenticated: true,
       security: {
-        session: `${USER_ROLE.CUSTOMER_ACCOUNT}`,
+        session: `${USER_ROLE.CUSTOMER_ACCOUNT} || ${USER_ROLE.STAFF_ACCOUNT}`,
       },
     },
     handler: async (req, res) => {

@@ -30,6 +30,7 @@ import { TICKETS_ACTIONS_ROUTE, ticketsActionsRouterPrefix } from "./actionsRout
 import { CHATBOT_ACTIONS_ROUTE, chatbotActionsRouterPrefix } from "./actionsRouter/chatbot"
 import { DASHBOARD_VIEW_ROUTE, dashboardViewsRouterPrefix } from "./viewsRouter/dashboard"
 import { WAITING_ROOM_VIEW_ROUTE } from "./viewsRouter/waitingRoom"
+import { STAFF_VIEW_ROUTE, staffViewsRouterPrefix } from "./viewsRouter/staff"
 
 // ==================== ROUTER ===================== //
 
@@ -299,12 +300,14 @@ type ViewRouter =
 | "auth"
 | "dashboard"
 | "waitingRoom"
+| "staff"
 
 type ViewRoutersPaths = {
   public: typeof PUBLIC_VIEW_ROUTE
   auth: typeof AUTH_VIEW_ROUTE
   dashboard: typeof DASHBOARD_VIEW_ROUTE
   waitingRoom: typeof WAITING_ROOM_VIEW_ROUTE
+  staff: typeof STAFF_VIEW_ROUTE
 }
 
 export type ViewRoute<R extends ViewRouter = ViewRouter> = [
@@ -324,6 +327,7 @@ export const viewsRouterPrefix: {
   public: "/",
   auth: "/",
   dashboard: dashboardViewsRouterPrefix,
+  staff: staffViewsRouterPrefix,
 }
 
 const viewRoutersConfig: {
@@ -344,6 +348,10 @@ const viewRoutersConfig: {
   },
   waitingRoom: {
     paths: WAITING_ROOM_VIEW_ROUTE,
+  },
+  staff: {
+    paths: STAFF_VIEW_ROUTE,
+    prefix: staffViewsRouterPrefix,
   },
 }
 
