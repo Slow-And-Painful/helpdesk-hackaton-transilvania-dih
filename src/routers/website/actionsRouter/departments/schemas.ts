@@ -33,4 +33,14 @@ export const schemas = {
       required: ["departmentId", "name"],
     },
   } as const satisfies FastifySchema,
+
+  [ROUTE.CREATE]: {
+    body: {
+      type: "object",
+      properties: {
+        name: { type: "string", minLength: 1, maxLength: 255 },
+      },
+      required: ["name"],
+    },
+  } as const satisfies FastifySchema,
 }

@@ -25,15 +25,15 @@ export const getUserRoles = async (
 
   const activeDepartmentId = req.session.data.activeDepartmentId
 
-  const matchingDepartmentUsers = await req.services.departmentUsersService.list({
-    limit: 1,
-    where: and(
-      eq(departmentUsersTable.departmentId, activeDepartmentId),
-      eq(departmentUsersTable.userId, callerUser?.id ?? -1)
-    )
-  })
-
-  const activeDepartmentUser = matchingDepartmentUsers[0]
+  const activeDepartmentUser = activeDepartmentId
+    ? (await req.services.departmentUsersService.list({
+        limit: 1,
+        where: and(
+          eq(departmentUsersTable.departmentId, activeDepartmentId),
+          eq(departmentUsersTable.userId, callerUser?.id ?? -1)
+        )
+      }))[0]
+    : undefined
 
   const targetUser = req.resources.user
 
