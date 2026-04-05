@@ -4,7 +4,7 @@ import { schemas } from "./schemas"
 import { BaseLayout } from "$templates/layouts"
 import WaitingRoomView from "$templates/views/WaitingRoomView"
 
-export const routerPrefix = ""
+export const routerPrefix = "/waiting-room"
 
 export const router = createRouter("waitingRoom", (server) => {
   server.route({

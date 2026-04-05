@@ -29,8 +29,9 @@ import { DEPARTMENTS_ACTIONS_ROUTE, departmentsActionsRouterPrefix } from "./act
 import { TICKETS_ACTIONS_ROUTE, ticketsActionsRouterPrefix } from "./actionsRouter/tickets"
 import { CHATBOT_ACTIONS_ROUTE, chatbotActionsRouterPrefix } from "./actionsRouter/chatbot"
 import { DASHBOARD_VIEW_ROUTE, dashboardViewsRouterPrefix } from "./viewsRouter/dashboard"
-import { WAITING_ROOM_VIEW_ROUTE } from "./viewsRouter/waitingRoom"
+import { WAITING_ROOM_VIEW_ROUTE, waitingRoomViewsRouterPrefix } from "./viewsRouter/waitingRoom"
 import { STAFF_VIEW_ROUTE, staffViewsRouterPrefix } from "./viewsRouter/staff"
+import { STAFF_ACTIONS_ROUTE, staffActionsRouterPrefix } from "./actionsRouter/staff"
 
 // ==================== ROUTER ===================== //
 
@@ -96,6 +97,7 @@ type ActionRouter =
 | "departments"
 | "tickets"
 | "chatbot"
+| "staff"
 
 type ActionRoutersPaths = {
   users: typeof USERS_ACTIONS_ROUTE
@@ -103,6 +105,7 @@ type ActionRoutersPaths = {
   departments: typeof DEPARTMENTS_ACTIONS_ROUTE
   tickets: typeof TICKETS_ACTIONS_ROUTE
   chatbot: typeof CHATBOT_ACTIONS_ROUTE
+  staff: typeof STAFF_ACTIONS_ROUTE
 }
 
 type ActionRoutersParams = {
@@ -137,6 +140,10 @@ const actionRoutersConfig: {
     paths: CHATBOT_ACTIONS_ROUTE,
     prefix: chatbotActionsRouterPrefix,
   },
+  staff: {
+    paths: STAFF_ACTIONS_ROUTE,
+    prefix: staffActionsRouterPrefix
+  }
 }
 
 export function getActionPath<
@@ -317,6 +324,7 @@ export type ViewRoute<R extends ViewRouter = ViewRouter> = [
 
 type ViewRoutersParams = {
   auth: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     LOGIN: any
   }
 }
@@ -328,6 +336,7 @@ export const viewsRouterPrefix: {
   auth: "/",
   dashboard: dashboardViewsRouterPrefix,
   staff: staffViewsRouterPrefix,
+  waitingRoom: waitingRoomViewsRouterPrefix,
 }
 
 const viewRoutersConfig: {

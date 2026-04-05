@@ -1,5 +1,5 @@
 enum GLOBAL_SETTINGS {
-  TEST = "TEST"
+  SYSTEM_PROMPT = "SYSTEM_PROMPT"
 }
 
 export default GLOBAL_SETTINGS
