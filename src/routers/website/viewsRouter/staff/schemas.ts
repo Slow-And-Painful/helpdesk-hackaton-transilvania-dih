@@ -5,4 +5,5 @@ export const schemas = {
   [ROUTE.DEPARTMENT_SETTINGS]: {},
   [ROUTE.USERS]: {},
   [ROUTE.AI_SETTINGS]: {},
+  [ROUTE.INSIGHTS]: {},
 }
