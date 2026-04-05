@@ -27,8 +27,8 @@ export const router = createRouter("chatbot", (server) => {
     handler: async (req, res) => {
       const { message, chatId } = req.body as { message: string; chatId?: string }
 
-      // Resolve the departmentUser for the current user + active department
       const activeDepartment = req.activeDepartment
+
       if (!activeDepartment) {
         return res.status(400).send("No active department selected")
       }
@@ -51,12 +51,16 @@ export const router = createRouter("chatbot", (server) => {
       const history: Content[] = []
 
       if (!chatId) {
-        // New conversation — create a chat row
         const newChat = await chatsService.sInsert({ departmentUserId: departmentUser.id })
         chatUuid = newChat.uuid
 
-        // Send message to Gemini (no history for a new chat)
-        const reply = await geminiComponent.sendMessage(message) ?? ""
+        const reply = await geminiComponent.sendMessage({
+          prompt: message,
+          history: [],
+          systemPrompts: {
+            department: activeDepartment.systemPrompt,
+          },
+        }) ?? ""
 
         await chatMessagesService.sInsert({ chatId: newChat.id, prompt: message, response: reply })
 
@@ -104,7 +108,13 @@ export const router = createRouter("chatbot", (server) => {
         }
 
         // Send message to Gemini with conversation history
-        const reply = await geminiComponent.sendMessage(message, history) ?? ""
+        const reply = await geminiComponent.sendMessage({
+          prompt: message,
+          history,
+          systemPrompts: {
+            department: activeDepartment.systemPrompt,
+          },
+        }) ?? ""
 
         await chatMessagesService.sInsert({ chatId: existingChat.id, prompt: message, response: reply })
 
