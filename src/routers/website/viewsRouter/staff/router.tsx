@@ -19,6 +19,7 @@ import { eq, inArray } from "drizzle-orm"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 import { usersTable } from "$dbSchemas/Users"
 import { ticketsTable } from "$dbSchemas/Tickets"
+import GlobalSettingsComponent from "$components/GlobalSettingsComponent"
 
 export const routerPrefix = "/staff"
 
@@ -26,6 +27,7 @@ const departmentsService = container.resolve<DepartmentsService>(DepartmentsServ
 const usersService = container.resolve<UsersService>(UsersService.token)
 const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
+const globalSettingsComponent = container.resolve<GlobalSettingsComponent>(GlobalSettingsComponent.token)
 
 export const router = createRouter("staff", (server) => {
   server.route({
@@ -210,8 +212,10 @@ export const router = createRouter("staff", (server) => {
       },
       authenticated: true,
     },
-    handler: (_req, res) => {
-      return res.view(<StaffAiSettingsView />, DashboardLayout)
+    handler: async(_, res) => {
+      const globalSettings = await globalSettingsComponent.getGlobalSettings()
+
+      return res.view(<StaffAiSettingsView globalSettings={globalSettings}/>, DashboardLayout)
     },
   })
 })

@@ -1,10 +1,24 @@
+import { GlobalSettings } from "$constants/globalSettings"
 import DashboardPage from "$templates/components/DashboardPage"
+import GlobalSettingsAiSystemPrompt from "$templates/components/global-settings/GlobalSettingsAiSytemPrompt"
 
-const StaffAiSettingsView = () => {
+type Props = {
+  globalSettings: GlobalSettings
+}
+
+const StaffAiSettingsView = (props: Props) => {
   return (
     <DashboardPage title={<span>AI Settings</span>}>
       <div class="flex flex-col gap-y-6">
-        {/* AI settings will go here */}
+        <GlobalSettingsAiSystemPrompt
+          values={{
+            systemPrompt: props.globalSettings.SYSTEM_PROMPT || "",
+          }}
+          initialValues={{
+            systemPrompt: props.globalSettings.SYSTEM_PROMPT || "",
+          }}
+          errors={{}}
+        />
       </div>
     </DashboardPage>
   )
