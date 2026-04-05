@@ -21,6 +21,7 @@ import "./modules/card-slider"
 import "./modules/auth"
 import "./modules/chatbot"
 import "./modules/sidebar-chats"
+import "./modules/charts"
 
 
 declare global {

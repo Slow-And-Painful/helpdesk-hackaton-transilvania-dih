@@ -3,4 +3,5 @@ export enum ROUTE {
   DEPARTMENT_SETTINGS = "/departments/:id",
   USERS = "/users",
   AI_SETTINGS = "/ai-settings",
+  INSIGHTS = "/insights"
 }

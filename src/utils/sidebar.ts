@@ -55,6 +55,7 @@ const getBaseStaffSidebarItems = (_user: User, routerName: SidebarProps["routerN
   const departmentsPath = getViewPath("staff", "DEPARTMENTS")
   const usersPath = getViewPath("staff", "USERS")
   const aiSettingsPath = getViewPath("staff", "AI_SETTINGS")
+  const insightsPath = getViewPath("staff", "INSIGHTS")
 
   const normalize = (p: string) => p.replace(/\/$/, "")
   const current = normalize(routerName as string)
@@ -81,6 +82,13 @@ const getBaseStaffSidebarItems = (_user: User, routerName: SidebarProps["routerN
       url: aiSettingsPath,
       isActive: current === normalize(aiSettingsPath),
     },
+    {
+      type: SIDEBAR_LINKS_TYPES.SIMPLE,
+      icon: "pie-chart",
+      label: "Insights",
+      url: insightsPath,
+      isActive: current === normalize(insightsPath)
+    }
   ]
 }
 

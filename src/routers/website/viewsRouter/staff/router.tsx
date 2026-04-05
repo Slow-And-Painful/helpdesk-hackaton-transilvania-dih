@@ -20,6 +20,7 @@ import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 import { usersTable } from "$dbSchemas/Users"
 import { ticketsTable } from "$dbSchemas/Tickets"
 import GlobalSettingsComponent from "$components/GlobalSettingsComponent"
+import StaffInsightsView from "$templates/views/StaffInsightsView"
 
 export const routerPrefix = "/staff"
 
@@ -216,6 +217,21 @@ export const router = createRouter("staff", (server) => {
       const globalSettings = await globalSettingsComponent.getGlobalSettings()
 
       return res.view(<StaffAiSettingsView globalSettings={globalSettings}/>, DashboardLayout)
+    },
+  })
+
+  server.route({
+    url: ROUTE.INSIGHTS,
+    method: "GET",
+    schema: schemas[ROUTE.INSIGHTS],
+    config: {
+      security: {
+        session: `${USER_ROLE.STAFF_ACCOUNT}`,
+      },
+      authenticated: true,
+    },
+    handler: async(_, res) => {
+      return res.view(<StaffInsightsView/>, DashboardLayout)
     },
   })
 })
