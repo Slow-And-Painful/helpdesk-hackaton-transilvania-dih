@@ -4,4 +4,5 @@ export enum ROUTE {
   GET_UPLOAD_DOCUMENT_PRESIGNED_URL = "/get-upload-document-presigned-url",
   UPLOAD_DOCUMENT_MODAL = "/upload-document-modal",
   DOCUMENT_DETAIL = "/document-detail/:documentId",
+  DOCUMENT_DOWNLOAD = "/document-download/:documentId",
 }

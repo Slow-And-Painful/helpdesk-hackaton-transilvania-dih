@@ -6,12 +6,15 @@ import ChatbotForm from "$templates/components/chatbot/ChatbotForm"
 import ChatMessage from "$templates/components/chatbot/ChatMessage"
 import { ChatMessageSchema } from "$dbSchemas/ChatMessages"
 
+type DocRef = { id: number; name: string }
+
 type Props = {
   chatId?: string
   messages?: ChatMessageSchema[]
+  ragDocuments?: DocRef[]
 }
 
-const ChatbotView = ({ chatId, messages }: Props) => {
+const ChatbotView = ({ chatId, messages, ragDocuments = [] }: Props) => {
   const hasMessages = messages && messages.length > 0
 
   return (
@@ -48,7 +51,7 @@ const ChatbotView = ({ chatId, messages }: Props) => {
       {/* Messages area — pre-populated when resuming a chat */}
       <div class={`hd-chat__messages${hasMessages ? " hd-chat__messages--active" : ""}`} id="hd-chat-messages">
         {hasMessages && messages.map((msg) => (
-          <ChatMessage message={msg.prompt} reply={msg.response} />
+          <ChatMessage message={msg.prompt} reply={msg.response} documents={ragDocuments} />
         ))}
       </div>
 

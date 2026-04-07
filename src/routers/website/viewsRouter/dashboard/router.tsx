@@ -49,6 +49,12 @@ export const router = createRouter("dashboard", (server) => {
 
       const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
+      const ragDocuments = req.activeDepartment
+        ? await ragDocumentsService.list({
+            where: eq(ragDocumentsTable.departmentId, req.activeDepartment.id),
+          })
+        : []
+
       if (chatUuid && UUID_REGEX.test(chatUuid)) {
         const chat = req.userChats.find((c) => c.uuid === chatUuid)
 
@@ -58,7 +64,7 @@ export const router = createRouter("dashboard", (server) => {
           })
 
           return res.view(
-            <ChatbotView chatId={chatUuid} messages={messages} />,
+            <ChatbotView chatId={chatUuid} messages={messages} ragDocuments={ragDocuments} />,
             DashboardLayout,
             { activeChatUuid: chatUuid }
           )
@@ -66,7 +72,7 @@ export const router = createRouter("dashboard", (server) => {
       }
 
       return res.view(
-        <ChatbotView />,
+        <ChatbotView ragDocuments={ragDocuments} />,
         DashboardLayout,
       )
     },

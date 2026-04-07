@@ -101,6 +101,28 @@ export const router = createRouter("departments", (server) => {
   })
 
   server.route({
+    method: "GET",
+    url: ROUTE.DOCUMENT_DOWNLOAD,
+    schema: schemas[ROUTE.DOCUMENT_DOWNLOAD],
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const { documentId } = req.params as { documentId: number }
+
+      const [document] = await ragDocumentsService.list({
+        where: eq(ragDocumentsTable.id, documentId),
+      })
+
+      if (!document) {
+        return res.status(404).send("Document not found")
+      }
+
+      const url = await ragDocumentsBucketComponent.getDocumentSignedUrl({ key: document.s3Key })
+
+      return res.redirect(url)
+    },
+  })
+
+  server.route({
     method: "POST",
     url: ROUTE.GET_UPLOAD_DOCUMENT_PRESIGNED_URL,
     schema: schemas[ROUTE.GET_UPLOAD_DOCUMENT_PRESIGNED_URL],

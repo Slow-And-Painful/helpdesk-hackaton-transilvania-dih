@@ -14,6 +14,15 @@ export const schemas = {
       required: ["documentId"],
     },
   } as const satisfies FastifySchema,
+  [ROUTE.DOCUMENT_DOWNLOAD]: {
+    params: {
+      type: "object",
+      properties: {
+        documentId: { type: "integer" },
+      },
+      required: ["documentId"],
+    },
+  } as const satisfies FastifySchema,
   [ROUTE.GET_UPLOAD_DOCUMENT_PRESIGNED_URL]: {
     body: {
       type: "object",
