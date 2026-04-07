@@ -25,6 +25,7 @@ export default class GeminiComponent {
     history: Content[],
     systemPrompts: {
       department: string
+      documents?: Array<{ id: number; name: string; aiDescription: string }>
     }
   }) => {
     const {
@@ -36,25 +37,34 @@ export default class GeminiComponent {
     const globalSettings = await this.globalSettingsComponent.getGlobalSettings()
     const globalSystemPrompt = globalSettings[GLOBAL_SETTINGS.SYSTEM_PROMPT]
 
+    const systemHistory: Content[] = [
+      {
+        parts: [{ text: globalSystemPrompt }],
+        role: "user",
+      },
+      {
+        parts: [{ text: systemPrompts.department }],
+        role: "user",
+      },
+    ]
+
+    if (systemPrompts.documents && systemPrompts.documents.length > 0) {
+      const docLines = systemPrompts.documents
+        .map(d => `[DOC:${d.id}] ${d.name}: ${d.aiDescription}`)
+        .join("\n")
+
+      systemHistory.push({
+        parts: [{
+          text: `The following documents are available in this department's knowledge base. When recommending a document to the user, reference it using the exact marker [DOC:<id>] so it can be rendered as a link.\n\n${docLines}`,
+        }],
+        role: "user",
+      })
+    }
+
     const chat = this.client.chats.create({
       model: this.model,
       history: [
-        {
-          parts: [
-            {
-              text: globalSystemPrompt,
-            }
-          ],
-          role: "user",
-        },
-        {
-          parts: [
-            {
-              text: systemPrompts.department,
-            }
-          ],
-          role: "user",
-        },
+        ...systemHistory,
         ...history,
       ],
     })

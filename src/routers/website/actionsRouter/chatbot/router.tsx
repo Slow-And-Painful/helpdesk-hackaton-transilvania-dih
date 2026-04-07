@@ -6,9 +6,11 @@ import { container } from "tsyringe"
 import ChatsService from "$services/ChatsService"
 import ChatMessagesService from "$services/ChatsMessagesService"
 import GeminiComponent from "$components/GeminiComponent"
+import RAGDocumentsService from "$services/RAGDocumentsService"
 import { chatsTable } from "$dbSchemas/Chats"
 import { chatMessagesTable } from "$dbSchemas/ChatMessages"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import { ragDocumentsTable } from "$dbSchemas/ragDocuments"
 import { and, eq } from "drizzle-orm"
 import type { Content } from "@google/genai"
 import Sidebar from "$templates/components/Sidebar"
@@ -18,6 +20,7 @@ export const routerPrefix = "/chatbot"
 const chatsService = container.resolve<ChatsService>(ChatsService.token)
 const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesService.token)
 const geminiComponent = container.resolve<GeminiComponent>(GeminiComponent.token)
+const ragDocumentsService = container.resolve<RAGDocumentsService>(RAGDocumentsService.token)
 
 export const router = createRouter("chatbot", (server) => {
   server.route({
@@ -47,6 +50,10 @@ export const router = createRouter("chatbot", (server) => {
         return res.status(400).send("User not in department")
       }
 
+      const ragDocuments = await ragDocumentsService.list({
+        where: eq(ragDocumentsTable.departmentId, activeDepartment.id),
+      })
+
       let chatUuid: string
       const history: Content[] = []
 
@@ -59,6 +66,7 @@ export const router = createRouter("chatbot", (server) => {
           history: [],
           systemPrompts: {
             department: activeDepartment.systemPrompt,
+            documents: ragDocuments,
           },
         }) ?? ""
 
@@ -70,7 +78,7 @@ export const router = createRouter("chatbot", (server) => {
           .header("HX-Push-Url", `/dashboard/?chat=${chatUuid}`)
           .view(
             <>
-              <ChatBotReply reply={reply} />
+              <ChatBotReply reply={reply} documents={ragDocuments} />
               <Sidebar
                 swapOOB="true"
                 routerName="/dashboard/"
@@ -113,6 +121,7 @@ export const router = createRouter("chatbot", (server) => {
           history,
           systemPrompts: {
             department: activeDepartment.systemPrompt,
+            documents: ragDocuments,
           },
         }) ?? ""
 
@@ -122,7 +131,7 @@ export const router = createRouter("chatbot", (server) => {
 
         return res
           .header("HX-Push-Url", `/dashboard/?chat=${chatUuid}`)
-          .view(<ChatBotReply reply={reply} />)
+          .view(<ChatBotReply reply={reply} documents={ragDocuments} />)
       }
     },
   })
