@@ -1,8 +1,9 @@
-import { createRouter, getViewPath } from "../../utils"
+import { createRouter } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import { container } from "tsyringe"
 import DepartmentsService from "$services/DepartmentsService"
+import RAGDocumentsService from "$services/RAGDocumentsService"
 import USER_ROLE from "$types/USER_ROLES"
 import DepartmentAiPromptForm, { getDepartmentAiPromptFormId } from "$templates/components/departments/DepartmentAiPromptForm"
 import DepartmentGeneralForm, { getDepartmentGeneralFormId } from "$templates/components/departments/DepartmentGeneralForm"
@@ -11,10 +12,16 @@ import { getDepartmentInitials } from "$utils/sidebar"
 import DepartmentsTable, { departmentsTableId } from "$templates/components/tables/DepartmentsTable"
 import CreateDepartmentForm, { createDepartmentFormId } from "$templates/components/departments/CreateDepartmentForm"
 import { createDepartmentModalId } from "$templates/components/departments/CreateDepartmentModal"
+import UpdateDocumentForm, { getUpdateDocumentFormId } from "$templates/components/documents/UpdateDocumentForm"
+import DocumentsTable, { documentsTableId } from "$templates/components/tables/DocumentsTable"
+import { eq } from "drizzle-orm"
+import { ragDocumentsTable } from "$dbSchemas/ragDocuments"
+import { getViewPath } from "../../utils"
 
 export const routerPrefix = "/departments"
 
 const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
+const ragDocumentsService = container.resolve<RAGDocumentsService>(RAGDocumentsService.token)
 
 export const router = createRouter("departments", (server) => {
   server.route({
@@ -144,6 +151,7 @@ export const router = createRouter("departments", (server) => {
       await departmentsService.update(departmentId, { name })
 
       const updatedDepartment = { ...req.activeDepartment, name }
+
       const formId = getDepartmentGeneralFormId(departmentId)
       return res
         .headers({
@@ -178,6 +186,95 @@ export const router = createRouter("departments", (server) => {
             <div id="sidebar-dept-tooltip" hx-swap-oob="innerHTML" safe>{name}</div>
           </>
         )
+    },
+  })
+
+  server.route({
+    method: "POST",
+    url: ROUTE.UPDATE_DOCUMENT,
+    schema: schemas[ROUTE.UPDATE_DOCUMENT],
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const { documentId, name, aiDescription } = req.body as { documentId: number; name: string; aiDescription?: string }
+
+      const [document] = await ragDocumentsService.list({
+        where: eq(ragDocumentsTable.id, documentId),
+      })
+
+      if (!document) {
+        return res.status(404).send("Document not found")
+      }
+
+      const formId = getUpdateDocumentFormId(documentId)
+      const values = { name, aiDescription: aiDescription ?? "" }
+
+      await ragDocumentsService.update(documentId, values)
+
+      const baseUrl = getViewPath("dashboard", "DOCUMENTS")
+      const { items, pagination } = await ragDocumentsService.getTableItems(
+        {},
+        req.activeDepartment
+          ? eq(ragDocumentsTable.departmentId, req.activeDepartment.id)
+          : undefined,
+      )
+
+      return res
+        .headers({
+          "HX-Retarget": `#${formId},#${documentsTableId}`,
+          "HX-Reswap": "none",
+          "HX-Push-Url": "false",
+          "HX-Trigger-After-Settle": JSON.stringify({
+            showSuccessToast: "Document updated successfully",
+          }),
+        })
+        .view(
+          <>
+            <UpdateDocumentForm
+              document={{ ...document, ...values }}
+              values={values}
+              initialValues={values}
+              errors={{}}
+              swapOOB={"outerHTML"}
+            />
+            <DocumentsTable
+              items={items}
+              pagination={pagination}
+              baseUrl={baseUrl}
+              swapOOB={"outerHTML"}
+            />
+          </>
+        )
+    },
+  })
+
+  server.route({
+    method: "POST",
+    url: ROUTE.UPLOAD_DOCUMENT,
+    schema: schemas[ROUTE.UPLOAD_DOCUMENT],
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const { documentKey, name, aiDescription } = req.body as { documentKey: string; documentType: string; name: string; aiDescription?: string }
+
+      if (!req.activeDepartment) {
+        return res.status(403).send("No active department")
+      }
+
+      await ragDocumentsService.sInsert({
+        s3Key: documentKey,
+        name,
+        aiDescription: aiDescription ?? "",
+        departmentId: req.activeDepartment.id,
+      })
+
+      return res
+        .headers({
+          "HX-Trigger-After-Settle": JSON.stringify({
+            showSuccessToast: "Document uploaded successfully",
+            closeModal: "upload-department-document-modal",
+          }),
+        })
+        .status(204)
+        .send()
     },
   })
 })

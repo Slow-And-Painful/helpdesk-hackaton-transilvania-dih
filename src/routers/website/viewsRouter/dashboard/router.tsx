@@ -8,6 +8,7 @@ import TicketsView from "$templates/views/TicketsView"
 import UsersView from "$templates/views/UsersView"
 import DepartmentSettingsView from "$templates/views/DepartmentSettingsView"
 import DepartmentDocumentsView from "$templates/views/DepartmentDocumentsView"
+import DocumentsTable, { documentsTableId } from "$templates/components/tables/DocumentsTable"
 import TicketsTable, { ticketsTableId } from "$templates/components/tables/TicketsTable"
 import UsersTable, { usersTableId } from "$templates/components/tables/UsersTable"
 import { container } from "tsyringe"
@@ -23,10 +24,14 @@ import { usersTable } from "$dbSchemas/Users"
 
 export const routerPrefix = "/dashboard"
 
+import RAGDocumentsService from "$services/RAGDocumentsService"
+import { ragDocumentsTable } from "$dbSchemas/ragDocuments"
+
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
 const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesService.token)
 const usersService = container.resolve<UsersService>(UsersService.token)
 const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
+const ragDocumentsService = container.resolve<RAGDocumentsService>(RAGDocumentsService.token)
 
 export const router = createRouter("dashboard", (server) => {
   server.route({
@@ -231,9 +236,35 @@ export const router = createRouter("dashboard", (server) => {
       },
       authenticated: true,
     },
-    handler: (req, res) => {
+    handler: async (req, res) => {
+      const query = req.query as Record<string, string>
+      const baseUrl = getViewPath("dashboard", "DOCUMENTS")
+
+      const additionalWhere = req.activeDepartment
+        ? eq(ragDocumentsTable.departmentId, req.activeDepartment.id)
+        : undefined
+
+      const { items, pagination } = await ragDocumentsService.getTableItems(query, additionalWhere)
+
+      const tableOnly = req.headers["hx-template"] === "table"
+
+      if (tableOnly) {
+        return res
+          .headers({
+            "HX-Reswap": "outerHTML",
+            "HX-Retarget": `#${documentsTableId}`,
+            "HX-Push-Url": `${baseUrl}${pagination.baseUrl ? `?${pagination.baseUrl}&page=${pagination.page}` : `?page=${pagination.page}`}`,
+          })
+          .view(<DocumentsTable items={items} pagination={pagination} baseUrl={baseUrl} />)
+      }
+
       return res.view(
-        <DepartmentDocumentsView activeDepartment={req.activeDepartment} />,
+        <DepartmentDocumentsView
+          activeDepartment={req.activeDepartment}
+          items={items}
+          pagination={pagination}
+          baseUrl={baseUrl}
+        />,
         DashboardLayout
       )
     },

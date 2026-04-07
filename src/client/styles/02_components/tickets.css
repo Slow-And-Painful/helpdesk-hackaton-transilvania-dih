@@ -176,6 +176,22 @@
   @apply flex items-center justify-end px-6 py-4 border-t border-gray-800;
 }
 
+/* ==================== DOCUMENT DETAIL DRAWER ==================== */
+
+.doc-drawer__panel {
+  @apply w-[560px];
+}
+
+.doc-drawer__preview {
+  @apply w-full rounded-lg overflow-hidden border border-gray-700 bg-gray-950;
+  height: 340px;
+}
+
+.doc-drawer__pdf {
+  @apply w-full h-full;
+}
+
+
 @keyframes drawer-slide-in {
   from {
     transform: translateX(100%);
