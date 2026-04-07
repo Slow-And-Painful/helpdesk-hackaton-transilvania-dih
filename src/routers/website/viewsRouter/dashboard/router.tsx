@@ -46,6 +46,9 @@ export const router = createRouter("dashboard", (server) => {
     },
     handler: async (req, res) => {
       const { chat: chatUuid } = req.query as { chat?: string }
+      const callerUser = req.callerUser
+      const activeDep = req.activeDepartment
+      const matchingDepUser = activeDep?.users.find(u => u.userId === callerUser.id)
 
       const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -58,7 +61,7 @@ export const router = createRouter("dashboard", (server) => {
       if (chatUuid && UUID_REGEX.test(chatUuid)) {
         const chat = req.userChats.find((c) => c.uuid === chatUuid)
 
-        if (chat) {
+        if (chat && chat.departmentUserId === matchingDepUser?.id) {
           const messages = await chatMessagesService.list({
             where: eq(chatMessagesTable.chatId, chat.id),
           })
@@ -71,7 +74,9 @@ export const router = createRouter("dashboard", (server) => {
         }
       }
 
-      return res.view(
+      return res.headers({
+        "HX-Push-Url": getViewPath("dashboard", "HOME")
+      }).view(
         <ChatbotView ragDocuments={ragDocuments} />,
         DashboardLayout,
       )

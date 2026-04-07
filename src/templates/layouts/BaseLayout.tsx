@@ -26,6 +26,9 @@ export function BaseLayout({
   userChats = [],
   activeChatUuid,
 }: LayoutProps) {
+  const matchingDepartmentUser = activeDepartment.users.find(u => u.userId === user.id)
+  const filteredChats = userChats.filter(chat => chat.departmentUserId === matchingDepartmentUser?.id)
+
   if (isHtmxRequest) {
     return (
       <>
@@ -40,7 +43,7 @@ export function BaseLayout({
                 activeDepartment={activeDepartment}
                 userDepartments={userDepartments}
                 activeDepartmentUserRole={activeDepartmentUserRole}
-                userChats={userChats}
+                userChats={filteredChats}
                 activeChatUuid={activeChatUuid}
               /> : null
           }
@@ -73,7 +76,7 @@ export function BaseLayout({
                   activeDepartment={activeDepartment}
                   userDepartments={userDepartments}
                   activeDepartmentUserRole={activeDepartmentUserRole}
-                  userChats={userChats}
+                  userChats={filteredChats}
                   activeChatUuid={activeChatUuid}
                 /> : null
             }
