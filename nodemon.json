@@ -1,6 +1,6 @@
 {
   "watch": ["src"],
-  "ext": "ts,tsx,js,json",
+  "ext": "ts,tsx,js,json,css",
   "exec": "npm run build && npm start",
   "ignore": ["src/meta.json"]
 }
