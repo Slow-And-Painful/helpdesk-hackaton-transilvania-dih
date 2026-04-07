@@ -108,6 +108,26 @@
   @apply text-gray-200 text-sm leading-relaxed;
 }
 
+.hd-chat__msg-bubble--markdown {
+  p { @apply mb-2 last:mb-0 text-sm; }
+  h1, h2, h3, h4, h5, h6 { @apply font-semibold mb-2 mt-3 first:mt-0; }
+  h1 { @apply text-xl; }
+  h2, h3 { @apply text-lg; }
+  h4, h5, h6 { @apply text-base; }
+  ul, ol { @apply pl-4 mb-2; }
+  ul { @apply list-disc; }
+  ol { @apply list-decimal; }
+  li { @apply mb-1; }
+  strong { @apply font-semibold; }
+  em { @apply italic; }
+  code { @apply bg-gray-700 rounded px-1 py-0.5 font-mono text-xs; }
+  pre { @apply bg-gray-700 rounded p-3 mb-2 overflow-x-auto; }
+  pre code { @apply bg-transparent p-0; }
+  a { @apply text-primary-400 underline; }
+  blockquote { @apply border-l-2 border-gray-600 pl-3 italic text-gray-400 mb-2; }
+  hr { @apply border-gray-700 my-3; }
+}
+
 .hd-chat__msg-avatar {
   @apply w-7 h-7 rounded-lg bg-primary-500/15 border border-primary-500/20
   flex items-center justify-center text-primary-400 shrink-0 mt-0.5;
