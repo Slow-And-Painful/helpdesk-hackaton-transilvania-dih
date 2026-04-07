@@ -51,6 +51,10 @@
   @apply pointer-events-none;
 }
 
+.dropzone.loading [data-loading-component] {
+  @apply !flex;
+}
+
 [data-input-file].loading {
   @apply pointer-events-none;
 

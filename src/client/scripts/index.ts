@@ -22,6 +22,7 @@ import "./modules/auth"
 import "./modules/chatbot"
 import "./modules/sidebar-chats"
 import "./modules/charts"
+import "./modules/documentFileUploader"
 
 
 declare global {
@@ -62,6 +63,11 @@ declare global {
     handleChatKeydown: (e: KeyboardEvent) => void
     submitSuggestion: (btn: HTMLElement) => void
     handleHelpdeskChat: (e: SubmitEvent) => boolean
+    documentFileUploader: {
+      init: () => void
+      onInputChange: (fileInput: HTMLInputElement, dropzone: HTMLElement) => void
+      confirmUpload: () => Promise<void>
+    }
   }
   interface HTMLElementEventMap {
     "htmx:beforeRequest": CustomEvent

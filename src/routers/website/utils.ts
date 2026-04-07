@@ -225,6 +225,9 @@ type PartialRoutersParams = {
   tickets: {
     TICKET_DETAIL: { ticketId: number }
   }
+  departments: {
+    DOCUMENT_DETAIL: { documentId: number }
+  }
 }
 
 const partialRoutersConfig: {

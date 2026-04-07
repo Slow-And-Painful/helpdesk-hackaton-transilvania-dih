@@ -1,10 +1,12 @@
-import { pgTable, varchar, serial, integer, timestamp } from "drizzle-orm/pg-core"
+import { pgTable, varchar, serial, integer, timestamp, text } from "drizzle-orm/pg-core"
 import { departmentsTable } from "./Departments"
 import { relations } from "drizzle-orm"
 
 export const ragDocumentsTable = pgTable("RAGDocuments", {
   id: serial().primaryKey(),
   s3Key: varchar({ length: 1024 }).notNull(),
+  name: varchar({ length: 255 }).notNull(),
+  aiDescription: text().notNull().default(""),
   departmentId: integer().notNull().references(() => departmentsTable.id),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow()
 })

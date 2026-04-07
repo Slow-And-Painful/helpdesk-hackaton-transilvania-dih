@@ -21,7 +21,7 @@ export default class RAGDocumentsService extends BaseService<
 > {
   mainTable = ragDocumentsTable
   pk = ragDocumentsTable.id
-  allowedSearchField = []
+  allowedSearchField = ["name"]
   allowedFilters = { id: "string" } as Record<string, "string" | "boolean">
 
   constructor(

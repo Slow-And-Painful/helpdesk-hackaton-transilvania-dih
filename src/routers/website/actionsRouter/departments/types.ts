@@ -3,4 +3,6 @@ export enum ROUTE {
   UPDATE_PROMPT = "/update-prompt",
   UPDATE_GENERAL = "/update-general",
   CREATE = "/create",
+  UPLOAD_DOCUMENT = "/upload-document",
+  UPDATE_DOCUMENT = "/update-document",
 }

@@ -43,4 +43,29 @@ export const schemas = {
       required: ["name"],
     },
   } as const satisfies FastifySchema,
+
+  [ROUTE.UPDATE_DOCUMENT]: {
+    body: {
+      type: "object",
+      properties: {
+        documentId: { type: "integer" },
+        name: { type: "string", minLength: 1, maxLength: 255 },
+        aiDescription: { type: "string" },
+      },
+      required: ["documentId", "name"],
+    },
+  } as const satisfies FastifySchema,
+
+  [ROUTE.UPLOAD_DOCUMENT]: {
+    body: {
+      type: "object",
+      properties: {
+        documentKey: { type: "string" },
+        documentType: { type: "string" },
+        name: { type: "string", minLength: 1, maxLength: 255 },
+        aiDescription: { type: "string" },
+      },
+      required: ["documentKey", "documentType", "name"],
+    },
+  } as const satisfies FastifySchema,
 }
