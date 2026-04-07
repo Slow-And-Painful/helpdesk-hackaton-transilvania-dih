@@ -452,13 +452,19 @@ void (async () => {
   // ========== USER CHATS ========== //
   server.addHook("preHandler", async (req) => {
     const user = req.callerUser
+
     req.userChats = []
-    if (!user) return
+
+    if (!user) {
+      return
+    }
 
     const departmentUserLinks = await departmentUsersService.list({
       where: eq(departmentUsersTable.userId, user.id),
     })
+
     const departmentUserIds = departmentUserLinks.map((l) => l.id)
+
     if (departmentUserIds.length > 0) {
       req.userChats = await chatsService.list({
         where: inArray(chatsTable.departmentUserId, departmentUserIds),

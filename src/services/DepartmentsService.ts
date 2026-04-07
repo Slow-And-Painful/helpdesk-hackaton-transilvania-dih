@@ -2,8 +2,11 @@ import BaseService, { MainQuery } from "$services/BaseService"
 import DrizzleDB from "$components/DrizzleDB"
 import { container, inject, injectable } from "tsyringe"
 import { DepartmentsSchema, departmentsTable, NewDepartmentSchema } from "$dbSchemas/Departments"
+import { DepartmentUserSchema } from "$dbSchemas/DepartmentUsers"
 
-export type Department = DepartmentsSchema
+export type Department = DepartmentsSchema & {
+  users: DepartmentUserSchema[]
+}
 
 type TABLE = typeof departmentsTable
 type PK_TYPE = number
@@ -34,6 +37,9 @@ export default class DepartmentsService extends BaseService<
   mainQuery: MainQuery<MAIN_QUERY_RESULT> = async ({ db, ...options }) => {
     return db.query.departmentsTable.findMany({
       ...options,
+      with: {
+        users: true,
+      }
     })
   }
 
