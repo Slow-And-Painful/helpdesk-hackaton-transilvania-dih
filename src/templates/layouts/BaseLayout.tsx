@@ -26,7 +26,7 @@ export function BaseLayout({
   userChats = [],
   activeChatUuid,
 }: LayoutProps) {
-  const matchingDepartmentUser = activeDepartment.users.find(u => u.userId === user.id)
+  const matchingDepartmentUser = activeDepartment?.users.find(u => u.userId === user.id)
   const filteredChats = userChats.filter(chat => chat.departmentUserId === matchingDepartmentUser?.id)
 
   if (isHtmxRequest) {

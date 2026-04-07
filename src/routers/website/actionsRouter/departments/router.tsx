@@ -266,15 +266,26 @@ export const router = createRouter("departments", (server) => {
         departmentId: req.activeDepartment.id,
       })
 
+      const { items, pagination } = await ragDocumentsService.getTableItems(req.query as Record<string, string>, eq(ragDocumentsTable.departmentId, req.activeDepartment.id))
+      const baseUrl = getViewPath("dashboard", "DOCUMENTS")
+
       return res
         .headers({
           "HX-Trigger-After-Settle": JSON.stringify({
             showSuccessToast: "Document uploaded successfully",
             closeModal: "upload-department-document-modal",
           }),
+          "HX-Reswap": "outerHTML",
+          "HX-Retarget": `#${documentsTableId}`,
+          "HX-Push-Url": `${baseUrl}${pagination.baseUrl ? `?${pagination.baseUrl}&page=${pagination.page}` : `?page=${pagination.page}`}`,
         })
-        .status(204)
-        .send()
+        .view(
+          <DocumentsTable
+            items={items}
+            pagination={pagination}
+            baseUrl={baseUrl}
+          />,
+        )
     },
   })
 })

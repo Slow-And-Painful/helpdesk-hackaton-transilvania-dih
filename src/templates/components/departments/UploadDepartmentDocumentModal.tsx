@@ -58,7 +58,7 @@ const UploadDepartmentDocumentModal = () => {
             name="documentAiDescription"
             label="Description for AI"
             placeholder="Describe when and how the AI should use this document"
-            rows={3}
+            rows={"3"}
             resizable={false}
           />
         </div>

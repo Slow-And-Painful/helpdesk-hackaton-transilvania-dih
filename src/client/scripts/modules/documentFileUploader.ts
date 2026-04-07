@@ -176,12 +176,6 @@ const documentConfirmUpload = async () => {
   }
   closeModalButton.removeAttribute("disabled")
 
-  await htmx.ajax("get", "/partials/departments/documents-list", {
-    target: `#department-documents-list`,
-    swap: "outerHTML",
-  })
-
-  window.toast.success("Document uploaded successfully")
   const modal = dropzone.closest(".modal__wrap")
   if (modal?.id) {
     window.closeModal(modal.id)
