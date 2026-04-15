@@ -23,7 +23,7 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
       title={
         <div class="w-full flex justify-between items-center">
           <div>
-            <span>Tickets</span>
+            <span>Tichete</span>
             {activeDepartment && (
               <span class="tickets-page__dept-name" safe> — {activeDepartment.name}</span>
             )}
@@ -38,7 +38,7 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
             hx-swap="innerHTML"
             iconPosition="right"
           >
-            Create new
+            Creează nou
           </Button>
         </div>
       }
@@ -46,8 +46,8 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
       <div class={"flex flex-col gap-y-6"}>
         <Tabs
           items={[
-            { title: "Incoming", href: `${baseUrl}?tab=incoming`, active: tab === "incoming" },
-            { title: "Outgoing", href: `${baseUrl}?tab=outgoing`, active: tab === "outgoing" },
+            { title: "Primite", href: `${baseUrl}?tab=incoming`, active: tab === "incoming" },
+            { title: "Trimise", href: `${baseUrl}?tab=outgoing`, active: tab === "outgoing" },
           ]}
         />
 

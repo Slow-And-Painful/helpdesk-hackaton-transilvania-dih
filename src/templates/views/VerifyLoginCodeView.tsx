@@ -17,18 +17,18 @@ const getErrorMessage = (error: VERIFY_LOGIN_CODE_ERROR): { title: string; descr
   switch (error) {
     case VERIFY_LOGIN_CODE_ERROR.CODE_NOT_FOUND:
       return {
-        title: "Invalid Code",
-        description: "The verification code you entered was not found. Please check the link in your email and try again."
+        title: "Cod Invalid",
+        description: "Codul de verificare introdus nu a fost găsit. Te rugăm să verifici link-ul din email și să încerci din nou."
       }
     case VERIFY_LOGIN_CODE_ERROR.CODE_EXPIRED:
       return {
-        title: "Code Expired",
-        description: "This verification code has expired. Please request a new login link."
+        title: "Cod Expirat",
+        description: "Acest cod de verificare a expirat. Te rugăm să soliciți un nou link de autentificare."
       }
     case VERIFY_LOGIN_CODE_ERROR.CODE_ALREADY_USED:
       return {
-        title: "Code Already Used",
-        description: "This verification code has already been used. Please request a new login link if you need to sign in again."
+        title: "Cod Deja Folosit",
+        description: "Acest cod de verificare a fost deja utilizat. Te rugăm să soliciți un nou link de autentificare dacă dorești să te conectezi din nou."
       }
   }
 }
@@ -49,7 +49,7 @@ const VerifyLoginCodeView = (props: Props) => {
           >
             <Icon name="chevron-left" size={20} />
           </a>
-          <h1 class="text-2xl font-roboto-bold">Verification Failed</h1>
+          <h1 class="text-2xl font-roboto-bold">Verificare Eșuată</h1>
         </div>
 
         <div class="flex flex-col gap-y-6">
@@ -64,7 +64,7 @@ const VerifyLoginCodeView = (props: Props) => {
               class="w-full"
             >
               <Button class="w-full">
-                Request New Login Link
+                Solicită un nou link de autentificare
               </Button>
             </a>
             <a
@@ -72,7 +72,7 @@ const VerifyLoginCodeView = (props: Props) => {
               hx-boost="true"
               class="w-full text-center text-sm text-gray-400 hover:text-gray-300 transition-colors"
             >
-              Go to Home
+              Mergi la pagina principală
             </a>
           </div>
         </div>

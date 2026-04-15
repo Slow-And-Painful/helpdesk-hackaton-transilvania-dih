@@ -21,10 +21,10 @@ const Homepage = (props: Props) => {
           {/* Headline */}
           <div class="flex flex-col gap-y-4">
             <h1 class="text-6xl md:text-7xl font-roboto-bold text-white leading-tight">
-              Transilvania Digital Innovation Hub
+              Hub de Inovație Digitală Transilvania
             </h1>
             <p class="text-xl text-gray-400 max-w-2xl">
-              Experience the power of intelligent assistance. Get answers, automate tasks, and boost your productivity.
+              Descoperă puterea asistenței inteligente. Obține răspunsuri, automatizează sarcini și sporește-ți productivitatea.
             </p>
           </div>
 
@@ -39,7 +39,7 @@ const Homepage = (props: Props) => {
                     preset="primary"
                     class="px-8 py-3 text-base"
                   >
-                    Go to your dashboard
+                    Mergi la tabloul de bord
                   </Button>
                 </a>
               : <>
@@ -51,7 +51,7 @@ const Homepage = (props: Props) => {
                     preset="primary"
                     class="px-8 py-3 text-base"
                   >
-                    Get Started
+                    Începe acum
                   </Button>
                 </a>
 
@@ -64,7 +64,7 @@ const Homepage = (props: Props) => {
                     outline
                     class="px-8 py-3 text-base"
                   >
-                    Sign In
+                    Conectează-te
                   </Button>
                 </a>
               </>
@@ -78,9 +78,9 @@ const Homepage = (props: Props) => {
             <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-950/30 border border-blue-900/50">
               <Icon name="zap" size={24} class="text-blue-400" />
             </div>
-            <h3 class="text-lg font-roboto-semibold text-white">Lightning Fast</h3>
+            <h3 class="text-lg font-roboto-semibold text-white">Extrem de Rapid</h3>
             <p class="text-sm text-gray-400">
-              Get instant responses powered by cutting-edge AI technology
+              Obține răspunsuri instantanee cu tehnologie AI de ultimă generație
             </p>
           </div>
 
@@ -88,9 +88,9 @@ const Homepage = (props: Props) => {
             <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-purple-950/30 border border-purple-900/50">
               <Icon name="shield" size={24} class="text-purple-400" />
             </div>
-            <h3 class="text-lg font-roboto-semibold text-white">Secure & Private</h3>
+            <h3 class="text-lg font-roboto-semibold text-white">Sigur și Privat</h3>
             <p class="text-sm text-gray-400">
-              Your data is protected with enterprise-grade security
+              Datele tale sunt protejate cu securitate de nivel enterprise
             </p>
           </div>
 
@@ -98,9 +98,9 @@ const Homepage = (props: Props) => {
             <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-green-950/30 border border-green-900/50">
               <Icon name="trending-up" size={24} class="text-green-400" />
             </div>
-            <h3 class="text-lg font-roboto-semibold text-white">Always Learning</h3>
+            <h3 class="text-lg font-roboto-semibold text-white">Mereu în Evoluție</h3>
             <p class="text-sm text-gray-400">
-              Continuously improving to serve you better every day
+              Se îmbunătățește continuu pentru a te servi mai bine în fiecare zi
             </p>
           </div>
         </div>

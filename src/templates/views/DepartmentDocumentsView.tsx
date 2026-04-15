@@ -21,7 +21,7 @@ const DepartmentDocumentsView = ({ activeDepartment, items, pagination, baseUrl 
     <DashboardPage
       title={
         <span>
-          Documents
+          Documente
           {activeDepartment && (
             <span class="tickets-page__dept-name" safe> — {activeDepartment.name}</span>
           )}
@@ -43,7 +43,7 @@ const DepartmentDocumentsView = ({ activeDepartment, items, pagination, baseUrl 
               hx-target="#modal"
               hx-swap="beforeend"
             >
-              Upload Document
+              Încarcă Document
             </Button>
           }
         />

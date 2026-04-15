@@ -12,7 +12,7 @@ const RecaptchaV2Modal = ({ formData, method, action }: Props) => {
     <Modal id="recaptcha-v2-modal" isOpen size="sm" title={""} closable={false}>
       <div class="flex flex-col gap-y-4 min-h-[120px] items-center justify-center">
         <div class="text-center">
-          Please complete the reCAPTCHA to continue.
+          Te rugăm să completezi reCAPTCHA pentru a continua.
         </div>
 
         <div

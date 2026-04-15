@@ -24,26 +24,26 @@ const ChatbotView = ({ chatId, messages, ragDocuments = [] }: Props) => {
         <div class="hd-chat__welcome-icon">
           <Icon name="zap" size={28} />
         </div>
-        <h1 class="hd-chat__welcome-title">Public Procurement Assistant</h1>
+        <h1 class="hd-chat__welcome-title">Asistent Achiziții Publice</h1>
         <p class="hd-chat__welcome-subtitle">
-          I can help you navigate public purchasing procedures, regulations, and best practices for buying with public funds.
+          Te pot ajuta să navighezi procedurile de achiziție publică, reglementările și cele mai bune practici pentru cumpărarea cu fonduri publice.
         </p>
         <div class="hd-chat__suggestions">
           <ChatSuggestion
-            label="How do I start a procurement process?"
-            message="How do I start a public procurement process?"
+            label="Cum încep un proces de achiziție?"
+            message="Cum încep un proces de achiziție publică?"
           />
           <ChatSuggestion
-            label="What are the thresholds for public tenders?"
-            message="What are the thresholds for public tenders?"
+            label="Care sunt pragurile pentru licitații publice?"
+            message="Care sunt pragurile pentru licitații publice?"
           />
           <ChatSuggestion
-            label="What documentation do I need?"
-            message="What documentation do I need for a purchase?"
+            label="Ce documentație am nevoie?"
+            message="Ce documentație am nevoie pentru o achiziție?"
           />
           <ChatSuggestion
-            label="Explain the direct acquisition procedure"
-            message="Explain the direct acquisition procedure"
+            label="Explică procedura de achiziție directă"
+            message="Explică procedura de achiziție directă"
           />
         </div>
       </div>
@@ -64,7 +64,7 @@ const ChatbotView = ({ chatId, messages, ragDocuments = [] }: Props) => {
           initialValues={{ message: "", chatId: chatId ?? "" }}
         />
         <p class="hd-chat__disclaimer">
-          AI assistant for public procurement guidance. Responses are informational only.
+          Asistent AI pentru orientare în achiziții publice. Răspunsurile sunt doar informative.
         </p>
       </div>
     </div>

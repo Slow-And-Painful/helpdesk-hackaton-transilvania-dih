@@ -64,28 +64,28 @@ const getBaseStaffSidebarItems = (_user: User, routerName: SidebarProps["routerN
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "inbox",
-      label: "Departments",
+      label: "Departamente",
       url: departmentsPath,
       isActive: current === normalize(departmentsPath) || current.startsWith(normalize(departmentsPath) + "/"),
     },
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "users",
-      label: "Users",
+      label: "Utilizatori",
       url: usersPath,
       isActive: current === normalize(usersPath),
     },
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "settings",
-      label: "AI Settings",
+      label: "Setări AI",
       url: aiSettingsPath,
       isActive: current === normalize(aiSettingsPath),
     },
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "pie-chart",
-      label: "Insights",
+      label: "Statistici",
       url: insightsPath,
       isActive: current === normalize(insightsPath)
     }
@@ -106,14 +106,14 @@ const getBaseCustomerSidebarItems = (_user: User, routerName: SidebarProps["rout
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "new-chat",
-      label: "Home",
+      label: "Acasă",
       url: homePath,
       isActive: current === normalize(homePath),
     },
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "inbox",
-      label: "Tickets",
+      label: "Tichete",
       url: ticketsPath,
       isActive: current === normalize(ticketsPath),
     },
@@ -123,19 +123,19 @@ const getBaseCustomerSidebarItems = (_user: User, routerName: SidebarProps["rout
     items.push({
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "users",
-      label: "Users",
+      label: "Utilizatori",
       url: usersPath,
       isActive: current === normalize(usersPath),
     }, {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "settings",
-      label: "Department",
+      label: "Departament",
       url: departmentPath,
       isActive: current === normalize(departmentPath),
     }, {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "document",
-      label: "Documents",
+      label: "Documente",
       url: documentsPath,
       isActive: current === normalize(documentsPath),
     })

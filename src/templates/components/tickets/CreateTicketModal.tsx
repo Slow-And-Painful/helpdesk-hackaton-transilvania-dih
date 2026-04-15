@@ -29,11 +29,11 @@ export default function CreateTicketModal({ departments, activeDepartmentId }: P
       id={createTicketModalId}
       isOpen={true}
       size="md"
-      title={<span>Create Ticket</span>}
+      title={<span>Creează Tichet</span>}
       footer={
         <ModalFooter
           modalId={createTicketModalId}
-          submitCta="Create"
+          submitCta="Creează"
           submitCtaIcon="plus"
           type="submit"
           form={formId}
@@ -58,13 +58,13 @@ export default function CreateTicketModal({ departments, activeDepartmentId }: P
             <FormControl name="name" formId={formId} showChanged={false}>
               <Input
                 id={`${formId}-name`}
-                label="Ticket Name"
+                label="Numele Tichetului"
                 name="name"
                 required
                 type="text"
                 error={errors?.name}
                 value={values?.name}
-                placeholder="Enter ticket name"
+                placeholder="Introdu numele tichetului"
                 size={"sm"}
               />
             </FormControl>
@@ -72,9 +72,9 @@ export default function CreateTicketModal({ departments, activeDepartmentId }: P
             <FormControl name="summary" formId={formId} showChanged={false}>
               <Textarea
                 id={`${formId}-summary`}
-                label="Summary"
+                label="Rezumat"
                 name="summary"
-                placeholder="Enter ticket summary"
+                placeholder="Introdu rezumatul tichetului"
                 error={errors?.summary}
                 maxLength={1000}
                 initialLength={values?.summary?.length ?? 0}
@@ -84,7 +84,7 @@ export default function CreateTicketModal({ departments, activeDepartmentId }: P
             <FormControl name="destinationDepartmentId" formId={formId} showChanged={false}>
               <Select
                 id={`${formId}-destinationDepartmentId`}
-                label="Destination Department"
+                label="Departament Destinatar"
                 name="destinationDepartmentId"
                 required
                 options={departmentOptions}

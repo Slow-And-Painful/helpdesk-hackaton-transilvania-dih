@@ -24,7 +24,7 @@ export default function TicketDetailDrawer({ ticket }: Props) {
       />
       <div class="ticket-drawer__panel">
         <div class="ticket-drawer__header">
-          <h2 class="ticket-drawer__title">Ticket Details</h2>
+          <h2 class="ticket-drawer__title">Detalii Tichet</h2>
           <button
             type="button"
             class="ticket-drawer__close"
@@ -44,7 +44,7 @@ export default function TicketDetailDrawer({ ticket }: Props) {
 
           {ticket.summary ? (
             <div class="ticket-drawer__section">
-              <div class="ticket-drawer__label">Summary</div>
+              <div class="ticket-drawer__label">Rezumat</div>
               <p class="ticket-drawer__text" safe>{ticket.summary}</p>
             </div>
           ) : null}
@@ -53,19 +53,19 @@ export default function TicketDetailDrawer({ ticket }: Props) {
 
           <div class="ticket-drawer__details">
             <div class="ticket-drawer__detail-row">
-              <span class="ticket-drawer__label">From</span>
+              <span class="ticket-drawer__label">De la</span>
               <span class="ticket-drawer__value" safe>
                 {ticket.senderDepartment?.name ?? "Unknown"}
               </span>
             </div>
             <div class="ticket-drawer__detail-row">
-              <span class="ticket-drawer__label">To</span>
+              <span class="ticket-drawer__label">Către</span>
               <span class="ticket-drawer__value" safe>
                 {ticket.destinationDepartment?.name ?? "Unknown"}
               </span>
             </div>
             <div class="ticket-drawer__detail-row">
-              <span class="ticket-drawer__label">Created</span>
+              <span class="ticket-drawer__label">Creat</span>
               <span class="ticket-drawer__value">
                 {new Date(ticket.createdAt).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -73,7 +73,7 @@ export default function TicketDetailDrawer({ ticket }: Props) {
                   day: "numeric",
                   hour: "2-digit",
                   minute: "2-digit",
-                })}
+                }, "ro-RO")}
               </span>
             </div>
           </div>
@@ -90,7 +90,7 @@ export default function TicketDetailDrawer({ ticket }: Props) {
               hx-vals={JSON.stringify({ ticketId: ticket.id })}
               hx-swap="none"
             >
-              Close Ticket
+              Închide Tichetul
             </Button>
           </div>
         ) : null}

@@ -22,7 +22,7 @@ const ButtonTabs = ({ class: className, items = [], ...props }: ButtonTabsProps)
             const child = itemProps.comingSoon ?
               <div class={"flex items-center justify-center gap-2"}>
                 <div>{title as "safe"}</div>
-                <div class="rounded-full bg-gray-800 flex items-center justify-center px-2 py-0.5 text-xxs text-gray-300">Coming soon</div>
+                <div class="rounded-full bg-gray-800 flex items-center justify-center px-2 py-0.5 text-xxs text-gray-300">În curând</div>
               </div>
               :
               title as "safe"

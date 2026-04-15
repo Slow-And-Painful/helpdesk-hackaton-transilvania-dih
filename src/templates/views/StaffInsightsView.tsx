@@ -5,38 +5,38 @@ import Tabs from "$templates/components/Tabs"
 // Demo data — no real service queries
 // ---------------------------------------------------------------------------
 
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+const months = ["Ian", "Feb", "Mar", "Apr", "Mai", "Iun", "Iul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 // AI Insights – token usage
 const tokenUsageData = JSON.stringify({
   labels: months,
   datasets: [
-    { label: "Input tokens (k)", data: [120, 145, 132, 178, 210, 195, 230, 267, 248, 290, 312, 340] },
-    { label: "Output tokens (k)", data: [45, 52, 48, 67, 80, 74, 88, 102, 95, 115, 128, 142] },
+    { label: "Tokeni intrare (k)", data: [120, 145, 132, 178, 210, 195, 230, 267, 248, 290, 312, 340] },
+    { label: "Tokeni ieșire (k)", data: [45, 52, 48, 67, 80, 74, 88, 102, 95, 115, 128, 142] },
   ],
 })
 
 const tokenByModelData = JSON.stringify({
   labels: ["Claude 3.5 Sonnet", "Claude 3 Haiku", "Claude 3 Opus", "Gemini 1.5 Pro"],
-  datasets: [{ label: "Tokens consumed (k)", data: [980, 640, 210, 85] }],
+  datasets: [{ label: "Tokeni consumați (k)", data: [980, 640, 210, 85] }],
 })
 
 const costTrendData = JSON.stringify({
   labels: months,
   datasets: [
-    { label: "Estimated cost ($)", data: [18, 22, 20, 28, 34, 31, 38, 44, 41, 49, 55, 61] },
+    { label: "Cost estimat ($)", data: [18, 22, 20, 28, 34, 31, 38, 44, 41, 49, 55, 61] },
   ],
 })
 
 const tokenByDeptData = JSON.stringify({
   labels: ["Engineering", "HR", "Legal", "Finance", "Support", "Marketing"],
-  datasets: [{ label: "Tokens (k)", data: [410, 220, 150, 180, 310, 95] }],
+  datasets: [{ label: "Tokeni (k)", data: [410, 220, 150, 180, 310, 95] }],
 })
 
 // Department insights – efficiency (avg hours to close ticket)
 const efficiencyData = JSON.stringify({
   labels: ["Support", "Engineering", "Finance", "HR", "Legal", "Marketing"],
-  datasets: [{ label: "Avg. resolution time (h)", data: [3.2, 8.5, 12.1, 6.8, 18.4, 9.3] }],
+  datasets: [{ label: "Timp mediu rezolvare (h)", data: [3.2, 8.5, 12.1, 6.8, 18.4, 9.3] }],
 })
 
 // Tickets opened per department
@@ -53,15 +53,15 @@ const ticketsOpenedData = JSON.stringify({
 // Most active users – platform interactions
 const platformUsersData = JSON.stringify({
   labels: ["M. Rossi", "L. Bianchi", "G. Ferrari", "A. Conti", "F. Marino", "C. Bruno", "S. Ricci", "E. Greco"],
-  datasets: [{ label: "Ticket interactions", data: [312, 278, 241, 198, 175, 152, 134, 118] }],
+  datasets: [{ label: "Interacțiuni tichete", data: [312, 278, 241, 198, 175, 152, 134, 118] }],
 })
 
 // Chatbot usage by user – tokens + chats
 const chatbotTokenData = JSON.stringify({
   labels: ["M. Rossi", "L. Bianchi", "G. Ferrari", "A. Conti", "F. Marino", "C. Bruno", "S. Ricci", "E. Greco"],
   datasets: [
-    { label: "Tokens consumed (k)", data: [89, 74, 65, 52, 47, 38, 31, 24] },
-    { label: "Chats created", data: [43, 36, 31, 25, 22, 18, 15, 11] },
+    { label: "Tokeni consumați (k)", data: [89, 74, 65, 52, 47, 38, 31, 24] },
+    { label: "Conversații create", data: [43, 36, 31, 25, 22, 18, 15, 11] },
   ],
 })
 
@@ -69,14 +69,14 @@ const chatbotTokenData = JSON.stringify({
 const chatbotOutcomesData = JSON.stringify({
   labels: ["Support", "Engineering", "Finance", "HR", "Legal", "Marketing"],
   datasets: [
-    { label: "Problems solved by chatbot", data: [210, 145, 88, 72, 40, 65] },
-    { label: "Tickets raised after chatbot failed", data: [52, 38, 24, 18, 12, 17] },
+    { label: "Probleme rezolvate de chatbot", data: [210, 145, 88, 72, 40, 65] },
+    { label: "Tichete deschise după eșecul chatbot-ului", data: [52, 38, 24, 18, 12, 17] },
   ],
 })
 
 // Efficiency radar per user (normalized 0-100)
 const userEfficiencyData = JSON.stringify({
-  labels: ["Response speed", "Resolution rate", "Ticket quality", "Chatbot leverage", "Collaboration"],
+  labels: ["Viteză răspuns", "Rată rezolvare", "Calitate tichete", "Utilizare chatbot", "Colaborare"],
   datasets: [
     { label: "M. Rossi",   data: [88, 92, 76, 82, 70] },
     { label: "L. Bianchi", data: [72, 80, 88, 65, 85] },
@@ -133,40 +133,40 @@ const StatCard = ({ label, value, sub, accent = "text-blue-400" }: StatCardProps
 const AiInsightsPanel = () => (
   <div data-insights-panel="ai">
     <div class="grid grid-cols-2 gap-4 xl:grid-cols-4 mb-6">
-      <StatCard label="Total tokens this month" value="482k" sub="+12% vs last month" accent="text-blue-400" />
-      <StatCard label="Estimated cost" value="$61" sub="All models combined" accent="text-purple-400" />
-      <StatCard label="Avg tokens / chat" value="1,240" sub="Input + output" accent="text-cyan-400" />
-      <StatCard label="Active AI models" value="4" sub="Across all departments" accent="text-green-400" />
+      <StatCard label="Total tokeni luna aceasta" value="482k" sub="+12% față de luna trecută" accent="text-blue-400" />
+      <StatCard label="Cost estimat" value="$61" sub="Toate modelele combinate" accent="text-purple-400" />
+      <StatCard label="Tokeni medii / conversație" value="1.240" sub="Intrare + ieșire" accent="text-cyan-400" />
+      <StatCard label="Modele AI active" value="4" sub="În toate departamentele" accent="text-green-400" />
     </div>
 
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
       <div class="xl:col-span-2">
         <ChartCard
-          title="Monthly token usage"
-          subtitle="Input vs output tokens over the year"
+          title="Utilizare lunară tokeni"
+          subtitle="Tokeni intrare vs ieșire pe parcursul anului"
           chartType="line"
           data={tokenUsageData}
           height="230px"
         />
       </div>
       <ChartCard
-        title="Token usage by model"
-        subtitle="Cumulative tokens per LLM"
+        title="Utilizare tokeni per model"
+        subtitle="Tokeni cumulați per model LLM"
         chartType="doughnut"
         data={tokenByModelData}
         height="230px"
       />
       <ChartCard
-        title="Estimated monthly cost"
-        subtitle="Dollars spent on AI inference"
+        title="Cost lunar estimat"
+        subtitle="Dolari cheltuiți pe inferență AI"
         chartType="line"
         data={costTrendData}
         height="200px"
       />
       <div class="lg:col-span-2 xl:col-span-2">
         <ChartCard
-          title="Token usage by department"
-          subtitle="Which departments consume the most tokens"
+          title="Utilizare tokeni per departament"
+          subtitle="Care departamente consumă cei mai mulți tokeni"
           chartType="bar"
           data={tokenByDeptData}
           height="200px"
@@ -180,17 +180,17 @@ const DepartmentInsightsPanel = () => (
   <div data-insights-panel="department" class="hidden">
     {/* Stats row */}
     <div class="grid grid-cols-2 gap-4 xl:grid-cols-4 mb-6">
-      <StatCard label="Most efficient dept." value="Support" sub="Avg. 3.2h resolution" accent="text-green-400" />
-      <StatCard label="Most tickets opened" value="Support" sub="161 in Q4" accent="text-orange-400" />
-      <StatCard label="Top chatbot user" value="M. Rossi" sub="89k tokens consumed" accent="text-purple-400" />
-      <StatCard label="Chatbot solve rate" value="79%" sub="Problems resolved w/o ticket" accent="text-cyan-400" />
+      <StatCard label="Dept. cel mai eficient" value="Support" sub="Rezolvare medie 3.2h" accent="text-green-400" />
+      <StatCard label="Cele mai multe tichete" value="Support" sub="161 în T4" accent="text-orange-400" />
+      <StatCard label="Top utilizator chatbot" value="M. Rossi" sub="89k tokeni consumați" accent="text-purple-400" />
+      <StatCard label="Rată rezolvare chatbot" value="79%" sub="Probleme rezolvate fără tichet" accent="text-cyan-400" />
     </div>
 
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {/* Efficiency */}
       <ChartCard
-        title="Most efficient departments"
-        subtitle="Lower bar = faster ticket resolution"
+        title="Departamente mai eficiente"
+        subtitle="Bară mai mică = rezolvare mai rapidă a tichetelor"
         chartType="bar"
         data={efficiencyData}
         height="220px"
@@ -198,8 +198,8 @@ const DepartmentInsightsPanel = () => (
 
       {/* Tickets opened */}
       <ChartCard
-        title="Tickets opened per department"
-        subtitle="Quarterly breakdown"
+        title="Tichete deschise per departament"
+        subtitle="Defalcare trimestrială"
         chartType="bar"
         data={ticketsOpenedData}
         height="220px"
@@ -207,8 +207,8 @@ const DepartmentInsightsPanel = () => (
 
       {/* Platform interactions */}
       <ChartCard
-        title="Most active platform users"
-        subtitle="Total ticket interactions per user"
+        title="Cei mai activi utilizatori ai platformei"
+        subtitle="Total interacțiuni tichete per utilizator"
         chartType="bar"
         data={platformUsersData}
         height="220px"
@@ -216,8 +216,8 @@ const DepartmentInsightsPanel = () => (
 
       {/* Chatbot usage */}
       <ChartCard
-        title="Chatbot usage by user"
-        subtitle="Tokens consumed & chats started"
+        title="Utilizare chatbot per utilizator"
+        subtitle="Tokeni consumați și conversații începute"
         chartType="bar"
         data={chatbotTokenData}
         height="220px"
@@ -226,8 +226,8 @@ const DepartmentInsightsPanel = () => (
       {/* Chatbot outcomes */}
       <div class="lg:col-span-2">
         <ChartCard
-          title="Chatbot outcomes by department"
-          subtitle="Problems solved directly vs tickets raised after chatbot couldn't help"
+          title="Rezultate chatbot per departament"
+          subtitle="Probleme rezolvate direct vs tichete deschise după ce chatbot-ul nu a putut ajuta"
           chartType="bar"
           data={chatbotOutcomesData}
           height="230px"
@@ -237,8 +237,8 @@ const DepartmentInsightsPanel = () => (
       {/* User efficiency radar */}
       <div class="lg:col-span-2">
         <ChartCard
-          title="Top user efficiency radar"
-          subtitle="Multi-dimensional performance for the 3 most active users"
+          title="Radar eficiență utilizatori top"
+          subtitle="Performanță multidimensională pentru cei 3 utilizatori cei mai activi"
           chartType="radar"
           data={userEfficiencyData}
           height="300px"
@@ -257,7 +257,7 @@ const StaffInsightsView = () => {
     <DashboardPage
       title={
         <div class="w-full flex justify-between items-center">
-          <span>Insights</span>
+          <span>Statistici</span>
         </div>
       }
     >
@@ -265,8 +265,8 @@ const StaffInsightsView = () => {
         {/* Tab bar */}
         <Tabs
           items={[
-            { title: "AI Insights",         active: true,  onclick: "window.switchInsightsTab('ai', this)" },
-            { title: "Department Insights", active: false, onclick: "window.switchInsightsTab('department', this)" },
+            { title: "Statistici AI",            active: true,  onclick: "window.switchInsightsTab('ai', this)" },
+            { title: "Statistici Departamente",  active: false, onclick: "window.switchInsightsTab('department', this)" },
           ]}
         />
 

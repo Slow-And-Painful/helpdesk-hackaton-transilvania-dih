@@ -33,13 +33,13 @@ const CreateDepartmentForm = ({ errors, values, initialValues }: Props) => {
           <FormControl name="name" formId={formId} showChanged={false}>
             <Input
               id={`${formId}-name`}
-              label="Name"
+              label="Nume"
               name="name"
               required
               type="text"
               error={errors?.name}
               value={values?.name}
-              placeholder="Enter department name"
+              placeholder="Introdu numele departamentului"
               size={"sm"}
             />
           </FormControl>

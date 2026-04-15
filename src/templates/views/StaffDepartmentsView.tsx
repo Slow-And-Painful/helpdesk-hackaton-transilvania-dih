@@ -17,7 +17,7 @@ const StaffDepartmentsView = ({ items, pagination, baseUrl }: Props) => {
     <DashboardPage
       title={
         <div class="w-full flex justify-between items-center">
-          <span>Departments</span>
+          <span>Departamente</span>
           <Button
             preset="primary"
             size="sm"
@@ -27,7 +27,7 @@ const StaffDepartmentsView = ({ items, pagination, baseUrl }: Props) => {
             hx-swap="innerHTML"
             iconPosition="right"
           >
-            Create new
+            Creează nou
           </Button>
         </div>
       }

@@ -8,7 +8,7 @@ type Props = {
 
 const StaffAiSettingsView = (props: Props) => {
   return (
-    <DashboardPage title={<span>AI Settings</span>}>
+    <DashboardPage title={<span>Setări AI</span>}>
       <div class="flex flex-col gap-y-6">
         <GlobalSettingsAiSystemPrompt
           values={{

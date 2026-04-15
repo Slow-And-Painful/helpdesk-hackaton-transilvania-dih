@@ -19,13 +19,13 @@ const LoginView = () => {
             class="flex items-center gap-x-2 text-gray-400 hover:text-gray-300 transition-colors w-fit"
           >
             <Icon name="chevron-left" size={18} />
-            <span class="text-sm">Back</span>
+            <span class="text-sm">Înapoi</span>
           </a>
           
           <div class="flex flex-col gap-y-2">
-            <h1 class="text-3xl font-roboto-bold text-white">Welcome Back</h1>
+            <h1 class="text-3xl font-roboto-bold text-white">Bine ai revenit</h1>
             <p class="text-sm text-gray-400">
-              Sign in to your account to continue
+              Conectează-te la contul tău pentru a continua
             </p>
           </div>
         </div>

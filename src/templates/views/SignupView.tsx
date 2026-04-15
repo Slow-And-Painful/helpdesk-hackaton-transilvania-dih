@@ -25,13 +25,13 @@ const SignupView = () => {
             class="flex items-center gap-x-2 text-gray-400 hover:text-gray-300 transition-colors w-fit"
           >
             <Icon name="chevron-left" size={18} />
-            <span class="text-sm">Back</span>
+            <span class="text-sm">Înapoi</span>
           </a>
           
           <div class="flex flex-col gap-y-2">
-            <h1 class="text-3xl font-roboto-bold text-white">Create Account</h1>
+            <h1 class="text-3xl font-roboto-bold text-white">Creează cont</h1>
             <p class="text-sm text-gray-400">
-              Get started with your free account
+              Începe cu contul tău gratuit
             </p>
           </div>
         </div>

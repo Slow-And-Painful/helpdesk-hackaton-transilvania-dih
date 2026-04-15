@@ -199,7 +199,7 @@ const SearchableList = ({
               ))
             ) : inputValue ? (
               <li class="dropdown__item">
-                <div class="dropdown__link">No results found</div>
+                <div class="dropdown__link">Niciun rezultat găsit</div>
               </li>
             ) : null}
           </ul>

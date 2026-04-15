@@ -49,7 +49,7 @@ const DepartmentGeneralForm = ({
             <Input
               id={`${formId}-name`}
               name="name"
-              label="Department Name"
+              label="Numele Departamentului"
               value={values.name}
               error={errors?.name}
               required
@@ -58,7 +58,7 @@ const DepartmentGeneralForm = ({
 
           <div class="flex items-center gap-x-3 justify-end">
             <Button type="submit" preset="primary" size={"sm"}>
-              Save Changes
+              Salvează Modificările
             </Button>
           </div>
         </>

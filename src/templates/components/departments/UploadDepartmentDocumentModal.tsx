@@ -17,7 +17,7 @@ const UploadDepartmentDocumentModal = () => {
     <UploadDocumentsModal
       id={uploadDepartmentDocumentModalId}
       modalId={uploadDepartmentDocumentModalId}
-      title={"Upload Document"}
+      title={"Încarcă Document"}
       inputName={"departmentDocument"}
       maxFiles={1}
       maxFileSize={MAX_DOCUMENT_SIZE}
@@ -27,7 +27,7 @@ const UploadDepartmentDocumentModal = () => {
       isOpen
       loadingComponent={
         <div class={"w-full h-full flex flex-col items-center justify-center gap-2 p-2"}>
-          <div class={"text-sm font-medium"}>Uploading document...</div>
+          <div class={"text-sm font-medium"}>Se încarcă documentul...</div>
           <div data-loading-bar class="w-full rounded-full bg-gray-200 h-2 overflow-hidden">
             <div class="bg-primary-600 h-full rounded-full transition-[width]" style={{ width: "0%" }}></div>
           </div>
@@ -39,7 +39,7 @@ const UploadDepartmentDocumentModal = () => {
         window.documentFileUploader?.onInputChange(this, dropzone);
       `}
       dropzoneText={null}
-      confirmButtonText={"Upload"}
+      confirmButtonText={"Încarcă"}
       onConfirm={`
         window.documentFileUploader?.confirmUpload()
       `}
@@ -49,15 +49,15 @@ const UploadDepartmentDocumentModal = () => {
           <Input
             id="document-name"
             name="documentName"
-            label="Name"
-            placeholder="Document name"
+            label="Nume"
+            placeholder="Numele documentului"
             required
           />
           <Textarea
             id="document-ai-description"
             name="documentAiDescription"
-            label="Description for AI"
-            placeholder="Describe when and how the AI should use this document"
+            label="Descriere pentru AI"
+            placeholder="Descrie când și cum ar trebui să folosească AI-ul acest document"
             rows={"3"}
             resizable={false}
           />

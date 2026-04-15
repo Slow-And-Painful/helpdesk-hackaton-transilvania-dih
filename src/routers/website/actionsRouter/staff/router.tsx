@@ -31,7 +31,7 @@ export const router = createRouter("staff", (server) => {
           "HX-Reswap": "outerHTML",
           "HX-Push-Url": "false",
           "HX-Trigger-After-Settle": JSON.stringify({
-            showSuccessToast: "System prompt updated successfully",
+            showSuccessToast: "Promptul de sistem a fost actualizat cu succes",
           })
         })
         .view(

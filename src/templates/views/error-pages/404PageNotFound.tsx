@@ -11,7 +11,7 @@ const PageNotFound = ({ user }: Props) => {
       <div class={"w-full h-full flex flex-col items-center justify-center"}>
         <div class={"w-fit mx-auto flex flex-col items-center justify-center"}>
           <h1 class={"text-[120px] font-bold -mt-10"}>404</h1>
-          <h1 class={"mt-4 mb-6 text-lg"}>The page you're looking for doesn't exist or has been moved.</h1>
+          <h1 class={"mt-4 mb-6 text-lg"}>Pagina pe care o cauți nu există sau a fost mutată.</h1>
           <Button
             hx-get={""}
             hx-push-url="true"

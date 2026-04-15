@@ -10,11 +10,11 @@ export default function CreateDepartmentModal() {
       id={createDepartmentModalId}
       isOpen={true}
       size="md"
-      title={<span>Create Department</span>}
+      title={<span>Creează Departament</span>}
       footer={
         <ModalFooter
           modalId={createDepartmentModalId}
-          submitCta="Create"
+          submitCta="Creează"
           submitCtaIcon="plus"
           type="submit"
           form={createDepartmentFormId}

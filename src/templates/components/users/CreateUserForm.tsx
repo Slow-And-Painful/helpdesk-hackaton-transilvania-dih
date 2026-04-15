@@ -35,13 +35,13 @@ const CreateUserForm = ({ errors, values, initialValues }: Props) => {
           <FormControl name="firstName" formId={formId} showChanged={false}>
             <Input
               id={`${formId}-firstName`}
-              label="First Name"
+              label="Prenume"
               name="firstName"
               required
               type="text"
               error={errors?.firstName}
               value={values?.firstName}
-              placeholder="Enter first name"
+              placeholder="Introdu prenumele"
               size={"sm"}
             />
           </FormControl>
@@ -49,13 +49,13 @@ const CreateUserForm = ({ errors, values, initialValues }: Props) => {
           <FormControl name="lastName" formId={formId} showChanged={false}>
             <Input
               id={`${formId}-lastName`}
-              label="Last Name"
+              label="Nume"
               name="lastName"
               required
               type="text"
               error={errors?.lastName}
               value={values?.lastName}
-              placeholder="Enter last name"
+              placeholder="Introdu numele"
               size={"sm"}
             />
           </FormControl>
@@ -69,7 +69,7 @@ const CreateUserForm = ({ errors, values, initialValues }: Props) => {
               type="email"
               error={errors?.email}
               value={values?.email}
-              placeholder="Enter email"
+              placeholder="Introdu emailul"
               size={"sm"}
             />
           </FormControl>

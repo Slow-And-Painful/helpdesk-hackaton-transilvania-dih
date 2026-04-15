@@ -7,7 +7,7 @@ type Props = {
   placeholder?: string
 }
 
-const ChatPrompt = ({ placeholder = "Ask about public procurement..." }: Props) => (
+const ChatPrompt = ({ placeholder = "Întreabă despre achiziții publice..." }: Props) => (
   <div class="hd-chat__input-container">
     <div class="hd-chat__input-toolbar">
       <button
@@ -18,7 +18,7 @@ const ChatPrompt = ({ placeholder = "Ask about public procurement..." }: Props) 
         hx-swap="innerHTML"
       >
         <Icon name="grid" size={13} />
-        <span>Department</span>
+        <span>Departament</span>
       </button>
     </div>
     <div class="hd-chat__input-row">
