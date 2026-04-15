@@ -23,10 +23,14 @@ import "./modules/chatbot"
 import "./modules/sidebar-chats"
 import "./modules/charts"
 import "./modules/documentFileUploader"
+import { docDrawerStartResize, docDrawerStartEdgeResize, restoreDocDrawerWidth } from "./modules/docDrawerResize"
+import "./modules/documentExtraction"
 
 
 declare global {
   interface Window {
+    docDrawerStartResize: typeof docDrawerStartResize
+    docDrawerStartEdgeResize: typeof docDrawerStartEdgeResize
     htmx: typeof htmx
     togglePasswordInput: (event: MouseEvent) => void
     toggleNavbarVisibility: (event: MouseEvent) => void
@@ -139,6 +143,7 @@ window.addEventListener("DOMContentLoaded", () => {
     window.initForms()
     initTextEllipsis()
     addPreCopyButtons()
+    restoreDocDrawerWidth()
   })
 
   document.body.addEventListener("showSuccessToast", (event) => {
@@ -155,6 +160,16 @@ window.addEventListener("DOMContentLoaded", () => {
     const modalId = (event as CustomEvent).detail.value
     if (modalId) {
       window.closeModal(modalId)
+    }
+  })
+
+  document.body.addEventListener("openDocumentDrawer", (event) => {
+    const documentId = (event as CustomEvent).detail.value
+    if (documentId) {
+      window.htmx.ajax("get", `/partials/departments/document-detail/${documentId}`, {
+        target: "#drawer",
+        swap: "innerHTML",
+      })
     }
   })
 

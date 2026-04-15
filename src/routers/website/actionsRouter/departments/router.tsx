@@ -4,6 +4,7 @@ import { schemas } from "./schemas"
 import { container } from "tsyringe"
 import DepartmentsService from "$services/DepartmentsService"
 import RAGDocumentsService from "$services/RAGDocumentsService"
+import DocumentTextExtractionComponent from "$components/DocumentTextExtractionComponent"
 import USER_ROLE from "$types/USER_ROLES"
 import DepartmentAiPromptForm, { getDepartmentAiPromptFormId } from "$templates/components/departments/DepartmentAiPromptForm"
 import DepartmentGeneralForm, { getDepartmentGeneralFormId } from "$templates/components/departments/DepartmentGeneralForm"
@@ -22,6 +23,7 @@ export const routerPrefix = "/departments"
 
 const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
 const ragDocumentsService = container.resolve<RAGDocumentsService>(RAGDocumentsService.token)
+const documentTextExtractionComponent = container.resolve<DocumentTextExtractionComponent>(DocumentTextExtractionComponent.token)
 
 export const router = createRouter("departments", (server) => {
   server.route({
@@ -195,7 +197,7 @@ export const router = createRouter("departments", (server) => {
     schema: schemas[ROUTE.UPDATE_DOCUMENT],
     config: { authenticated: true },
     handler: async (req, res) => {
-      const { documentId, name, aiDescription } = req.body as { documentId: number; name: string; aiDescription?: string }
+      const { documentId, name, aiDescription, extractedText } = req.body as { documentId: number; name: string; aiDescription?: string; extractedText?: string }
 
       const [document] = await ragDocumentsService.list({
         where: eq(ragDocumentsTable.id, documentId),
@@ -206,7 +208,11 @@ export const router = createRouter("departments", (server) => {
       }
 
       const formId = getUpdateDocumentFormId(documentId)
-      const values = { name, aiDescription: aiDescription ?? "" }
+      const values = {
+        name,
+        aiDescription: aiDescription ?? "",
+        extractedText: extractedText ?? document.extractedText,
+      }
 
       await ragDocumentsService.update(documentId, values)
 
@@ -235,6 +241,7 @@ export const router = createRouter("departments", (server) => {
               initialValues={values}
               errors={{}}
               swapOOB={"outerHTML"}
+              showExtractedText
             />
             <DocumentsTable
               items={items}
@@ -259,11 +266,18 @@ export const router = createRouter("departments", (server) => {
         return res.status(403).send("No active department")
       }
 
-      await ragDocumentsService.sInsert({
+      const newDocument = await ragDocumentsService.sInsert({
         s3Key: documentKey,
         name,
         aiDescription: aiDescription ?? "",
+        extractedText: "",
+        extractionStatus: "pending",
         departmentId: req.activeDepartment.id,
+      })
+
+      // Trigger text extraction in background — do not await
+      void documentTextExtractionComponent.extractAndSave(newDocument, req.callerUser?.id).catch((err) => {
+        console.error(`[DocumentExtraction] Failed for document ${newDocument.id}:`, err)
       })
 
       const { items, pagination } = await ragDocumentsService.getTableItems(req.query as Record<string, string>, eq(ragDocumentsTable.departmentId, req.activeDepartment.id))
@@ -274,6 +288,7 @@ export const router = createRouter("departments", (server) => {
           "HX-Trigger-After-Settle": JSON.stringify({
             showSuccessToast: "Document uploaded successfully",
             closeModal: "upload-department-document-modal",
+            openDocumentDrawer: newDocument.id,
           }),
           "HX-Reswap": "outerHTML",
           "HX-Retarget": `#${documentsTableId}`,
@@ -285,6 +300,49 @@ export const router = createRouter("departments", (server) => {
             pagination={pagination}
             baseUrl={baseUrl}
           />,
+        )
+    },
+  })
+
+  server.route({
+    method: "POST",
+    url: ROUTE.EXTRACT_DOCUMENT_TEXT,
+    schema: schemas[ROUTE.EXTRACT_DOCUMENT_TEXT],
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const { documentId } = req.body as { documentId: number }
+
+      const [document] = await ragDocumentsService.list({
+        where: eq(ragDocumentsTable.id, documentId),
+      })
+
+      if (!document) {
+        return res.status(404).send("Document not found")
+      }
+
+      // Start extraction and return immediately with "extracting" status
+      void documentTextExtractionComponent.extractAndSave(document, req.callerUser?.id).catch((err) => {
+        console.error(`[DocumentExtraction] Failed for document ${document.id}:`, err)
+      })
+
+      const formId = getUpdateDocumentFormId(documentId)
+
+      return res
+        .headers({
+          "HX-Retarget": `#${formId}`,
+          "HX-Reswap": "outerHTML",
+          "HX-Trigger-After-Settle": JSON.stringify({
+            showSuccessToast: "Text extraction started",
+          }),
+        })
+        .view(
+          <UpdateDocumentForm
+            document={{ ...document, extractionStatus: "extracting" }}
+            values={{ name: document.name, aiDescription: document.aiDescription, extractedText: document.extractedText }}
+            initialValues={{ name: document.name, aiDescription: document.aiDescription, extractedText: document.extractedText }}
+            errors={{}}
+            showExtractedText
+          />
         )
     },
   })

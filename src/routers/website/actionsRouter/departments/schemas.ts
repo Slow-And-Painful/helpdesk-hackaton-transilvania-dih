@@ -51,8 +51,19 @@ export const schemas = {
         documentId: { type: "integer" },
         name: { type: "string", minLength: 1, maxLength: 255 },
         aiDescription: { type: "string" },
+        extractedText: { type: "string" },
       },
       required: ["documentId", "name"],
+    },
+  } as const satisfies FastifySchema,
+
+  [ROUTE.EXTRACT_DOCUMENT_TEXT]: {
+    body: {
+      type: "object",
+      properties: {
+        documentId: { type: "integer" },
+      },
+      required: ["documentId"],
     },
   } as const satisfies FastifySchema,
 

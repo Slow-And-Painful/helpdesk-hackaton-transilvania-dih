@@ -7,6 +7,8 @@ export const ragDocumentsTable = pgTable("RAGDocuments", {
   s3Key: varchar({ length: 1024 }).notNull(),
   name: varchar({ length: 255 }).notNull(),
   aiDescription: text().notNull().default(""),
+  extractedText: text().notNull().default(""),
+  extractionStatus: varchar({ length: 50 }).notNull().default("pending"),
   departmentId: integer().notNull().references(() => departmentsTable.id),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow()
 })
