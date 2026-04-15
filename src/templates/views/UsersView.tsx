@@ -20,7 +20,7 @@ const UsersView = ({ items, pagination, baseUrl, activeDepartment }: Props) => {
       title={
         <div class="w-full flex justify-between items-center">
           <div>
-            <span>Users</span>
+            <span>Utilizatori</span>
             {activeDepartment && (
               <span class="tickets-page__dept-name" safe>
                 {" "} — {activeDepartment.name}
@@ -37,7 +37,7 @@ const UsersView = ({ items, pagination, baseUrl, activeDepartment }: Props) => {
             hx-swap="innerHTML"
             iconPosition="right"
           >
-            Create new
+            Creează nou
           </Button>
         </div>
       }

@@ -43,7 +43,7 @@ const Sidebar = (props: Props) => {
       {/* Department Switcher Widget */}
       {activeDepartment && (
         <div id="sidebar-departments" class="sidebar-departments">
-          <div class="sidebar-departments__label sidebar__menu-item-label">Department</div>
+          <div class="sidebar-departments__label sidebar__menu-item-label">Departament</div>
           <div class="sidebar-departments__list">
             <Tooltip
               content={activeDepartment.name}
@@ -69,12 +69,12 @@ const Sidebar = (props: Props) => {
       {userChats.length > 0 && (
         <div class="sidebar-chats">
           <div class="sidebar-chats__header">
-            <span class="sidebar-chats__label sidebar__menu-item-label">Chats</span>
+            <span class="sidebar-chats__label sidebar__menu-item-label">Conversații</span>
             <a
               class="sidebar-chats__new-btn"
               href={getViewPath("dashboard", "HOME")}
               hx-boost="true"
-              title="New chat"
+              title="Conversație nouă"
             >
               <Icon name="new-chat" size={14} />
             </a>
@@ -85,7 +85,7 @@ const Sidebar = (props: Props) => {
             inputClass="sidebar-chats__search-input"
             type="text"
             size="sm"
-            placeholder="Search chats..."
+            placeholder="Caută conversații..."
             prepend={<Icon name="search" size={12} />}
             autocomplete="off"
             {...{ oninput: "filterSidebarChats(this.value)" }}
@@ -96,7 +96,7 @@ const Sidebar = (props: Props) => {
                 class={classNames("sidebar-chats__item", {
                   "sidebar-chats__item--active": chat.uuid === activeChatUuid,
                 })}
-                data-chat-label={`Chat ${userChats.length - i}`}
+                data-chat-label={`Conversație ${userChats.length - i}`}
               >
                 <a
                   class="sidebar-chats__item-link"
@@ -104,7 +104,7 @@ const Sidebar = (props: Props) => {
                   hx-boost="true"
                 >
                   <Icon name="message-square" size={14} />
-                  <span class="sidebar-chats__item-label">Chat {userChats.length - i}</span>
+                  <span class="sidebar-chats__item-label">Conversație {userChats.length - i}</span>
                 </a>
               </li>
             ))}
@@ -248,7 +248,7 @@ const Sidebar = (props: Props) => {
           <a
             // href={getViewPath("public", "TERMS_AND_CONDITIONS")}
           >
-            Terms and Conditions
+            Termeni și Condiții
           </a>
           &nbsp;
           <span>&</span>
@@ -256,7 +256,7 @@ const Sidebar = (props: Props) => {
           <a
             // href={getViewPath("public", "PRIVACY_POLICY")}
           >
-            Privacy Policy
+            Politica de Confidențialitate
           </a>
         </div>
       </div>

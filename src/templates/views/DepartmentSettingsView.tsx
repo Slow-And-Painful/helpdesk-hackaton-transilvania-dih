@@ -20,7 +20,7 @@ const DepartmentSettingsView = ({ activeDepartment, tab, baseUrl }: Props) => {
       titleContainerId={departmentSettingsTitleId}
       title={
         <span>
-          Department
+          Departament
           {activeDepartment && (
             <span class="tickets-page__dept-name" safe>
               {" "} — {activeDepartment.name}
@@ -33,7 +33,7 @@ const DepartmentSettingsView = ({ activeDepartment, tab, baseUrl }: Props) => {
         <Tabs
           items={[
             { title: "General", href: `${baseUrl}?tab=general`, active: tab === "general" },
-            { title: "AI Settings", href: `${baseUrl}?tab=ai-settings`, active: tab === "ai-settings" },
+            { title: "Setări AI", href: `${baseUrl}?tab=ai-settings`, active: tab === "ai-settings" },
           ]}
         />
 

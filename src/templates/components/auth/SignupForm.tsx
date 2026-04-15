@@ -44,14 +44,14 @@ const SignupForm = (props: Props) => {
                 <FormControl name={"firstName"} formId={formId} showChanged={false}>
                   <Input
                     id={`${formId}-firstName`}
-                    label={"Name"}
+                    label={"Prenume"}
                     name="firstName"
                     required
                     type="firstName"
                     error={errors?.firstName}
                     value={values?.firstName}
                     ignoreOnePassword={false}
-                    placeholder={"John"}
+                    placeholder={"Ion"}
                     omitRequiredStar
                   />
                 </FormControl>
@@ -61,14 +61,14 @@ const SignupForm = (props: Props) => {
                 <FormControl name={"lastName"} formId={formId} showChanged={false}>
                   <Input
                     id={`${formId}-firslastNametName`}
-                    label={"Surname"}
+                    label={"Nume"}
                     name="lastName"
                     required
                     type="lastName"
                     error={errors?.lastName}
                     value={values?.lastName}
                     ignoreOnePassword={false}
-                    placeholder={"Doe"}
+                    placeholder={"Popescu"}
                     omitRequiredStar
                   />
                 </FormControl>
@@ -85,7 +85,7 @@ const SignupForm = (props: Props) => {
                 error={errors?.email}
                 value={values?.email}
                 ignoreOnePassword={false}
-                placeholder={"Insert your email here"}
+                placeholder={"Introdu adresa ta de email"}
                 omitRequiredStar
               />
             </FormControl>
@@ -94,18 +94,18 @@ const SignupForm = (props: Props) => {
 
             <div class={"w-full flex items-center justify-between gap-x-4"}>
               <div class="flex items-center gap-x-1 text-sm text-gray-400">
-                <span>Already have an account?</span>
+                <span>Ai deja un cont?</span>
                 <a
                   href={getViewPath("auth", "LOGIN", {})}
                   hx-boost="true"
                   class="text-primary-700 hover:text-primary-600 transition-colors"
                 >
-                  Sign in
+                  Conectează-te
                 </a>
               </div>
               
               <Button type="submit" size="sm" spinner>
-                Sign Up
+                Înregistrează-te
               </Button>
             </div>
           </div>

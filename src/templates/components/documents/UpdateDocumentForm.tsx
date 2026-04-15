@@ -28,7 +28,7 @@ const ExtractionStatusBadge = ({ status }: { status: string }) => {
     return (
       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-900/30 text-green-400 border border-green-800/50">
         <Icon name="check" size={10} />
-        Extracted
+        Extras
       </span>
     )
   }
@@ -36,7 +36,7 @@ const ExtractionStatusBadge = ({ status }: { status: string }) => {
     return (
       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-900/30 text-blue-400 border border-blue-800/50 animate-pulse">
         <Icon name="loader-icon" size={10} />
-        Extracting…
+        Se extrage…
       </span>
     )
   }
@@ -44,14 +44,14 @@ const ExtractionStatusBadge = ({ status }: { status: string }) => {
     return (
       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-900/30 text-red-400 border border-red-800/50">
         <Icon name="alert-triangle" size={10} />
-        Failed
+        Eșuat
       </span>
     )
   }
   return (
     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-800 text-gray-400 border border-gray-700">
       <Icon name="clock" size={10} />
-      Pending
+      În așteptare
     </span>
   )
 }
@@ -86,7 +86,7 @@ const UpdateDocumentForm = ({ document, errors, values, initialValues, swapOOB, 
             <Input
               id={`${formId}-name`}
               name="name"
-              label="Name"
+              label="Nume"
               value={values.name}
               error={errors?.name}
               required
@@ -97,7 +97,7 @@ const UpdateDocumentForm = ({ document, errors, values, initialValues, swapOOB, 
             <Textarea
               id={`${formId}-aiDescription`}
               name="aiDescription"
-              label="Description for AI"
+              label="Descriere pentru AI"
               error={errors?.aiDescription}
             >
               {values.aiDescription as "safe"}
@@ -108,7 +108,7 @@ const UpdateDocumentForm = ({ document, errors, values, initialValues, swapOOB, 
             <div class="flex flex-col gap-2">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <label class="text-sm font-medium text-gray-300">Extracted Text</label>
+                  <label class="text-sm font-medium text-gray-300">Text Extras</label>
                   <ExtractionStatusBadge status={extractionStatus} />
                 </div>
                 {canReExtract && (
@@ -121,18 +121,18 @@ const UpdateDocumentForm = ({ document, errors, values, initialValues, swapOOB, 
                     hx-swap="outerHTML"
                   >
                     <Icon name="refresh-cw" size={12} />
-                    {extractionStatus === "failed" ? "Retry extraction" : "Re-extract"}
+                    {extractionStatus === "failed" ? "Reîncearcă extragerea" : "Re-extrage"}
                   </button>
                 )}
               </div>
 
               {extractionStatus === "extracting" ? (
                 <div class="rounded-lg border border-blue-800/50 bg-blue-900/10 p-3 text-sm text-blue-400">
-                  Text extraction is in progress. This will update automatically when done.
+                  Extragerea textului este în curs. Se va actualiza automat când este gata.
                 </div>
               ) : extractionStatus === "failed" ? (
                 <div class="rounded-lg border border-red-800/50 bg-red-900/10 p-3 text-sm text-red-400">
-                  Extraction failed. Click "Retry extraction" to try again.
+                  Extragerea a eșuat. Apasă "Reîncearcă extragerea" pentru a încerca din nou.
                 </div>
               ) : (
                 <FormControl name="extractedText" formId={formId}>
@@ -153,7 +153,7 @@ const UpdateDocumentForm = ({ document, errors, values, initialValues, swapOOB, 
 
           <div class="flex justify-end">
             <Button type="submit" preset="primary" size="sm" icon="check">
-              Save Changes
+              Salvează Modificările
             </Button>
           </div>
         </>

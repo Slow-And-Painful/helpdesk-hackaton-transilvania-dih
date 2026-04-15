@@ -22,12 +22,12 @@ const userTableConfig: TableConfig<User>[] = [
   },
   {
     accessor: "firstName",
-    heading: <>First name</>,
+    heading: <>Prenume</>,
     sortable: true,
   },
   {
     accessor: "lastName",
-    heading: <>Last name</>,
+    heading: <>Nume</>,
     sortable: true,
   },
   {
@@ -37,8 +37,8 @@ const userTableConfig: TableConfig<User>[] = [
   },
   {
     accessor: "blocked",
-    heading: <>Blocked</>,
-    render: (row) => <span>{row.blocked ? "Yes" : "No"}</span>,
+    heading: <>Blocat</>,
+    render: (row) => <span>{row.blocked ? "Da" : "Nu"}</span>,
   },
   {
     accessor: "id",
@@ -49,7 +49,7 @@ const userTableConfig: TableConfig<User>[] = [
         href={`/internal/utility-login-as?userId=${row.id}`}
         class="text-primary-500 hover:underline"
       >
-        Login as
+        Autentifică-te ca
       </a>
     ),
   },
@@ -57,27 +57,27 @@ const userTableConfig: TableConfig<User>[] = [
 
 const UtilityLoginView = ({ customers, customersPagination, staff, staffPagination }: Props) => {
   return (
-    <DashboardPage title={<div class="px-24">Utility Login</div>}>
+    <DashboardPage title={<div class="px-24">Autentificare Utilitar</div>}>
       <div class="flex flex-col gap-y-8 p-24">
         <div class="flex flex-col gap-y-2">
-          <h2 class="text-lg text-white font-roboto-medium">Customers</h2>
+          <h2 class="text-lg text-white font-roboto-medium">Clienți</h2>
           <Table
             id={getTableId(USER_TYPE.CUSTOMER)}
             config={userTableConfig}
             data={customers}
             pagination={customersPagination}
-            noDataProps={{ noDataMessage: "No customers", noDataFoundMessage: "No customers found" }}
+            noDataProps={{ noDataMessage: "Niciun client", noDataFoundMessage: "Niciun client găsit" }}
           />
         </div>
 
         <div class="flex flex-col gap-y-2">
-          <h2 class="text-lg text-white font-roboto-medium">Staff</h2>
+          <h2 class="text-lg text-white font-roboto-medium">Personal</h2>
           <Table
             id={getTableId(USER_TYPE.STAFF)}
             config={userTableConfig}
             data={staff}
             pagination={staffPagination}
-            noDataProps={{ noDataMessage: "No staff", noDataFoundMessage: "No staff found" }}
+            noDataProps={{ noDataMessage: "Niciun personal", noDataFoundMessage: "Niciun personal găsit" }}
           />
         </div>
       </div>

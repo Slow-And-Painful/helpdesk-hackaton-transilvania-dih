@@ -10,11 +10,11 @@ export default function CreateUserModal() {
       id={createUserModalId}
       isOpen={true}
       size="md"
-      title={<span>Create User</span>}
+      title={<span>Creează Utilizator</span>}
       footer={
         <ModalFooter
           modalId={createUserModalId}
-          submitCta="Create"
+          submitCta="Creează"
           submitCtaIcon="plus"
           type="submit"
           form={createUserFormId}

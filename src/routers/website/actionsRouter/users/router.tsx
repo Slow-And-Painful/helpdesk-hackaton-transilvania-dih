@@ -49,7 +49,7 @@ export const router = createRouter("users", (server) => {
             <CreateUserForm
               values={{ firstName, lastName, email }}
               initialValues={{ firstName, lastName, email }}
-              errors={{ email: <>A user with this email already exists</> }}
+              errors={{ email: <>Un utilizator cu acest email există deja</> }}
             />
           )
       }
@@ -88,7 +88,7 @@ export const router = createRouter("users", (server) => {
           "HX-Retarget": `#${usersTableId}`,
           "HX-Trigger-After-Settle": JSON.stringify({
             closeModal: createUserModalId,
-            showSuccessToast: "User created successfully"
+            showSuccessToast: "Utilizatorul a fost creat cu succes"
           }),
         })
         .view(<UsersTable items={items} pagination={pagination} baseUrl={baseUrl} />)

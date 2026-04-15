@@ -15,24 +15,24 @@ const SignupCompleted = (props: Props) => {
           <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-950/30 border border-green-900/50 mb-2">
             <Icon name="mail" size={24} class="text-green-400" />
           </div>
-          <h1 class="text-2xl font-roboto-bold text-white">Check your email</h1>
+          <h1 class="text-2xl font-roboto-bold text-white">Verifică-ți emailul</h1>
         </div>
 
-        <Alert theme="success" title="Email sent successfully">
-          We have sent a verification link to <span class="font-roboto-semibold">{props.user.email}</span>. 
-          Please check your inbox and click the link to complete your signup.
+        <Alert theme="success" title="Email trimis cu succes">
+          Am trimis un link de verificare la <span class="font-roboto-semibold">{props.user.email}</span>.
+          Te rugăm să verifici inbox-ul și să apeși pe link pentru a finaliza înregistrarea.
         </Alert>
 
         <div class="flex flex-col gap-y-3">
           <p class="text-sm text-gray-400 text-center">
-            Didn't receive the email? Check your spam folder or contact support.
+            Nu ai primit emailul? Verifică dosarul de spam sau contactează suportul.
           </p>
           <a
             href={getViewPath("public", "HOME")}
             hx-boost="true"
             class="w-full text-center text-sm text-gray-400 hover:text-gray-300 transition-colors"
           >
-            Go to Home
+            Mergi la pagina principală
           </a>
         </div>
       </div>

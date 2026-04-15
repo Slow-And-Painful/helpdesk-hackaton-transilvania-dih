@@ -57,7 +57,7 @@ const UpdateUserForm = ({ user, errors, values, initialValues, swapOOB }: Props)
               <Input
                 id={`${formId}-firstName`}
                 name={"firstName"}
-                label={"First Name"}
+                label={"Prenume"}
                 value={values.firstName}
                 error={errors?.firstName}
                 required
@@ -67,7 +67,7 @@ const UpdateUserForm = ({ user, errors, values, initialValues, swapOOB }: Props)
               <Input
                 id={`${formId}-lastName`}
                 name={"lastName"}
-                label={"Last Name"}
+                label={"Nume"}
                 value={values.lastName}
                 error={errors?.lastName}
                 required
@@ -90,9 +90,9 @@ const UpdateUserForm = ({ user, errors, values, initialValues, swapOOB }: Props)
             <Textarea
               id={`${formId}-description`}
               name={"description"}
-              label={"Description"}
+              label={"Descriere"}
               error={errors?.description}
-              placeholder="Write here the description about your job task in order to help the AI"
+              placeholder="Scrie aici descrierea sarcinilor tale de serviciu pentru a ajuta AI-ul"
               // maxLength={DESCRIPTION_CHARACTERS_LIMIT}
               maxLength={1000}
               initialLength={values.description.length}
@@ -106,14 +106,14 @@ const UpdateUserForm = ({ user, errors, values, initialValues, swapOOB }: Props)
               class="!w-30"
               size="sm"
             >
-              Cancel
+              Anulează
             </FormResetButton>
 
             <Button
               class="!w-30"
               type={"submit"}
               size="sm"
-            >Save changes</Button>
+            >Salvează modificările</Button>
           </div>
         </>
       )}

@@ -14,7 +14,7 @@ const UnexpectedErrorPage = ({ user }: Props) => {
       <div class={"w-full h-full flex flex-col items-center justify-center"}>
         <div class={"w-fit mx-auto flex flex-col items-center justify-center"}>
           <h1 class={"text-[120px] font-bold -mt-10"}>500</h1>
-          <h1 class={"mt-4 mb-6 text-lg"}>An unexpected error occurred. Please try again later.</h1>
+          <h1 class={"mt-4 mb-6 text-lg"}>A apărut o eroare neașteptată. Te rugăm să încerci din nou mai târziu.</h1>
           <Button
             hx-push-url="true"
             preset="secondary"

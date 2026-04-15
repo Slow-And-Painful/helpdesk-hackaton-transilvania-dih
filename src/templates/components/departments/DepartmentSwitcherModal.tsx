@@ -21,7 +21,7 @@ export default function DepartmentSwitcherModal({ activeDepartment, userDepartme
       id={departmentSwitcherModalId}
       isOpen={true}
       size="sm"
-      title={<span>Switch Department</span>}
+      title={<span>Schimbă Departamentul</span>}
     >
       <div class="department-switcher__grid py-2">
         {userDepartments.map((dept) => {
@@ -48,7 +48,7 @@ export default function DepartmentSwitcherModal({ activeDepartment, userDepartme
                   {isActive ? (
                     <Badge theme="active" size="sm">
                       <Icon name="check" size={10} />
-                      Active
+                      Activ
                     </Badge>
                   ) : null}
                 </div>

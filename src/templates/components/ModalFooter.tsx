@@ -13,7 +13,7 @@ interface Props extends Htmx.Attributes, JSX.HtmlButtonTag {
 const ModalFooter = ({
   modalId,
   submitCta,
-  cancelCta = "Cancel",
+  cancelCta = "Anulează",
   submitCtaIcon,
   submitCtaPreset = "primary",
   cancelCtaIcon,

@@ -73,7 +73,7 @@ export const router = createRouter("departments", (server) => {
           "HX-Reswap": "outerHTML",
           "HX-Push-Url": "false",
           "HX-Trigger-After-Settle": JSON.stringify({
-            showSuccessToast: "AI prompt updated successfully",
+            showSuccessToast: "Promptul AI a fost actualizat cu succes",
           })
         })
         .view(
@@ -110,7 +110,7 @@ export const router = createRouter("departments", (server) => {
             <CreateDepartmentForm
               values={{ name }}
               initialValues={{ name }}
-              errors={{ name: <>A department with this name already exists</> }}
+              errors={{ name: <>Un departament cu acest nume există deja</> }}
             />
           )
       }
@@ -128,7 +128,7 @@ export const router = createRouter("departments", (server) => {
           "HX-Retarget": `#${departmentsTableId}`,
           "HX-Trigger-After-Settle": JSON.stringify({
             closeModal: createDepartmentModalId,
-            showSuccessToast: "Department created successfully",
+            showSuccessToast: "Departamentul a fost creat cu succes",
           }),
         })
         .view(<DepartmentsTable items={items} pagination={pagination} baseUrl={baseUrl} />)
@@ -161,7 +161,7 @@ export const router = createRouter("departments", (server) => {
           "HX-Reswap": "outerHTML",
           "HX-Push-Url": "false",
           "HX-Trigger-After-Settle": JSON.stringify({
-            showSuccessToast: "Department updated successfully",
+            showSuccessToast: "Departamentul a fost actualizat cu succes",
           }),
         })
         .view(
@@ -177,7 +177,7 @@ export const router = createRouter("departments", (server) => {
               <div class="flex w-full justify-between items-center">
                 <div class="truncate line-clamp-1 flex-1">
                   <span>
-                    Department
+                    Departament
                     <span class="tickets-page__dept-name" safe> — {name}</span>
                   </span>
                 </div>
@@ -230,7 +230,7 @@ export const router = createRouter("departments", (server) => {
           "HX-Reswap": "none",
           "HX-Push-Url": "false",
           "HX-Trigger-After-Settle": JSON.stringify({
-            showSuccessToast: "Document updated successfully",
+            showSuccessToast: "Documentul a fost actualizat cu succes",
           }),
         })
         .view(
@@ -286,7 +286,7 @@ export const router = createRouter("departments", (server) => {
       return res
         .headers({
           "HX-Trigger-After-Settle": JSON.stringify({
-            showSuccessToast: "Document uploaded successfully",
+            showSuccessToast: "Documentul a fost încărcat cu succes",
             closeModal: "upload-department-document-modal",
             openDocumentDrawer: newDocument.id,
           }),
@@ -332,7 +332,7 @@ export const router = createRouter("departments", (server) => {
           "HX-Retarget": `#${formId}`,
           "HX-Reswap": "outerHTML",
           "HX-Trigger-After-Settle": JSON.stringify({
-            showSuccessToast: "Text extraction started",
+            showSuccessToast: "Extragerea textului a început",
           }),
         })
         .view(

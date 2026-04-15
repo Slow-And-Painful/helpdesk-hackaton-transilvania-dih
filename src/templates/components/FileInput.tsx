@@ -48,10 +48,10 @@ export default ({
         />
 
         <label for={id} class="file-input__el">
-          <div class="file-input__el-prefix">Choose file</div>
+          <div class="file-input__el-prefix">Alege fișier</div>
           <div class="file-input__content">
             <span class="file-input__content-text js-file-input-text">
-              No file chosen
+              Niciun fișier ales
             </span>
           </div>
         </label>

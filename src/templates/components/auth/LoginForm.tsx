@@ -47,7 +47,7 @@ const LoginForm = (props: Props) => {
                 error={errors?.email}
                 value={values?.email}
                 ignoreOnePassword={false}
-                placeholder={"Insert your email here"}
+                placeholder={"Introdu adresa ta de email"}
                 omitRequiredStar
               />
             </FormControl>
@@ -56,18 +56,18 @@ const LoginForm = (props: Props) => {
 
             <div class={"w-full flex items-center justify-between gap-x-4"}>
               <div class="flex items-center gap-x-1 text-sm text-gray-400">
-                <span>Don't have an account?</span>
+                <span>Nu ai un cont?</span>
                 <a
                   href={getViewPath("auth", "SIGNUP")}
                   hx-boost="true"
                   class="text-primary-700 hover:text-primary-600 transition-colors"
                 >
-                  Sign up
+                  Înregistrează-te
                 </a>
               </div>
               
               <Button type="submit" size="sm" spinner>
-                Sign In
+                Conectează-te
               </Button>
             </div>
           </div>

@@ -49,8 +49,8 @@ const DepartmentAiPromptForm = ({
             <Textarea
               id={`${formId}-systemPrompt`}
               name="systemPrompt"
-              label="AI System Prompt"
-              placeholder="Enter the system prompt for this department's AI assistant..."
+              label="Prompt sistem AI"
+              placeholder="Introdu promptul de sistem pentru asistentul AI al acestui departament..."
               error={errors?.systemPrompt}
             >
               {values.systemPrompt as "safe"}
@@ -59,7 +59,7 @@ const DepartmentAiPromptForm = ({
 
           <div class="flex items-center gap-x-3 justify-end">
             <Button type="submit" preset="primary" size={"sm"}>
-              Save Changes
+              Salvează Modificările
             </Button>
           </div>
         </>

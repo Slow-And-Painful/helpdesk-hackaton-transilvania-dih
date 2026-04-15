@@ -41,7 +41,7 @@ const StaffDepartmentSettingsView = ({
     <DashboardPage
       title={
         <span>
-          Department
+          Departament
           <span class="tickets-page__dept-name" safe> — {department.name}</span>
         </span>
       }
@@ -49,10 +49,10 @@ const StaffDepartmentSettingsView = ({
       <div class="flex flex-col gap-y-6">
         <Tabs
           items={[
-            { title: "Users", href: `${baseUrl}?tab=users`, active: tab === "users" },
-            { title: "AI Settings", href: `${baseUrl}?tab=ai-settings`, active: tab === "ai-settings" },
-            { title: "Documents", href: `${baseUrl}?tab=documents`, active: tab === "documents" },
-            { title: "Tickets", href: `${baseUrl}?tab=tickets`, active: tab === "tickets" },
+            { title: "Utilizatori", href: `${baseUrl}?tab=users`, active: tab === "users" },
+            { title: "Setări AI", href: `${baseUrl}?tab=ai-settings`, active: tab === "ai-settings" },
+            { title: "Documente", href: `${baseUrl}?tab=documents`, active: tab === "documents" },
+            { title: "Tichete", href: `${baseUrl}?tab=tickets`, active: tab === "tickets" },
           ]}
         />
 

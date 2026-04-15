@@ -1,11 +1,11 @@
 export const PASSWORD_RULES_MESSAGE = (
   <>
-    Password must be at least 8 characters long, contain an uppercase letter, a
-    lowercase letter, a number, and a special character among{" "}
+    Parola trebuie să aibă cel puțin 8 caractere, să conțină o literă mare, o
+    literă mică, un număr și un caracter special dintre{" "}
     <b>@ $ ! % * ? &</b>
   </>
 )
 
-export const CHAT_MESSAGE_ERROR_TEXT = "Ops! Something went wrong. Please try again."
+export const CHAT_MESSAGE_ERROR_TEXT = "Ups! Ceva nu a mers bine. Te rugăm să încerci din nou."
 
-export const PASSWORDS_DO_NOT_MATCH_ERROR_TEXT = "Passwords do not match"
+export const PASSWORDS_DO_NOT_MATCH_ERROR_TEXT = "Parolele nu se potrivesc"
