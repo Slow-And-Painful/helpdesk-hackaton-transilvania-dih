@@ -179,16 +179,62 @@
 /* ==================== DOCUMENT DETAIL DRAWER ==================== */
 
 .doc-drawer__panel {
-  @apply w-[560px];
+  @apply max-w-full;
+  width: calc(100vw - 6rem);
+  min-width: 400px;
+}
+
+.doc-drawer__edge-handle {
+  @apply absolute top-0 left-0 h-full w-1.5 cursor-col-resize z-20 bg-transparent hover:bg-primary-600/50 transition-colors duration-150;
+
+  &::before {
+    content: '';
+    @apply absolute inset-y-0 -left-1 -right-1;
+  }
+}
+
+.doc-drawer__edge-handle--dragging {
+  @apply bg-primary-600/70;
+}
+
+.doc-drawer__body {
+  @apply flex-1 overflow-hidden flex flex-row gap-0;
+}
+
+.doc-drawer__preview-col {
+  @apply shrink-0 flex flex-col relative;
+  width: 360px;
+  min-width: 180px;
+  max-width: 70%;
+}
+
+.doc-drawer__drag-cover {
+  @apply absolute inset-0 z-10;
+}
+
+.doc-drawer__resize-handle {
+  @apply w-1 shrink-0 cursor-col-resize bg-gray-800 hover:bg-primary-600 transition-colors duration-150 relative;
+
+  &::after {
+    content: '';
+    @apply absolute inset-y-0 -left-1 -right-1;
+  }
+}
+
+.doc-drawer__resize-handle--dragging {
+  @apply bg-primary-600;
 }
 
 .doc-drawer__preview {
-  @apply w-full rounded-lg overflow-hidden border border-gray-700 bg-gray-950;
-  height: 340px;
+  @apply flex-1 min-h-0 bg-gray-950;
 }
 
 .doc-drawer__pdf {
   @apply w-full h-full;
+}
+
+.doc-drawer__form-col {
+  @apply flex-1 min-w-0 overflow-y-auto px-6 py-5 flex flex-col gap-y-4;
 }
 
 

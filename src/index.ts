@@ -506,6 +506,33 @@ void (async () => {
 
   await server.register(apiCommonRoutes, { prefix: "/api" })
 
+  // ========== SSE SUBSCRIPTION ROUTE ========== //
+  const sseManagerComponent = container.resolve<SSEManagerComponent>(SSEManagerComponent.token)
+
+  server.route({
+    method: "GET",
+    url: "/sse",
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const user = req.callerUser
+      if (!user) {
+        return res.status(401).send("Unauthorized")
+      }
+
+      // Pass the Fastify reply object — FastifyHttpAdapter calls res.raw internally
+      const stream = await sseManagerComponent.SSEManager.createSSEStream(res)
+      const roomId = SSEManagerComponent.getUserRoomId(user.id)
+      await stream.addToRoom(roomId)
+
+      res.raw.on("close", () => {
+        void sseManagerComponent.SSEManager.closeSSEStream(stream.id)
+      })
+
+      // Keep the connection open
+      await new Promise<void>(() => {})
+    },
+  })
+
   await server.register(actionsRouter, { prefix: actionsRouterPrefix })
   await server.register(partialsRouter, { prefix: partialsRouterPrefix })
   await server.register(viewsRouter, { prefix: viewsRouterPrefix })

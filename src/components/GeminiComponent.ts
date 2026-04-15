@@ -25,7 +25,7 @@ export default class GeminiComponent {
     history: Content[],
     systemPrompts: {
       department: string
-      documents?: Array<{ id: number; name: string; aiDescription: string }>
+      documents?: Array<{ id: number; name: string; aiDescription: string; extractedText?: string }>
     }
   }) => {
     const {
@@ -49,8 +49,9 @@ export default class GeminiComponent {
     ]
 
     if (systemPrompts.documents && systemPrompts.documents.length > 0) {
+      // Build document index with references
       const docLines = systemPrompts.documents
-        .map(d => `[DOC:${d.id}] ${d.name}: ${d.aiDescription}`)
+        .map(d => `[DOC:${d.id}] ${d.name}${d.aiDescription ? `: ${d.aiDescription}` : ""}`)
         .join("\n")
 
       systemHistory.push({
@@ -59,6 +60,21 @@ export default class GeminiComponent {
         }],
         role: "user",
       })
+
+      // Inject full extracted text for documents that have it
+      const docsWithText = systemPrompts.documents.filter(d => d.extractedText && d.extractedText.trim().length > 0)
+      if (docsWithText.length > 0) {
+        const contentBlocks = docsWithText
+          .map(d => `=== [DOC:${d.id}] ${d.name} ===\n${d.extractedText}`)
+          .join("\n\n")
+
+        systemHistory.push({
+          parts: [{
+            text: `Below is the full text content extracted from the department's documents. Use this to answer user questions accurately and cite the relevant document using [DOC:<id>] markers.\n\n${contentBlocks}`,
+          }],
+          role: "user",
+        })
+      }
     }
 
     const chat = this.client.chats.create({

@@ -5,7 +5,7 @@ import Textarea from "$templates/components/Textarea"
 
 export const uploadDepartmentDocumentModalId = "upload-department-document-modal"
 
-const SUPPORTED_DOCUMENT_FORMATS = ["jpeg", "jpg", "png", "webp", "pdf", "doc", "docx"]
+const SUPPORTED_DOCUMENT_FORMATS = ["pdf"]
 const MAX_DOCUMENT_SIZE = 10 * 1024 * 1024 // 10MB
 
 const UploadDepartmentDocumentModal = () => {

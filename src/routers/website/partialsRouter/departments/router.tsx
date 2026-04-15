@@ -5,6 +5,7 @@ import DepartmentSwitcherModal from "$templates/components/departments/Departmen
 import CreateDepartmentModal from "$templates/components/departments/CreateDepartmentModal"
 import UploadDepartmentDocumentModal from "$templates/components/departments/UploadDepartmentDocumentModal"
 import DocumentDetailDrawer from "$templates/components/documents/DocumentDetailDrawer"
+import UpdateDocumentForm from "$templates/components/documents/UpdateDocumentForm"
 import USER_ROLE from "$types/USER_ROLES"
 import { container } from "tsyringe"
 import RAGDocumentsBucketComponent from "$components/RAGDocumentsBucketComponent"
@@ -97,6 +98,34 @@ export const router = createRouter("departments", (server) => {
           "HX-Reswap": "innerHTML",
         })
         .view(<DocumentDetailDrawer document={document} pdfUrl={pdfUrl} />)
+    },
+  })
+
+  server.route({
+    method: "GET",
+    url: ROUTE.DOCUMENT_FORM,
+    schema: schemas[ROUTE.DOCUMENT_FORM],
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const { documentId } = req.params as { documentId: number }
+
+      const [document] = await ragDocumentsService.list({
+        where: eq(ragDocumentsTable.id, documentId),
+      })
+
+      if (!document) {
+        return res.status(404).send("Document not found")
+      }
+
+      return res.view(
+        <UpdateDocumentForm
+          document={document}
+          values={{ name: document.name, aiDescription: document.aiDescription, extractedText: document.extractedText }}
+          initialValues={{ name: document.name, aiDescription: document.aiDescription, extractedText: document.extractedText }}
+          errors={{}}
+          showExtractedText
+        />
+      )
     },
   })
 
