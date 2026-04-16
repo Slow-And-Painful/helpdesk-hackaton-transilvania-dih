@@ -19,8 +19,8 @@ const StaffDepartmentAiSettingsTab = ({ department }: Props) => {
 
       <DepartmentAiPromptForm
         department={department}
-        values={{ systemPrompt: department.systemPrompt || "" }}
-        initialValues={{ systemPrompt: department.systemPrompt || "" }}
+        values={{ systemPrompt: department.systemPrompt || "", aiDescription: department.aiDescription || "" }}
+        initialValues={{ systemPrompt: department.systemPrompt || "", aiDescription: department.aiDescription || "" }}
         errors={{}}
       />
     </div>

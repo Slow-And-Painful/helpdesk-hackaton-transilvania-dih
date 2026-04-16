@@ -8,6 +8,7 @@ import { getActionPath } from "$routers/website/utils"
 
 type FormData = {
   systemPrompt: string
+  aiDescription: string
 }
 
 type Props = FormCommonProps<FormData> & {
@@ -44,7 +45,19 @@ const DepartmentAiPromptForm = ({
       render={({ formId }) => (
         <>
           <input type="hidden" name="departmentId" value={department.id.toString()} />
-          
+
+          <FormControl name="aiDescription" formId={formId}>
+            <Textarea
+              id={`${formId}-aiDescription`}
+              name="aiDescription"
+              label="Descriere departament (pentru AI)"
+              placeholder="Descrie pe scurt ce face acest departament, cui se adresează și ce tipuri de solicitări poate prelua..."
+              error={errors?.aiDescription}
+            >
+              {values.aiDescription as "safe"}
+            </Textarea>
+          </FormControl>
+
           <FormControl name="systemPrompt" formId={formId}>
             <Textarea
               id={`${formId}-systemPrompt`}

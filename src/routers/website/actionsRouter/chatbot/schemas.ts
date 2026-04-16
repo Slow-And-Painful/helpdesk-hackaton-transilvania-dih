@@ -12,4 +12,14 @@ export const schemas = {
       required: ["message"],
     },
   } as const satisfies FastifySchema,
+  [ROUTE.STREAM_MESSAGE]: {
+    body: {
+      type: "object",
+      properties: {
+        message: { type: "string", minLength: 1, maxLength: 4000 },
+        chatId: { type: "string" },
+      },
+      required: ["message"],
+    },
+  } as const satisfies FastifySchema,
 }

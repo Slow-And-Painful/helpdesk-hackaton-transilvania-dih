@@ -26,6 +26,8 @@ export const router = createRouter("tickets", (server) => {
     },
     handler: async (req, res) => {
       const allDepartments = await departmentsService.list()
+      const { departmentId } = req.query as { departmentId?: string }
+      const preselectedDepartmentId = departmentId ? parseInt(departmentId, 10) : null
 
       return res
         .headers({
@@ -36,6 +38,7 @@ export const router = createRouter("tickets", (server) => {
           <CreateTicketModal
             departments={allDepartments}
             activeDepartmentId={req.activeDepartment?.id ?? null}
+            preselectedDepartmentId={preselectedDepartmentId}
           />
         )
     },

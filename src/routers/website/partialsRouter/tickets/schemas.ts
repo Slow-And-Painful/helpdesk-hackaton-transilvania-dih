@@ -2,7 +2,14 @@ import { FastifySchema } from "fastify"
 import { ROUTE } from "./types"
 
 export const schemas = {
-  [ROUTE.CREATE_TICKET_MODAL]: {} as const satisfies FastifySchema,
+  [ROUTE.CREATE_TICKET_MODAL]: {
+    querystring: {
+      type: "object",
+      properties: {
+        departmentId: { type: "string" },
+      },
+    },
+  } as const satisfies FastifySchema,
   [ROUTE.TICKET_DETAIL]: {
     params: {
       type: "object",

@@ -11,18 +11,24 @@ import { getActionPath } from "$routers/website/utils"
 type Props = {
   departments: Department[]
   activeDepartmentId: number | null
+  preselectedDepartmentId?: number | null
 }
 
 export const createTicketModalId = "create-ticket-modal"
 const formId = "create-ticket-form"
 
-export default function CreateTicketModal({ departments, activeDepartmentId }: Props) {
-  const departmentOptions: SelectOptions = departments
-    .filter((d) => d.id !== activeDepartmentId)
-    .map((d) => ({
-      label: d.name,
-      value: d.id,
-    }))
+export default function CreateTicketModal({ departments, activeDepartmentId, preselectedDepartmentId }: Props) {
+  const filteredDepts = departments.filter((d) => d.id !== activeDepartmentId)
+
+  const resolvedPreselectedId = preselectedDepartmentId != null && filteredDepts.some(d => d.id === preselectedDepartmentId)
+    ? preselectedDepartmentId
+    : filteredDepts[0]?.id ?? null
+
+  const departmentOptions: SelectOptions = filteredDepts.map((d) => ({
+    label: d.name,
+    value: d.id,
+    selected: d.id === resolvedPreselectedId,
+  }))
 
   return (
     <Modal
@@ -51,8 +57,8 @@ export default function CreateTicketModal({ departments, activeDepartmentId }: P
           ["hx-on::before-request"]: "onFormBeforeRequest(event.target)",
         }}
         hx-target-error={`#${formId}`}
-        values={{ name: "", summary: "", destinationDepartmentId: departmentOptions[0]?.value?.toString() ?? "" }}
-        initialValues={{ name: "", summary: "", destinationDepartmentId: departmentOptions[0]?.value?.toString() ?? "" }}
+        values={{ name: "", summary: "", destinationDepartmentId: resolvedPreselectedId?.toString() ?? "" }}
+        initialValues={{ name: "", summary: "", destinationDepartmentId: resolvedPreselectedId?.toString() ?? "" }}
         render={({ errors, values, formId }) => (
           <div class="flex flex-col gap-y-4">
             <FormControl name="name" formId={formId} showChanged={false}>

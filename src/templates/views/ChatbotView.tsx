@@ -59,10 +59,7 @@ const ChatbotView = ({ chatId, messages, ragDocuments = [] }: Props) => {
 
       {/* Input area — always at the bottom */}
       <div class="hd-chat__input-wrapper">
-        <ChatbotForm
-          values={{ message: "", chatId: chatId ?? "" }}
-          initialValues={{ message: "", chatId: chatId ?? "" }}
-        />
+        <ChatbotForm values={{ message: "", chatId: chatId ?? "" }} />
         <p class="hd-chat__disclaimer">
           Asistent AI pentru orientare în achiziții publice. Răspunsurile sunt doar informative.
         </p>

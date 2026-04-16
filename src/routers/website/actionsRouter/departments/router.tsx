@@ -55,16 +55,14 @@ export const router = createRouter("departments", (server) => {
     schema: schemas[ROUTE.UPDATE_PROMPT],
     config: {
       authenticated: true,
-      security: { session: `${USER_ROLE.DEPARTMENT_ADMIN}` },
+      security: { session: `${USER_ROLE.DEPARTMENT_ADMIN} || ${USER_ROLE.STAFF_ACCOUNT}` },
     },
     handler: async (req, res) => {
-      const { departmentId, systemPrompt } = req.body as { departmentId: number; systemPrompt: string }
+      const { departmentId, systemPrompt, aiDescription } = req.body as { departmentId: number; systemPrompt: string; aiDescription?: string }
 
-      if (req.activeDepartment?.id !== departmentId) {
-        return res.status(403).send("Department not accessible")
-      }
+      const department = await departmentsService.getOrFail(departmentId)
 
-      await departmentsService.update(departmentId, { systemPrompt })
+      await departmentsService.update(departmentId, { systemPrompt, aiDescription: aiDescription ?? "" })
 
       const formId = getDepartmentAiPromptFormId(departmentId)
       return res
@@ -78,9 +76,9 @@ export const router = createRouter("departments", (server) => {
         })
         .view(
           <DepartmentAiPromptForm
-            department={{ ...req.activeDepartment, systemPrompt }}
-            values={{ systemPrompt }}
-            initialValues={{ systemPrompt }}
+            department={{ ...department, systemPrompt, aiDescription: aiDescription ?? "" }}
+            values={{ systemPrompt, aiDescription: aiDescription ?? "" }}
+            initialValues={{ systemPrompt, aiDescription: aiDescription ?? "" }}
             errors={{}}
           />
         )
@@ -286,7 +284,7 @@ export const router = createRouter("departments", (server) => {
       return res
         .headers({
           "HX-Trigger-After-Settle": JSON.stringify({
-            showSuccessToast: "Documentul a fost încărcat cu succes",
+            showSuccessToast: "Documentul a fost incarcat cu succes",
             closeModal: "upload-department-document-modal",
             openDocumentDrawer: newDocument.id,
           }),
