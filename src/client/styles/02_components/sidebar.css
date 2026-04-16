@@ -90,15 +90,20 @@ html[data-sidebar-closed] {
 }
 
 .sidebar__container {
-  @apply fixed top-5 left-5 z-40 
-  h-[var(--sidebar-height)] w-[var(--sidebar-width)] bg-gray-900
-  border border-gray-800 rounded-2xl
+  @apply fixed top-5 left-5 z-40
+  h-[var(--sidebar-height)] w-[var(--sidebar-width)]
+  rounded-2xl
   pt-4 flex flex-col;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
   transition: width var(--sidebar-animation-duration);
 }
 
 .sidebar__header {
-  @apply flex items-center justify-between px-4 pb-4 border-b border-gray-800;
+  @apply flex items-center justify-between px-4 pb-4;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.4);
   transition: padding var(--sidebar-animation-duration);
 }
 
@@ -134,18 +139,19 @@ html[data-sidebar-closed] {
   }
 
   &:hover:not(&.sidebar__menu-item--active) {
-    @apply bg-gray-800;
+    background: rgba(31, 41, 55, 0.6);
+    border-color: rgba(99, 102, 241, 0.2);
 
     .sidebar__menu-item a {
       @apply text-gray-200;
     }
 
     .sidebar__menu-item-link > .icon {
-      @apply text-gray-400;
+      @apply text-gray-300;
     }
 
     .sidebar__menu-item__dropdown-toggle:not(.sidebar__menu-item__dropdown-menu-toggle) {
-      @apply bg-gray-700;
+      background: rgba(55, 65, 81, 0.5);
     }
   }
 
@@ -156,7 +162,9 @@ html[data-sidebar-closed] {
   }
 
   &.sidebar__menu-item--active {
-    @apply bg-gray-700;
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.1);
   }
 
   &:not(:first-child) {
@@ -168,7 +176,7 @@ html[data-sidebar-closed] {
   @apply text-white;
 
   .icon {
-    @apply text-gray-100;
+    @apply text-blue-300;
   }
 }
 
@@ -214,7 +222,8 @@ html[data-sidebar-closed] {
 }
 
 .sidebar__user-data-container {
-  @apply border-t border-gray-800 p-4 cursor-pointer;
+  @apply p-4 cursor-pointer;
+  border-top: 1px solid rgba(55, 65, 81, 0.4);
 }
 
 .sidebar__user-data {
@@ -239,7 +248,8 @@ html[data-sidebar-closed] {
 }
 
 .sidebar__footer__terms-and-conditions {
-  @apply px-4 py-3 text-xs text-gray-400 border-t border-gray-800;
+  @apply px-4 py-3 text-xs text-gray-400;
+  border-top: 1px solid rgba(55, 65, 81, 0.4);
 
   a {
     @apply underline hover:cursor-pointer;
@@ -253,7 +263,8 @@ html[data-sidebar-closed] {
 /* ==================== DEPARTMENT SWITCHER ==================== */
 
 .sidebar-departments {
-  @apply px-3 py-3 border-b border-gray-800;
+  @apply px-3 py-3;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.4);
 }
 
 .sidebar-departments__label {
@@ -266,8 +277,10 @@ html[data-sidebar-closed] {
 
 .sidebar-departments__item {
   @apply w-9 h-9 rounded-lg flex items-center justify-center text-xs font-roboto-medium
-  bg-gray-800 text-gray-400 border border-gray-700
+  text-gray-400
   transition-all duration-200 cursor-default select-none;
+  background: rgba(31, 41, 55, 0.6);
+  border: 1px solid rgba(55, 65, 81, 0.5);
 }
 
 .sidebar-departments__item--active {
@@ -289,7 +302,9 @@ html[data-sidebar-closed] {
 }
 
 .sidebar-tickets__count {
-  @apply bg-gray-800 text-gray-400 text-xs rounded-full px-2 py-0.5 min-w-[1.25rem] text-center;
+  @apply text-gray-400 text-xs rounded-full px-2 py-0.5 min-w-[1.25rem] text-center;
+  background: rgba(31, 41, 55, 0.7);
+  border: 1px solid rgba(55, 65, 81, 0.4);
 }
 
 .sidebar-tickets__list {
@@ -301,7 +316,14 @@ html[data-sidebar-closed] {
 }
 
 .sidebar-tickets__item {
-  @apply px-2.5 py-2 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors duration-150 cursor-default;
+  @apply px-2.5 py-2 rounded-lg transition-colors duration-150 cursor-default;
+  background: rgba(31, 41, 55, 0.4);
+  border: 1px solid rgba(55, 65, 81, 0.35);
+
+  &:hover {
+    background: rgba(31, 41, 55, 0.7);
+    border-color: rgba(75, 85, 99, 0.5);
+  }
 }
 
 .sidebar-tickets__item-header {
@@ -335,7 +357,8 @@ html[data-sidebar-closed] {
 /* ==================== CHAT HISTORY LIST ==================== */
 
 .sidebar-chats {
-  @apply flex flex-col overflow-hidden px-3 py-3 border-b border-gray-800;
+  @apply flex flex-col overflow-hidden px-3 py-3;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.4);
   max-height: 18rem;
 }
 
@@ -355,7 +378,8 @@ html[data-sidebar-closed] {
   @apply mb-2;
 
   .input__container {
-    @apply border-gray-700;
+    border-color: rgba(55, 65, 81, 0.5);
+    background: rgba(17, 24, 39, 0.6);
   }
 
   .input__icon--prepend .icon {
@@ -376,14 +400,15 @@ html[data-sidebar-closed] {
 }
 
 .sidebar-chats__item {
-  @apply rounded-lg transition-colors duration-150;
+  @apply rounded-lg transition-all duration-150;
 
   &:hover:not(.sidebar-chats__item--active) {
-    @apply bg-gray-800;
+    background: rgba(31, 41, 55, 0.6);
   }
 
   &.sidebar-chats__item--active {
-    @apply bg-gray-700;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.3);
   }
 }
 

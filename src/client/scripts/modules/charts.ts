@@ -72,13 +72,14 @@ const BASE_GRID = {
 }
 
 const BASE_TOOLTIP = {
-  backgroundColor: "#1f2937",
+  backgroundColor: "rgba(17, 24, 39, 0.92)",
   titleColor: "#ffffff",
   bodyColor: "#9ca3af",
-  borderColor: "rgba(255,255,255,0.1)",
+  borderColor: "rgba(255, 255, 255, 0.08)",
   borderWidth: 1,
-  padding: 10,
-  cornerRadius: 6,
+  padding: 12,
+  cornerRadius: 10,
+  boxPadding: 4,
 }
 
 const BASE_LEGEND = {

@@ -106,7 +106,7 @@ function appendCreateTicketButton(msgEl: HTMLElement, cta: TicketCta): void {
 function addChatToSidebar(chatUuid: string): void {
   const liHtml = `<li class="sidebar-chats__item sidebar-chats__item--active" data-chat-label="Conversație nouă">
     <a class="sidebar-chats__item-link" href="/dashboard/?chat=${chatUuid}" hx-boost="true">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      <div class="icon" style="--icon-size: 14"><svg width="14" height="14" viewBox="0 0 24 24" role="img"><use href="#message-square"></use></svg></div>
       <span class="sidebar-chats__item-label">Conversație nouă</span>
     </a>
   </li>`

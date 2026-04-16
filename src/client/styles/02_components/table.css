@@ -20,7 +20,9 @@ tbody {
 }
 
 .table__head {
-  @apply p-4 bg-gray-800 first:rounded-l-lg last:rounded-r-lg text-sm font-roboto-semibold font-semibold text-white truncate select-none;
+  @apply p-4 first:rounded-l-lg last:rounded-r-lg text-sm font-roboto-semibold font-semibold text-gray-300 truncate select-none;
+  background: rgba(31, 41, 55, 0.7);
+  border-bottom: 1px solid rgba(55, 65, 81, 0.5);
 
   /* &:last-child {
     @apply  text-center;
@@ -44,16 +46,19 @@ tbody {
 }
 
 .table__data {
-  @apply bg-black py-1 px-4 !h-[32px];
+  @apply py-3 px-4 !h-[52px];
+  background: transparent;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.25);
 }
 
 .table__row {
-  @apply text-sm bg-transparent h-[32px] pt-2 text-gray-300;
+  @apply text-sm bg-transparent h-[52px] text-gray-300;
 
   &:has(> * > .dropdown--open),
   &:hover {
     .table__data {
-      @apply bg-gray-900 first:rounded-l-lg last:rounded-r-lg;
+      @apply first:rounded-l-lg last:rounded-r-lg;
+      background: rgba(31, 41, 55, 0.5);
     }
 
     .table__data.table__menu:not([data-no-options]) > div:first-child,
@@ -94,7 +99,8 @@ tbody {
 
   &:checked {
     ~ .table__menu-toggle {
-      @apply bg-gray-100;
+      background: rgba(55, 65, 81, 0.6);
+      @apply text-gray-200;
     }
 
     ~ .dropdown--bottom {
@@ -104,12 +110,19 @@ tbody {
 }
 
 .table__menu-toggle {
-  @apply w-[30px] h-[30px] flex items-center justify-center rounded-lg cursor-pointer text-gray-500 hover:bg-gray-100;
+  @apply w-[30px] h-[30px] flex items-center justify-center rounded-lg cursor-pointer text-gray-500;
   transition: background-color 0.2s;
+
+  &:hover {
+    background: rgba(55, 65, 81, 0.5);
+    @apply text-gray-300;
+  }
 }
 
 .table__footer {
-  @apply px-4 pb-6 pt-4 mt-2 border-t border-gray-800 bg-black flex flex-wrap justify-between items-center select-none;
+  @apply px-4 pb-6 pt-4 mt-2 flex flex-wrap justify-between items-center select-none;
+  border-top: 1px solid rgba(55, 65, 81, 0.4);
+  background: transparent;
 }
 
 .table_link {

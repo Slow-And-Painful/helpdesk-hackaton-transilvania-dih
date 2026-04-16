@@ -107,7 +107,7 @@ const UploadDocumentsModal = ({
         data-max-total-size={realMaxTotalSize}
       >
         {loadingComponent ? (
-          <div class="absolute inset-0 bg-gray-800 hidden items-center justify-center z-10 w-full h-full" data-loading-component>
+          <div class="absolute inset-0 hidden items-center justify-center z-10 w-full h-full backdrop-blur-sm" style="background:rgba(17,24,39,0.75)" data-loading-component>
             {loadingComponent}
           </div>
         ) : null}

@@ -1,45 +1,86 @@
 .toast.htmx-added {
   @apply translate-y-[360px];
 }
+
 .toast {
-  @apply fixed bottom-8 left-2/4 -translate-x-2/4 z-[60] flex justify-between items-center gap-2.5 w-[320px] max-w-[90%] p-2 rounded-lg translate-y-0;
+  @apply fixed bottom-8 left-2/4 -translate-x-2/4 z-[60] flex justify-between items-center gap-2.5 w-[340px] max-w-[90%] px-4 py-3 rounded-xl translate-y-0;
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   transition: translate 0.3s ease-in-out;
 }
 
 .toast__content {
-  @apply flex flex-col gap-y-2 w-full;
+  @apply flex flex-col gap-y-1.5 w-full;
 }
 
 .toast__title {
-  @apply font-roboto-semibold;
+  @apply font-roboto-semibold text-sm text-white;
 }
 
 .toast__message {
-  @apply text-sm;
+  @apply text-xs text-gray-400;
 }
 
 .toast__icon {
-  @apply min-w-6 max-w-6 w-6 h-6 flex items-center justify-center;
+  @apply min-w-5 max-w-5 w-5 h-5 flex items-center justify-center shrink-0;
 }
 
 .toast--error {
-  @apply text-primary-100 bg-primary-900;
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba(239, 68, 68, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
 
-  /* .toast__title, .toast__icon {
-    @apply text-primary-100
-  } */
+  .toast__icon {
+    @apply text-red-400;
+  }
+  .toast__title {
+    @apply text-red-300;
+  }
 }
+
 .toast--warning {
-  @apply text-orange-50 bg-orange-900;
+  border-color: rgba(251, 146, 60, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba(251, 146, 60, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+
+  .toast__icon {
+    @apply text-orange-400;
+  }
+  .toast__title {
+    @apply text-orange-300;
+  }
 }
 
 .toast--info {
-  @apply text-[#E6ECFF] bg-[#041964];
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba(99, 102, 241, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+
+  .toast__icon {
+    @apply text-blue-400;
+  }
+  .toast__title {
+    @apply text-blue-300;
+  }
 }
+
 .toast--success {
-  @apply bg-[#052E16] text-[#BBF7D0];
+  border-color: rgba(34, 197, 94, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba(34, 197, 94, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+
+  .toast__icon {
+    @apply text-green-400;
+  }
+  .toast__title {
+    @apply text-green-300;
+  }
 }
 
 .toast__close {
-  @apply w-8 h-8 flex justify-center items-center cursor-pointer;
+  @apply w-7 h-7 flex justify-center items-center cursor-pointer rounded-lg text-gray-500 shrink-0;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(55, 65, 81, 0.5);
+    @apply text-gray-300;
+  }
 }

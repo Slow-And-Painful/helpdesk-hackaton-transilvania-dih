@@ -114,26 +114,32 @@
 }
 
 .ticket-drawer__panel {
-  @apply fixed top-0 right-0 h-full w-[420px] max-w-[90vw]
-    bg-gray-900 border-l border-gray-800
-    flex flex-col shadow-2xl;
+  @apply fixed top-0 right-0 h-full w-[420px] max-w-[90vw] flex flex-col;
+  background: rgba(17, 24, 39, 0.90);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(55, 65, 81, 0.5);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   animation: drawer-slide-in 0.25s ease-out forwards;
 }
 
 .ticket-drawer__header {
-  @apply flex items-center justify-between px-6 py-4 border-b border-gray-800;
+  @apply flex items-center justify-between px-6 py-4;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.4);
 }
 
 .ticket-drawer__title {
-  @apply text-lg font-roboto-medium text-gray-100;
+  @apply text-base font-roboto-semibold text-white;
 }
 
 .ticket-drawer__close {
-  @apply text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-800;
+  @apply text-gray-400 hover:text-white transition-colors p-1.5 rounded-lg;
+  &:hover {
+    background: rgba(55, 65, 81, 0.5);
+  }
 }
 
 .ticket-drawer__body {
-  @apply flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-y-4;
+  @apply flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-y-5;
 }
 
 .ticket-drawer__id {
@@ -141,39 +147,54 @@
 }
 
 .ticket-drawer__name {
-  @apply text-xl font-roboto-medium text-white leading-snug;
+  @apply text-lg font-roboto-semibold text-white leading-snug;
 }
 
 .ticket-drawer__section {
-  @apply flex flex-col gap-y-1.5;
+  @apply flex flex-col gap-y-2;
 }
 
 .ticket-drawer__label {
-  @apply text-xs uppercase tracking-wider text-gray-500 font-roboto-medium;
+  @apply text-xs uppercase tracking-widest text-gray-500 font-roboto-medium;
 }
 
 .ticket-drawer__text {
   @apply text-sm text-gray-300 leading-relaxed whitespace-pre-wrap;
+  padding: 12px;
+  background: rgba(31, 41, 55, 0.5);
+  border: 1px solid rgba(55, 65, 81, 0.4);
+  border-radius: 0.5rem;
 }
 
 .ticket-drawer__divider {
-  @apply border-t border-gray-800 my-1;
+  border-top: 1px solid rgba(55, 65, 81, 0.4);
+  @apply my-1;
 }
 
 .ticket-drawer__details {
-  @apply flex flex-col gap-y-3;
+  @apply flex flex-col gap-y-0;
+  background: rgba(31, 41, 55, 0.4);
+  border: 1px solid rgba(55, 65, 81, 0.4);
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 
 .ticket-drawer__detail-row {
-  @apply flex items-center justify-between;
+  @apply flex items-center justify-between px-4 py-3;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .ticket-drawer__value {
-  @apply text-sm text-gray-200;
+  @apply text-sm text-gray-200 font-roboto-medium;
 }
 
 .ticket-drawer__footer {
-  @apply flex items-center justify-end px-6 py-4 border-t border-gray-800;
+  @apply flex items-center justify-end px-6 py-4;
+  border-top: 1px solid rgba(55, 65, 81, 0.4);
 }
 
 /* ==================== DOCUMENT DETAIL DRAWER ==================== */
@@ -213,20 +234,26 @@
 }
 
 .doc-drawer__resize-handle {
-  @apply w-1 shrink-0 cursor-col-resize bg-gray-800 hover:bg-primary-600 transition-colors duration-150 relative;
+  @apply w-px shrink-0 cursor-col-resize transition-colors duration-150 relative;
+  background: rgba(55, 65, 81, 0.5);
 
   &::after {
     content: '';
     @apply absolute inset-y-0 -left-1 -right-1;
   }
+
+  &:hover {
+    background: rgba(99, 102, 241, 0.5);
+  }
 }
 
 .doc-drawer__resize-handle--dragging {
-  @apply bg-primary-600;
+  background: rgba(99, 102, 241, 0.7);
 }
 
 .doc-drawer__preview {
-  @apply flex-1 min-h-0 bg-gray-950;
+  @apply flex-1 min-h-0;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .doc-drawer__pdf {

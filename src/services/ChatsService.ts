@@ -2,6 +2,7 @@ import BaseService, { MainQuery } from "$services/BaseService"
 import DrizzleDB from "$components/DrizzleDB"
 import { container, inject, injectable } from "tsyringe"
 import { ChatsSchema, chatsTable, NewChatsSchema } from "$dbSchemas/Chats"
+import { desc } from "drizzle-orm"
 
 type Chat = ChatsSchema
 
@@ -32,6 +33,7 @@ export default class ChatsService extends BaseService<
     mainQuery: MainQuery<MAIN_QUERY__RESULT> = async ({ db, ...options }) => {
         return db.query.chatsTable.findMany({
             ...options,
+            orderBy: desc(chatsTable.id)
         })
     }
 

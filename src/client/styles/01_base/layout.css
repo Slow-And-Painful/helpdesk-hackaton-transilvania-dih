@@ -25,6 +25,7 @@ body {
   @apply font-roboto-regular bg-black text-white overflow-hidden scrollbar-none;
 }
 
+
 .container {
   @apply mx-auto;
 }
