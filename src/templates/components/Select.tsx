@@ -2,7 +2,6 @@ import Dropdown from "$templates/components/dropdown/Dropdown"
 import DropdownTrigger from "$templates/components/dropdown/DropdownTrigger"
 import Icon from "$templates/components/Icon"
 import { Children } from "@kitajs/html"
-import { btoa } from "buffer"
 import classNames from "classnames"
 
 type SelectSize = "sm" | "md" | "lg"
@@ -48,7 +47,7 @@ export default ({
         disabled && "select__wrap--disabled",
         !!error && "select__wrap--error",
       ]}
-      data-options={btoa(JSON.stringify(options))}
+      data-options={Buffer.from(JSON.stringify(options)).toString("base64")}
     >
       {label ? (
         <label class="select__label">

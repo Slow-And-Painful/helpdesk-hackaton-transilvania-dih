@@ -137,6 +137,19 @@
   @apply flex flex-col;
 }
 
+/* ===== STREAMING CURSOR ===== */
+.hd-chat__msg-bubble--streaming::after {
+  content: "▋";
+  display: inline-block;
+  @apply text-primary-400;
+  animation: hd-cursor-blink 0.7s step-end infinite;
+}
+
+@keyframes hd-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* ===== TYPING INDICATOR ===== */
 
 .hd-chat__typing {
@@ -237,4 +250,14 @@
 
 .hd-chat__disclaimer {
   @apply text-xs text-gray-600 text-center mt-2.5 select-none;
+}
+
+/* ===== TICKET CTA ===== */
+
+.hd-chat__ticket-cta {
+  @apply inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-lg
+  bg-primary-500/15 border border-primary-500/30
+  text-sm text-primary-300
+  hover:bg-primary-500/25 hover:border-primary-500/50 hover:text-primary-200
+  transition-all duration-150 cursor-pointer;
 }

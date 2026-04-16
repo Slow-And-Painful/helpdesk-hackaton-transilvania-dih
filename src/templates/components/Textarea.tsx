@@ -54,6 +54,7 @@ export default ({
           readonly={readonly}
           placeholder={placeholder ?? undefined}
           class={classNames("textarea", inputClass, { "!resize-y": resizable })}
+          rows="15"
           {...maxLength && { maxLength, "oninput": "textareaOnInput(this)" }}
         />
 

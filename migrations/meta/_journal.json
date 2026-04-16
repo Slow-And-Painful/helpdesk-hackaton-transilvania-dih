@@ -120,6 +120,13 @@
       "when": 1776281593252,
       "tag": "0016_illegal_shard",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1776341545024,
+      "tag": "0017_add_ai_description_to_departments",
+      "breakpoints": true
     }
   ]
 }

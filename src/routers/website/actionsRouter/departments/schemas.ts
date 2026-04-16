@@ -18,6 +18,7 @@ export const schemas = {
       properties: {
         departmentId: { type: "integer" },
         systemPrompt: { type: "string" },
+        aiDescription: { type: "string" },
       },
       required: ["departmentId"],
     },

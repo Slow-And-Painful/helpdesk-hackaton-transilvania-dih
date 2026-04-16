@@ -21,9 +21,11 @@ const DepartmentAiSettingsTab = ({ activeDepartment }: Props) => {
         department={activeDepartment}
         values={{
           systemPrompt: activeDepartment.systemPrompt || "",
+          aiDescription: activeDepartment.aiDescription || "",
         }}
         initialValues={{
           systemPrompt: activeDepartment.systemPrompt || "",
+          aiDescription: activeDepartment.aiDescription || "",
         }}
         errors={{}}
       />

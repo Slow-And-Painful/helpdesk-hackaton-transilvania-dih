@@ -6,7 +6,8 @@ export const departmentsTable = pgTable("Departments", {
   id: serial().primaryKey(),
   name: varchar({ length: 255 }).notNull().default(""),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  systemPrompt: text().notNull().default(""),  
+  systemPrompt: text().notNull().default(""),
+  aiDescription: text().notNull().default(""),
 })
 
 export const departmentRelations = relations(
