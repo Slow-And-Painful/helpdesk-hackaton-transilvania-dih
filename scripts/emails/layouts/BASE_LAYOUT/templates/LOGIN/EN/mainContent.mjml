@@ -1,65 +1,55 @@
-<mj-section padding="20px 40px">
+<mj-section padding="32px 40px 8px 40px" background-color="#0d1117">
   <mj-column>
     <mj-text
       font-size="16px"
-      line-height="24px"
+      line-height="26px"
       color="#d1d5db"
       font-family="Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-      padding="0 0 24px 0"
+      padding="0 0 16px 0"
     >
-      Hello {{targetUser.firstName}} {{targetUser.lastName}},
+      Salut {{targetUser.firstName}} {{targetUser.lastName}},
     </mj-text>
-    
+
     <mj-text
       font-size="16px"
-      line-height="24px"
+      line-height="26px"
       color="#d1d5db"
       font-family="Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-      padding="0 0 24px 0"
+      padding="0 0 28px 0"
     >
-      Click the button below to securely sign in to your account.
+      Am primit o solicitare de autentificare pentru contul tău. Apasă butonul de mai jos pentru a te conecta în siguranță.
     </mj-text>
   </mj-column>
 </mj-section>
 
-<mj-section padding="0 40px 20px 40px">
+<mj-section padding="0 40px 28px 40px" background-color="#0d1117">
   <mj-column>
     <mj-button
       font-family="Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-      font-weight="500"
+      font-weight="600"
       font-size="14px"
-      background-color="#ffffff"
-      color="#000000"
+      background-color="#3b82f6"
+      color="#ffffff"
       border-radius="8px"
       href="{{activationLink}}"
-      padding="12px 32px"
+      padding="13px 32px"
+      align="center"
     >
-      Sign In to Your Account
+      Conectează-te la cont
     </mj-button>
   </mj-column>
 </mj-section>
 
-<mj-section padding="0 40px 20px 40px">
+<mj-section padding="0 40px 32px 40px" background-color="#0d1117">
   <mj-column>
     <mj-text
-      font-size="14px"
+      font-size="13px"
       line-height="20px"
-      color="#9ca3af"
+      color="#6b7280"
       font-family="Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
       align="center"
     >
-      This link will expire in 15 minutes for security purposes.
-    </mj-text>
-    
-    <mj-text
-      font-size="14px"
-      line-height="20px"
-      color="#9ca3af"
-      font-family="Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-      align="center"
-      padding="12px 0 0 0"
-    >
-      If you didn't request this, you can safely ignore this email.
+      Linkul expiră în <span style="color:#9ca3af;font-weight:500;">15 minute</span> din motive de securitate.
     </mj-text>
   </mj-column>
 </mj-section>

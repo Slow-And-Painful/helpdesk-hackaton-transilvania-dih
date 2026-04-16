@@ -97,7 +97,7 @@ type ChartCardProps = {
 }
 
 const ChartCard = ({ title, subtitle, chartType, data, height = "220px" }: ChartCardProps) => (
-  <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col gap-y-3">
+  <div class="rounded-xl p-4 flex flex-col gap-y-3" style="background:rgba(17,24,39,0.6);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);box-shadow:0 4px 24px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.03) inset;">
     <div>
       <p class="text-sm font-roboto-medium text-white">{title as "safe"}</p>
       {subtitle ? <p class="text-xs text-gray-500 mt-0.5">{subtitle as "safe"}</p> : null}
@@ -119,10 +119,10 @@ type StatCardProps = {
 }
 
 const StatCard = ({ label, value, sub, accent = "text-blue-400" }: StatCardProps) => (
-  <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col gap-y-1">
-    <p class="text-xs text-gray-500 font-roboto-medium uppercase tracking-wide">{label as "safe"}</p>
+  <div class="rounded-xl p-4 flex flex-col gap-y-1" style="background:rgba(17,24,39,0.6);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);box-shadow:0 4px 24px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.03) inset;">
+    <p class="text-xs text-gray-500 font-roboto-medium uppercase tracking-widest">{label as "safe"}</p>
     <p class={`text-2xl font-roboto-bold ${accent}`}>{value as "safe"}</p>
-    {sub ? <p class="text-xs text-gray-500">{sub as "safe"}</p> : null}
+    {sub ? <p class="text-xs text-gray-500 mt-0.5">{sub as "safe"}</p> : null}
   </div>
 )
 

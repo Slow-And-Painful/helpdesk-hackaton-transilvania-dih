@@ -1,5 +1,14 @@
 .file-uploaded-item {
-  @apply flex items-center justify-between text-white text-sm font-normal gap-3 h-[36px] w-full p-2 border-gray-800 border-b-[1px];
+  @apply flex items-center justify-between text-gray-300 text-sm font-normal gap-3 h-[36px] w-full px-3 py-2;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.4);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba(31, 41, 55, 0.4);
+  }
 }
 
 .file-uploaded-item__name-container {

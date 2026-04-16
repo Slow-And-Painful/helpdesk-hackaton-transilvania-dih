@@ -14,22 +14,42 @@
   @apply flex flex-col h-full w-full relative overflow-hidden;
 }
 
+
 /* ===== WELCOME SCREEN ===== */
 
 .hd-chat__welcome {
-  @apply flex-1 flex flex-col items-center justify-center px-6 pb-8;
+  @apply flex-1 flex flex-col items-center justify-center px-6 pb-8 relative;
   max-width: 640px;
   margin: 0 auto;
   width: 100%;
 }
 
+.hd-chat__welcome-badge {
+  @apply inline-flex items-center gap-x-2 px-3 py-1 rounded-full
+  bg-blue-500/10 border border-blue-500/25
+  text-blue-400 text-xs font-roboto-semibold uppercase tracking-widest
+  mb-5;
+}
+
+.hd-chat__welcome-badge-dot {
+  @apply w-1.5 h-1.5 rounded-full bg-blue-400;
+  animation: hd-pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
+}
+
+@keyframes hd-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 .hd-chat__welcome-icon {
-  @apply w-14 h-14 rounded-2xl bg-primary-500/10 border border-primary-500/20
-  flex items-center justify-center text-primary-400 mb-6;
+  @apply w-14 h-14 rounded-2xl
+  bg-gradient-to-br from-blue-500/20 to-purple-500/20
+  border border-blue-500/30
+  flex items-center justify-center text-blue-400 mb-5;
 }
 
 .hd-chat__welcome-title {
-  @apply text-2xl text-white font-roboto-light text-center mb-3 tracking-tight;
+  @apply text-2xl text-white font-roboto-semibold text-center mb-2 tracking-tight;
 }
 
 .hd-chat__welcome-subtitle {
@@ -42,9 +62,9 @@
 
 .hd-chat__suggestion {
   @apply flex items-start gap-2.5 px-4 py-3.5 rounded-xl
-  bg-gray-800/60 border border-gray-700/50
+  bg-gray-900/60 border border-gray-800/70
   text-left text-sm text-gray-300 leading-snug
-  hover:bg-gray-800 hover:border-gray-600 hover:text-white
+  hover:bg-gray-900 hover:border-gray-700 hover:text-white
   transition-all duration-200 cursor-pointer;
 
   .icon {
@@ -52,7 +72,7 @@
   }
 
   &:hover .icon {
-    @apply text-primary-400;
+    @apply text-blue-400;
   }
 }
 
@@ -92,7 +112,9 @@
 }
 
 .hd-chat__msg--user .hd-chat__msg-bubble {
-  @apply bg-gray-800 rounded-2xl rounded-br-sm px-4 py-3;
+  @apply rounded-2xl rounded-br-sm px-4 py-3;
+  background: rgba(31, 41, 55, 0.8);
+  border: 1px solid rgba(55, 65, 81, 0.6);
 }
 
 /* Bot messages */
@@ -195,10 +217,12 @@
 }
 
 .hd-chat__input-container {
-  @apply flex flex-col bg-gray-800/80 border border-gray-700/60
+  @apply flex flex-col border border-gray-800/70
   rounded-2xl px-4 pt-2.5 pb-3
-  focus-within:border-gray-600 focus-within:bg-gray-800
+  focus-within:border-blue-500/30
   transition-all duration-200;
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(12px);
 }
 
 .hd-chat__input-toolbar {

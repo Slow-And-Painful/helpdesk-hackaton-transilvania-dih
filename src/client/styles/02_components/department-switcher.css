@@ -6,7 +6,9 @@
   @apply w-full text-left;
 
   &:not(:disabled):hover .department-switcher__card {
-    @apply bg-gray-800 border-gray-600 cursor-pointer;
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 0 20px rgba(99,102,241,0.08);
+    cursor: pointer;
   }
 
   &:disabled {
@@ -15,11 +17,17 @@
 }
 
 .department-switcher__card-btn--active .department-switcher__card {
-  @apply border-indigo-500/50 ring-2 ring-indigo-500/20;
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(99,102,241,0.15) inset,
+    0 0 24px rgba(99,102,241,0.12);
 }
 
 .department-switcher__card {
-  @apply p-4 flex flex-col gap-3 transition-all duration-150;
+  @apply p-4 flex flex-col gap-3 rounded-xl transition-all duration-200;
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(55, 65, 81, 0.5);
 }
 
 .department-switcher__avatar {
@@ -33,7 +41,7 @@
 }
 
 .department-switcher__card-name {
-  @apply text-sm font-medium text-white truncate flex-1;
+  @apply text-sm font-roboto-medium text-white truncate flex-1;
 }
 
 .department-switcher__card-hint {

@@ -21,8 +21,12 @@ const ChatbotView = ({ chatId, messages, ragDocuments = [] }: Props) => {
     <div class="hd-chat" id="helpdesk-chat">
       {/* Empty state / welcome — hidden when resuming an existing chat */}
       <div class="hd-chat__welcome" id="hd-chat-welcome" style={hasMessages ? "display:none" : undefined}>
+        <div class="hd-chat__welcome-badge">
+          <span class="hd-chat__welcome-badge-dot" />
+          Asistent AI intern
+        </div>
         <div class="hd-chat__welcome-icon">
-          <Icon name="zap" size={28} />
+          <Icon name="agent" size={28} />
         </div>
         <h1 class="hd-chat__welcome-title">Asistent Achiziții Publice</h1>
         <p class="hd-chat__welcome-subtitle">

@@ -329,9 +329,6 @@ export const router = createRouter("departments", (server) => {
         .headers({
           "HX-Retarget": `#${formId}`,
           "HX-Reswap": "outerHTML",
-          "HX-Trigger-After-Settle": JSON.stringify({
-            showSuccessToast: "Extragerea textului a început",
-          }),
         })
         .view(
           <UpdateDocumentForm
