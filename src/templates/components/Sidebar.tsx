@@ -91,12 +91,12 @@ const Sidebar = (props: Props) => {
             {...{ oninput: "filterSidebarChats(this.value)" }}
           />
           <ul class="sidebar-chats__list">
-            {userChats.map((chat, i) => (
+            {userChats.map((chat) => (
               <li
                 class={classNames("sidebar-chats__item", {
                   "sidebar-chats__item--active": chat.uuid === activeChatUuid,
                 })}
-                data-chat-label={`Conversație ${userChats.length - i}`}
+                data-chat-label={chat.name ?? "Conversație nouă"}
               >
                 <a
                   class="sidebar-chats__item-link"
@@ -104,7 +104,7 @@ const Sidebar = (props: Props) => {
                   hx-boost="true"
                 >
                   <Icon name="message-square" size={14} />
-                  <span class="sidebar-chats__item-label">Conversație {userChats.length - i}</span>
+                  <span class="sidebar-chats__item-label" safe>{chat.name ?? "Conversație nouă"}</span>
                 </a>
               </li>
             ))}

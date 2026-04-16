@@ -37,6 +37,15 @@ function stripCtaMarkers(text: string): string {
   return text.replace(/\s*\[CTA:CREATE_TICKET:[^\]]*\]/g, "")
 }
 
+function extractError(text: string): string | null {
+  const match = text.match(/\[ERROR:([^\]]*)\]/)
+  return match ? match[1] : null
+}
+
+function stripErrorMarkers(text: string): string {
+  return text.replace(/\s*\[ERROR:[^\]]*\]/g, "")
+}
+
 type Props = {
   reply: string
   documents?: DocRef[]
@@ -44,7 +53,8 @@ type Props = {
 
 const ChatBotReply = ({ reply, documents = [] }: Props) => {
   const cta = extractTicketCta(reply)
-  const displayReply = stripCtaMarkers(reply)
+  const error = extractError(reply)
+  const displayReply = stripCtaMarkers(stripErrorMarkers(reply))
 
   const ticketUrl = cta?.deptId != null
     ? `/partials/tickets/create-modal?departmentId=${cta.deptId}${cta.message ? `&subject=${encodeURIComponent(cta.message)}` : ""}`
@@ -67,6 +77,12 @@ const ChatBotReply = ({ reply, documents = [] }: Props) => {
           >
             Deschide tichet de suport
           </button>
+        )}
+        {error != null && (
+          <div class="hd-chat__error-box">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span safe>{error}</span>
+          </div>
         )}
       </div>
     </div>

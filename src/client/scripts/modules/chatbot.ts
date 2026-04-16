@@ -56,6 +56,28 @@ function stripCtaMarkers(markdown: string): string {
   return markdown.replace(/\s*\[CTA:CREATE_TICKET:[^\]]*\]/g, "")
 }
 
+function extractError(markdown: string): string | null {
+  const match = markdown.match(/\[ERROR:([^\]]*)\]/)
+  return match ? match[1] : null
+}
+
+function stripErrorMarkers(markdown: string): string {
+  return markdown.replace(/\s*\[ERROR:[^\]]*\]/g, "")
+}
+
+function appendErrorBox(msgEl: HTMLElement, message: string): void {
+  const existing = msgEl.querySelector(".hd-chat__error-box")
+  if (existing) return
+
+  const box = document.createElement("div")
+  box.className = "hd-chat__error-box"
+  box.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    <span>${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</span>`
+
+  const content = msgEl.querySelector(".hd-chat__msg-content")
+  if (content) content.appendChild(box)
+}
+
 function appendCreateTicketButton(msgEl: HTMLElement, cta: TicketCta): void {
   const existing = msgEl.querySelector(".hd-chat__ticket-cta")
   if (existing) return
@@ -79,6 +101,44 @@ function appendCreateTicketButton(msgEl: HTMLElement, cta: TicketCta): void {
     // @ts-expect-error htmx is loaded globally
     if (typeof htmx !== "undefined") htmx.process(btn)
   }
+}
+
+function addChatToSidebar(chatUuid: string): void {
+  const liHtml = `<li class="sidebar-chats__item sidebar-chats__item--active" data-chat-label="Conversație nouă">
+    <a class="sidebar-chats__item-link" href="/dashboard/?chat=${chatUuid}" hx-boost="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      <span class="sidebar-chats__item-label">Conversație nouă</span>
+    </a>
+  </li>`
+
+  let list = document.querySelector<HTMLUListElement>(".sidebar-chats__list")
+
+  if (!list) {
+    // First chat ever — the sidebar-chats section doesn't exist yet, insert it
+    const sidebar = document.getElementById("sidebar")
+    if (!sidebar) return
+
+    const section = document.createElement("div")
+    section.className = "sidebar-chats"
+    section.innerHTML = `<div class="sidebar-chats__header">
+      <span class="sidebar-chats__label sidebar__menu-item-label">Conversații</span>
+    </div>
+    <ul class="sidebar-chats__list">${liHtml}</ul>`
+
+    // Insert before the regular menu (sidebar__menu) or before footer
+    const menu = sidebar.querySelector(".sidebar__menu") ?? sidebar.querySelector(".sidebar__footer")
+    if (menu) sidebar.insertBefore(section, menu)
+    else sidebar.appendChild(section)
+    return
+  }
+
+  // Remove active class from any current active item
+  list.querySelectorAll(".sidebar-chats__item--active").forEach(el => el.classList.remove("sidebar-chats__item--active"))
+
+  const temp = document.createElement("ul")
+  temp.innerHTML = liHtml
+  const li = temp.firstElementChild
+  if (li) list.prepend(li)
 }
 
 function appendBotMessage(): { bubble: HTMLElement; msgEl: HTMLElement } {
@@ -171,10 +231,16 @@ async function streamChat(form: HTMLFormElement) {
         }
 
         if (currentEvent === "meta" && parsed && typeof parsed === "object" && "docs" in parsed) {
-          docs = (parsed as { docs: Array<{ id: number; name: string }> }).docs
+          const meta = parsed as { docs: Array<{ id: number; name: string }>; chatUuid?: string }
+          docs = meta.docs
+          if (meta.chatUuid && !chatId && hiddenInput) {
+            hiddenInput.value = meta.chatUuid
+            window.history.replaceState(null, "", `/dashboard/?chat=${meta.chatUuid}`)
+            addChatToSidebar(meta.chatUuid)
+          }
         } else if (currentEvent === "chunk" && typeof parsed === "string") {
           rawMarkdown += parsed
-          const displayMarkdown = stripCtaMarkers(rawMarkdown)
+          const displayMarkdown = stripCtaMarkers(stripErrorMarkers(rawMarkdown))
           bubble.innerHTML = renderDocMarkers(md.render(displayMarkdown), docs)
           msgs.scrollTop = msgs.scrollHeight
         } else if (currentEvent === "done" && typeof parsed === "string" && parsed) {
@@ -188,10 +254,15 @@ async function streamChat(form: HTMLFormElement) {
 
     bubble.classList.remove("hd-chat__msg-bubble--streaming")
 
-    // After streaming is complete, check for CTA marker
+    // After streaming is complete, check for CTA and ERROR markers
     const cta = extractTicketCta(rawMarkdown)
     if (cta) {
       appendCreateTicketButton(msgEl, cta)
+    }
+
+    const errorMsg = extractError(rawMarkdown)
+    if (errorMsg) {
+      appendErrorBox(msgEl, errorMsg)
     }
 
     msgs.scrollTop = msgs.scrollHeight
