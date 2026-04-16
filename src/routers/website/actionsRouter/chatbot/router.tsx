@@ -64,7 +64,7 @@ export const router = createRouter("chatbot", (server) => {
       const history: Content[] = []
 
       if (!chatId) {
-        const newChat = await chatsService.sInsert({ departmentUserId: departmentUser.id })
+        const newChat = await chatsService.sInsert({ departmentUserId: departmentUser.id, name: "Conversatie noua" })
         chatUuid = newChat.uuid
         chatDbId = newChat.id
       } else {
@@ -104,10 +104,14 @@ export const router = createRouter("chatbot", (server) => {
       }
 
       // Send document and department metadata so the client can render links and pre-select departments
+      // chatUuid is included so the client can update the sidebar immediately (before Gemini responds)
       sendEvent("meta", {
         docs: ragDocuments.map(d => ({ id: d.id, name: d.name })),
         departments: allDepartments.map(d => ({ id: d.id, name: d.name })),
+        chatUuid,
       })
+
+      let fullReply = ""
 
       try {
         const stream = await geminiComponent.streamMessage({
@@ -119,8 +123,6 @@ export const router = createRouter("chatbot", (server) => {
             allDepartments,
           },
         })
-
-        let fullReply = ""
 
         for await (const chunk of stream) {
           const text = chunk.text ?? ""
@@ -134,7 +136,11 @@ export const router = createRouter("chatbot", (server) => {
 
         sendEvent("done", chatUuid)
       } catch (_err) {
-        sendEvent("error", "A apărut o eroare. Te rugăm să încerci din nou.")
+        const errorMarker = "[ERROR:A apărut o eroare la procesarea mesajului. Te rugăm să încerci din nou.]"
+        fullReply += errorMarker
+        sendEvent("chunk", errorMarker)
+        await chatMessagesService.sInsert({ chatId: chatDbId, prompt: message, response: fullReply }).catch(() => {})
+        sendEvent("done", chatUuid)
       } finally {
         res.raw.end()
       }
@@ -179,7 +185,7 @@ export const router = createRouter("chatbot", (server) => {
       const history: Content[] = []
 
       if (!chatId) {
-        const newChat = await chatsService.sInsert({ departmentUserId: departmentUser.id })
+        const newChat = await chatsService.sInsert({ departmentUserId: departmentUser.id, name: "Conversatie noua" })
         chatUuid = newChat.uuid
 
         const reply = await geminiComponent.sendMessage({

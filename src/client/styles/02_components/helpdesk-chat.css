@@ -261,3 +261,9 @@
   hover:bg-primary-500/25 hover:border-primary-500/50 hover:text-primary-200
   transition-all duration-150 cursor-pointer;
 }
+
+.hd-chat__error-box {
+  @apply flex items-start gap-2 px-4 py-3 rounded-lg
+  bg-red-500/10 border border-red-500/30
+  text-sm text-red-400;
+}

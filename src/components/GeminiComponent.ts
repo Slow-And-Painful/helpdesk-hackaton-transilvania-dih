@@ -48,13 +48,13 @@ export default class GeminiComponent {
     if (systemPrompts.allDepartments && systemPrompts.allDepartments.length > 0) {
       const deptLines = systemPrompts.allDepartments
         .filter(d => d.aiDescription.trim().length > 0)
-        .map(d => `[DEPT:${d.id}] ${d.name}: ${d.aiDescription}`)
+        .map(d => `ID:${d.id} — ${d.name}: ${d.aiDescription}`)
         .join("\n")
 
       if (deptLines) {
         systemHistory.push({
           parts: [{
-            text: `Platforma are mai multe departamente. Mai jos găsești o scurtă descriere a fiecăruia, împreună cu identificatorul lor [DEPT:<id>].\n\nDacă solicitarea utilizatorului nu aparține departamentului curent sau dacă recomanzi deschiderea unui tichet de suport, specifică departamentul cel mai potrivit folosind marcajul [DEPT:<id>] (de exemplu: [DEPT:3]) — acesta va fi utilizat automat pentru a pre-selecta departamentul destinatar la crearea tichetului.\n\n${deptLines}`,
+            text: `Platforma are mai multe departamente. Mai jos găsești ID-ul și descrierea fiecăruia. Folosește ID-ul numeric al departamentului cel mai potrivit atunci când generezi un marcaj [CTA:CREATE_TICKET:...].\n\n${deptLines}`,
           }],
           role: "user",
         })
@@ -83,7 +83,7 @@ export default class GeminiComponent {
 
         systemHistory.push({
           parts: [{
-            text: `Mai jos se află textul integral extras din documentele departamentului. Folosește aceste informații pentru a răspunde cu acuratețe la întrebările utilizatorului și citează documentul relevant folosind marcajele [DOC:<id>].\n\nDacă, după consultarea tuturor documentelor disponibile, nu poți oferi un răspuns satisfăcător sau problema necesită intervenție umană, informează utilizatorul că poate deschide un tichet de suport. Identifică departamentul cel mai potrivit din lista de departamente disponibile și include marcajul [DEPT:<id>] al acestuia. Încheie răspunsul cu exact această propoziție pe un rând nou (înlocuind [DEPT:<id>] cu marcajul real al departamentului recomandat): „Nu am găsit o procedură care să acopere această situație. Te invit să deschizi un tichet de suport [DEPT:<id>] — echipa responsabilă îl va prelua și îți va oferi asistență personalizată." — aceasta va activa automat un buton de creare tichet în interfață.\n\n${contentBlocks}`,
+            text: `Mai jos se află textul integral extras din documentele departamentului. Folosește aceste informații pentru a răspunde cu acuratețe la întrebările utilizatorului și citează documentul relevant folosind marcajele [DOC:<id>].\n\nDacă, după consultarea tuturor documentelor disponibile, nu poți oferi un răspuns satisfăcător sau problema necesită intervenție umană, adaugă la finalul răspunsului un marcaj [CTA:CREATE_TICKET:<departmentId>:<subiect>] conform instrucțiunilor din prompt-ul general.\n\n${contentBlocks}`,
           }],
           role: "user",
         })
