@@ -61,7 +61,11 @@ export default class DocumentTextExtractionComponent {
       ],
     })
 
-    return response.text ?? ""
+    return {
+      text: response.text ?? "",
+      inputTokens: response.usageMetadata?.promptTokenCount ?? 0,
+      outputTokens: response.usageMetadata?.candidatesTokenCount ?? 0,
+    }
   }
 
   extractAndSave = async (document: RAGDocumentSchema, userId?: number): Promise<void> => {
@@ -81,11 +85,13 @@ export default class DocumentTextExtractionComponent {
     })
 
     try {
-      const extractedText = await this.extractText(document)
+      const { text: extractedText, inputTokens, outputTokens } = await this.extractText(document)
 
       await this.ragDocumentsService.update(document.id, {
         extractedText,
         extractionStatus: "done",
+        extractionInputTokens: inputTokens,
+        extractionOutputTokens: outputTokens,
       })
 
       void this.sseManagerComponent.send(roomId, {

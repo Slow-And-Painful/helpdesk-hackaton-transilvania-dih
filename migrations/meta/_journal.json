@@ -127,6 +127,20 @@
       "when": 1776341545024,
       "tag": "0017_add_ai_description_to_departments",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1776611125879,
+      "tag": "0018_workable_impossible_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1776611306686,
+      "tag": "0019_tidy_nocturne",
+      "breakpoints": true
     }
   ]
 }

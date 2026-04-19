@@ -12,6 +12,8 @@ export const chatMessagesTable = pgTable("ChatMessages", {
     prompt: text().notNull(),
     response: text().notNull(),
     chatId: integer().notNull().references(() => chatsTable.id, { onDelete: "cascade" }),
+    inputTokens: integer().notNull().default(0),
+    outputTokens: integer().notNull().default(0),
 })
 
 export const chatMessagesRelations = relations(

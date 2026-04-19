@@ -9,6 +9,8 @@ export const ragDocumentsTable = pgTable("RAGDocuments", {
   aiDescription: text().notNull().default(""),
   extractedText: text().notNull().default(""),
   extractionStatus: varchar({ length: 50 }).notNull().default("pending"),
+  extractionInputTokens: integer().notNull().default(0),
+  extractionOutputTokens: integer().notNull().default(0),
   departmentId: integer().notNull().references(() => departmentsTable.id),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow()
 })
