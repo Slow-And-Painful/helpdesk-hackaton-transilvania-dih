@@ -133,15 +133,15 @@ export const router = createRouter("chatbot", (server) => {
         }
 
         const { inputTokens, outputTokens } = getUsage()
-        await chatMessagesService.sInsert({ chatId: chatDbId, prompt: message, response: fullReply, inputTokens, outputTokens })
+        const savedMsg = await chatMessagesService.sInsert({ chatId: chatDbId, prompt: message, response: fullReply, inputTokens, outputTokens })
 
-        sendEvent("done", chatUuid)
+        sendEvent("done", { chatUuid, messageId: savedMsg.id })
       } catch (_err) {
         const errorMarker = "[ERROR:A apărut o eroare la procesarea mesajului. Te rugăm să încerci din nou.]"
         fullReply += errorMarker
         sendEvent("chunk", errorMarker)
-        await chatMessagesService.sInsert({ chatId: chatDbId, prompt: message, response: fullReply }).catch(() => {})
-        sendEvent("done", chatUuid)
+        const errMsg = await chatMessagesService.sInsert({ chatId: chatDbId, prompt: message, response: fullReply }).catch(() => null)
+        sendEvent("done", { chatUuid, messageId: errMsg?.id ?? null })
       } finally {
         res.raw.end()
       }
@@ -199,7 +199,7 @@ export const router = createRouter("chatbot", (server) => {
           },
         })
 
-        await chatMessagesService.sInsert({ chatId: newChat.id, prompt: message, response: reply, inputTokens, outputTokens })
+        const newMsg = await chatMessagesService.sInsert({ chatId: newChat.id, prompt: message, response: reply, inputTokens, outputTokens })
 
         const updatedChats = [newChat, ...req.userChats]
 
@@ -207,7 +207,7 @@ export const router = createRouter("chatbot", (server) => {
           .header("HX-Push-Url", `/dashboard/?chat=${chatUuid}`)
           .view(
             <>
-              <ChatBotReply reply={reply} documents={ragDocuments} />
+              <ChatBotReply reply={reply} documents={ragDocuments} messageId={newMsg.id} />
               <Sidebar
                 swapOOB="true"
                 routerName="/dashboard/"
@@ -255,13 +255,13 @@ export const router = createRouter("chatbot", (server) => {
           },
         })
 
-        await chatMessagesService.sInsert({ chatId: existingChat.id, prompt: message, response: reply, inputTokens, outputTokens })
+        const existingMsg = await chatMessagesService.sInsert({ chatId: existingChat.id, prompt: message, response: reply, inputTokens, outputTokens })
 
         chatUuid = existingChat.uuid
 
         return res
           .header("HX-Push-Url", `/dashboard/?chat=${chatUuid}`)
-          .view(<ChatBotReply reply={reply} documents={ragDocuments} />)
+          .view(<ChatBotReply reply={reply} documents={ragDocuments} messageId={existingMsg.id} />)
       }
     },
   })

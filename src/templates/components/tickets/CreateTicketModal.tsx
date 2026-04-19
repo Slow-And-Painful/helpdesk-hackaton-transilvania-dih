@@ -12,12 +12,16 @@ type Props = {
   departments: Department[]
   activeDepartmentId: number | null
   preselectedDepartmentId?: number | null
+  prefillName?: string
+  prefillSummary?: string
+  fromChatbot?: boolean
+  chatMessageId?: number
 }
 
 export const createTicketModalId = "create-ticket-modal"
 const formId = "create-ticket-form"
 
-export default function CreateTicketModal({ departments, activeDepartmentId, preselectedDepartmentId }: Props) {
+export default function CreateTicketModal({ departments, activeDepartmentId, preselectedDepartmentId, prefillName = "", prefillSummary = "", fromChatbot = false, chatMessageId }: Props) {
   const filteredDepts = departments.filter((d) => d.id !== activeDepartmentId)
 
   const resolvedPreselectedId = preselectedDepartmentId != null && filteredDepts.some(d => d.id === preselectedDepartmentId)
@@ -57,10 +61,12 @@ export default function CreateTicketModal({ departments, activeDepartmentId, pre
           ["hx-on::before-request"]: "onFormBeforeRequest(event.target)",
         }}
         hx-target-error={`#${formId}`}
-        values={{ name: "", summary: "", destinationDepartmentId: resolvedPreselectedId?.toString() ?? "" }}
-        initialValues={{ name: "", summary: "", destinationDepartmentId: resolvedPreselectedId?.toString() ?? "" }}
+        values={{ name: prefillName, summary: prefillSummary, destinationDepartmentId: resolvedPreselectedId?.toString() ?? "", fromChatbot: fromChatbot ? "1" : "", chatMessageId: chatMessageId?.toString() ?? "" }}
+        initialValues={{ name: "", summary: "", destinationDepartmentId: "", fromChatbot: "", chatMessageId: "" }}
         render={({ errors, values, formId }) => (
           <div class="flex flex-col gap-y-4">
+            <input type="hidden" name="fromChatbot" value={values?.fromChatbot} />
+            <input type="hidden" name="chatMessageId" value={values?.chatMessageId} />
             <FormControl name="name" formId={formId} showChanged={false}>
               <Input
                 id={`${formId}-name`}

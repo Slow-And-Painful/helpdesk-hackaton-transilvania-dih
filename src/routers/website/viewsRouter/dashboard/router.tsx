@@ -95,7 +95,8 @@ export const router = createRouter("dashboard", (server) => {
     },
     handler: async (req, res) => {
       const activeDepartment = req.activeDepartment
-      const { tab: tabParam, ...query } = req.query as Record<string, string>
+      const { tab: tabParam, ticketId: ticketIdParam, ...query } = req.query as Record<string, string>
+      const openTicketId = ticketIdParam ? parseInt(ticketIdParam, 10) : undefined
       const tab = tabParam === "outgoing" ? "outgoing" : "incoming"
       const baseUrl = getViewPath("dashboard", "TICKETS")
 
@@ -147,6 +148,7 @@ export const router = createRouter("dashboard", (server) => {
           activeDepartment={activeDepartment}
           tab={tab}
           baseUrl={baseUrl}
+          openTicketId={openTicketId}
         />,
         DashboardLayout
       )

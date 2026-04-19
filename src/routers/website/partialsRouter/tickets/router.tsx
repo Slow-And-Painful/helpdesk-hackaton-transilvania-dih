@@ -26,7 +26,7 @@ export const router = createRouter("tickets", (server) => {
     },
     handler: async (req, res) => {
       const allDepartments = await departmentsService.list()
-      const { departmentId } = req.query as { departmentId?: string }
+      const { departmentId, subject, summary, fromChatbot, chatMessageId } = req.query as { departmentId?: string; subject?: string; summary?: string; fromChatbot?: string; chatMessageId?: string }
       const preselectedDepartmentId = departmentId ? parseInt(departmentId, 10) : null
 
       return res
@@ -39,6 +39,10 @@ export const router = createRouter("tickets", (server) => {
             departments={allDepartments}
             activeDepartmentId={req.activeDepartment?.id ?? null}
             preselectedDepartmentId={preselectedDepartmentId}
+            prefillName={subject}
+            prefillSummary={summary}
+            fromChatbot={fromChatbot === "1"}
+            chatMessageId={chatMessageId ? parseInt(chatMessageId, 10) : undefined}
           />
         )
     },

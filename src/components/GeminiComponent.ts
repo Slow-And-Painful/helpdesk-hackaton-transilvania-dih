@@ -30,77 +30,52 @@ export default class GeminiComponent {
     this.model = "gemini-2.5-flash-lite"
   }
 
-  private buildSystemHistory = async(systemPrompts: MessageOptions["systemPrompts"]): Promise<Content[]> => {
+  private buildSystemInstruction = async(systemPrompts: MessageOptions["systemPrompts"]): Promise<string> => {
     const globalSettings = await this.globalSettingsComponent.getGlobalSettings()
     const globalSystemPrompt = globalSettings[GLOBAL_SETTINGS.SYSTEM_PROMPT]
 
-    const systemHistory: Content[] = [
-      {
-        parts: [{ text: globalSystemPrompt }],
-        role: "user",
-      },
-      {
-        parts: [{ text: systemPrompts.department }],
-        role: "user",
-      },
-    ]
+    const parts: string[] = [globalSystemPrompt, systemPrompts.department]
 
     if (systemPrompts.allDepartments && systemPrompts.allDepartments.length > 0) {
       const deptLines = systemPrompts.allDepartments
         .filter(d => d.aiDescription.trim().length > 0)
-        .map(d => `ID:${d.id} — ${d.name}: ${d.aiDescription}`)
+        .map(d => `${d.id} — ${d.name}: ${d.aiDescription}`)
         .join("\n")
 
       if (deptLines) {
-        systemHistory.push({
-          parts: [{
-            text: `Platforma are mai multe departamente. Mai jos găsești ID-ul și descrierea fiecăruia. Folosește ID-ul numeric al departamentului cel mai potrivit atunci când generezi un marcaj [CTA:CREATE_TICKET:...].\n\n${deptLines}`,
-          }],
-          role: "user",
-        })
+        parts.push(`Platforma are mai multe departamente. Mai jos găsești ID-ul numeric și descrierea fiecăruia. Folosește ID-ul numeric al departamentului cel mai potrivit atunci când generezi un marcaj [CTA:CREATE_TICKET:...]. Nu menționa niciodată ID-urile numerice ale departamentelor în răspunsurile tale — acestea sunt doar pentru uz intern.\n\n${deptLines}`)
       }
     }
 
     if (systemPrompts.documents && systemPrompts.documents.length > 0) {
-      // Build document index with references
       const docLines = systemPrompts.documents
         .map(d => `[DOC:${d.id}] ${d.name}${d.aiDescription ? `: ${d.aiDescription}` : ""}`)
         .join("\n")
 
-      systemHistory.push({
-        parts: [{
-          text: `Următoarele documente sunt disponibile în baza de cunoștințe a departamentului. Când recomanzi un document utilizatorului, referențiază-l folosind exact marcajul [DOC:<id>] pentru ca acesta să fie afișat ca link descărcabil.\n\n${docLines}`,
-        }],
-        role: "user",
-      })
+      parts.push(`Următoarele documente sunt disponibile în baza de cunoștințe a departamentului. Când recomanzi un document utilizatorului, referențiază-l folosind exact marcajul [DOC:<id>] pentru ca acesta să fie afișat ca link descărcabil.\n\n${docLines}`)
 
-      // Inject full extracted text for documents that have it
       const docsWithText = systemPrompts.documents.filter(d => d.extractedText && d.extractedText.trim().length > 0)
       if (docsWithText.length > 0) {
         const contentBlocks = docsWithText
           .map(d => `=== [DOC:${d.id}] ${d.name} ===\n${d.extractedText}`)
           .join("\n\n")
 
-        systemHistory.push({
-          parts: [{
-            text: `Mai jos se află textul integral extras din documentele departamentului. Folosește aceste informații pentru a răspunde cu acuratețe la întrebările utilizatorului și citează documentul relevant folosind marcajele [DOC:<id>].\n\nDacă, după consultarea tuturor documentelor disponibile, nu poți oferi un răspuns satisfăcător sau problema necesită intervenție umană, adaugă la finalul răspunsului un marcaj [CTA:CREATE_TICKET:<departmentId>:<subiect>] conform instrucțiunilor din prompt-ul general.\n\n${contentBlocks}`,
-          }],
-          role: "user",
-        })
+        parts.push(`Mai jos se află textul integral extras din documentele departamentului. Folosește aceste informații pentru a răspunde cu acuratețe la întrebările utilizatorului și citează documentul relevant folosind marcajele [DOC:<id>].\n\n${contentBlocks}`)
       }
     }
 
-    return systemHistory
+    return parts.join("\n\n---\n\n")
   }
 
   sendMessage = async(options: MessageOptions) => {
     const { prompt, history, systemPrompts } = options
 
-    const systemHistory = await this.buildSystemHistory(systemPrompts)
+    const systemInstruction = await this.buildSystemInstruction(systemPrompts)
 
     const chat = this.client.chats.create({
       model: this.model,
-      history: [...systemHistory, ...history],
+      config: { systemInstruction },
+      history,
     })
 
     const response = await chat.sendMessage({ message: prompt })
@@ -115,11 +90,12 @@ export default class GeminiComponent {
   streamMessage = async(options: MessageOptions): Promise<{ stream: AsyncGenerator<GenerateContentResponse>; getUsage: () => { inputTokens: number; outputTokens: number } }> => {
     const { prompt, history, systemPrompts } = options
 
-    const systemHistory = await this.buildSystemHistory(systemPrompts)
+    const systemInstruction = await this.buildSystemInstruction(systemPrompts)
 
     const chat = this.client.chats.create({
       model: this.model,
-      history: [...systemHistory, ...history],
+      config: { systemInstruction },
+      history,
     })
 
     const stream = chat.sendMessageStream({ message: prompt })

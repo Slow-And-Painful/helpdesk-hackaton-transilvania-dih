@@ -9,6 +9,8 @@ export const schemas = {
         name: { type: "string", minLength: 1, maxLength: 255 },
         destinationDepartmentId: { type: "integer" },
         summary: { type: "string" },
+        fromChatbot: { type: "string" },
+        chatMessageId: { type: "string" },
       },
       required: ["name", "destinationDepartmentId"],
     },

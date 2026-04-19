@@ -7,6 +7,10 @@ export const schemas = {
       type: "object",
       properties: {
         departmentId: { type: "string" },
+        subject: { type: "string" },
+        summary: { type: "string" },
+        fromChatbot: { type: "string" },
+        chatMessageId: { type: "string" },
       },
     },
   } as const satisfies FastifySchema,

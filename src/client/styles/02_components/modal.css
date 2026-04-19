@@ -73,7 +73,7 @@
 }
 
 .modal__footer {
-  @apply flex items-center justify-end gap-x-3 pt-1 border-t border-gray-800/60;
+  @apply flex items-center justify-end gap-x-3 pt-1;
 }
 
 /* Sizes */

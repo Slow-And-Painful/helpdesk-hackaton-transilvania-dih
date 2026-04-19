@@ -55,7 +55,7 @@ const ChatbotView = ({ chatId, messages, ragDocuments = [] }: Props) => {
       {/* Messages area — pre-populated when resuming a chat */}
       <div class={`hd-chat__messages${hasMessages ? " hd-chat__messages--active" : ""}`} id="hd-chat-messages">
         {hasMessages && messages.map((msg) => (
-          <ChatMessage message={msg.prompt} reply={msg.response} documents={ragDocuments} />
+          <ChatMessage message={msg.prompt} reply={msg.response} documents={ragDocuments} messageId={msg.id} />
         ))}
       </div>
 
