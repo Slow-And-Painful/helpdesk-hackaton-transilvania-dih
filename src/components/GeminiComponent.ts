@@ -105,10 +105,14 @@ export default class GeminiComponent {
 
     const response = await chat.sendMessage({ message: prompt })
 
-    return response.text
+    return {
+      text: response.text ?? "",
+      inputTokens: response.usageMetadata?.promptTokenCount ?? 0,
+      outputTokens: response.usageMetadata?.candidatesTokenCount ?? 0,
+    }
   }
 
-  streamMessage = async(options: MessageOptions): Promise<AsyncGenerator<GenerateContentResponse>> => {
+  streamMessage = async(options: MessageOptions): Promise<{ stream: AsyncGenerator<GenerateContentResponse>; getUsage: () => { inputTokens: number; outputTokens: number } }> => {
     const { prompt, history, systemPrompts } = options
 
     const systemHistory = await this.buildSystemHistory(systemPrompts)
@@ -118,7 +122,24 @@ export default class GeminiComponent {
       history: [...systemHistory, ...history],
     })
 
-    return chat.sendMessageStream({ message: prompt })
+    const stream = chat.sendMessageStream({ message: prompt })
+    let inputTokens = 0
+    let outputTokens = 0
+
+    const wrappedStream = async function* () {
+      for await (const chunk of await stream) {
+        if (chunk.usageMetadata) {
+          inputTokens = chunk.usageMetadata.promptTokenCount ?? 0
+          outputTokens = chunk.usageMetadata.candidatesTokenCount ?? 0
+        }
+        yield chunk
+      }
+    }
+
+    return {
+      stream: wrappedStream(),
+      getUsage: () => ({ inputTokens, outputTokens }),
+    }
   }
 
   static token = Symbol("GeminiComponent")

@@ -1,0 +1,2 @@
+ALTER TABLE "RAGDocuments" ADD COLUMN "extractionInputTokens" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE "RAGDocuments" ADD COLUMN "extractionOutputTokens" integer DEFAULT 0 NOT NULL;

@@ -114,7 +114,7 @@ export const router = createRouter("chatbot", (server) => {
       let fullReply = ""
 
       try {
-        const stream = await geminiComponent.streamMessage({
+        const { stream, getUsage } = await geminiComponent.streamMessage({
           prompt: message,
           history,
           systemPrompts: {
@@ -132,7 +132,8 @@ export const router = createRouter("chatbot", (server) => {
           }
         }
 
-        await chatMessagesService.sInsert({ chatId: chatDbId, prompt: message, response: fullReply })
+        const { inputTokens, outputTokens } = getUsage()
+        await chatMessagesService.sInsert({ chatId: chatDbId, prompt: message, response: fullReply, inputTokens, outputTokens })
 
         sendEvent("done", chatUuid)
       } catch (_err) {
@@ -188,7 +189,7 @@ export const router = createRouter("chatbot", (server) => {
         const newChat = await chatsService.sInsert({ departmentUserId: departmentUser.id, name: "Conversatie noua" })
         chatUuid = newChat.uuid
 
-        const reply = await geminiComponent.sendMessage({
+        const { text: reply, inputTokens, outputTokens } = await geminiComponent.sendMessage({
           prompt: message,
           history: [],
           systemPrompts: {
@@ -196,9 +197,9 @@ export const router = createRouter("chatbot", (server) => {
             documents: ragDocuments,
             allDepartments,
           },
-        }) ?? ""
+        })
 
-        await chatMessagesService.sInsert({ chatId: newChat.id, prompt: message, response: reply })
+        await chatMessagesService.sInsert({ chatId: newChat.id, prompt: message, response: reply, inputTokens, outputTokens })
 
         const updatedChats = [newChat, ...req.userChats]
 
@@ -244,7 +245,7 @@ export const router = createRouter("chatbot", (server) => {
         }
 
         // Send message to Gemini with conversation history
-        const reply = await geminiComponent.sendMessage({
+        const { text: reply, inputTokens, outputTokens } = await geminiComponent.sendMessage({
           prompt: message,
           history,
           systemPrompts: {
@@ -252,9 +253,9 @@ export const router = createRouter("chatbot", (server) => {
             documents: ragDocuments,
             allDepartments,
           },
-        }) ?? ""
+        })
 
-        await chatMessagesService.sInsert({ chatId: existingChat.id, prompt: message, response: reply })
+        await chatMessagesService.sInsert({ chatId: existingChat.id, prompt: message, response: reply, inputTokens, outputTokens })
 
         chatUuid = existingChat.uuid
 
