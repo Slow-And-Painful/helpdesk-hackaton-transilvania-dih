@@ -20,6 +20,27 @@ export const schemas = {
       type: "object",
       properties: {
         ticketId: { type: "integer" },
+        tab: { type: "string" },
+      },
+      required: ["ticketId"],
+    },
+  } as const satisfies FastifySchema,
+  [ROUTE.OPEN]: {
+    body: {
+      type: "object",
+      properties: {
+        ticketId: { type: "integer" },
+        tab: { type: "string" },
+      },
+      required: ["ticketId"],
+    },
+  } as const satisfies FastifySchema,
+  [ROUTE.ASSIGN]: {
+    body: {
+      type: "object",
+      properties: {
+        ticketId: { type: "integer" },
+        assigneeId: { type: ["integer", "null"] },
       },
       required: ["ticketId"],
     },

@@ -224,6 +224,8 @@ type PartialRoutersParams = {
   }
   tickets: {
     TICKET_DETAIL: { ticketId: number }
+    ASSIGN_MODAL: { ticketId: number }
+    SENDER_USER_MODAL: { ticketId: number }
   }
   departments: {
     DOCUMENT_DETAIL: { documentId: number }

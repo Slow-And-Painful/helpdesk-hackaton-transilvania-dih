@@ -61,6 +61,7 @@ export type TableProps<Row> = JSX.HtmlTag & {
   swapOOB?: Htmx.Attributes["hx-swap-oob"]
   rowHeight?: number
   rowId?: (row: Row) => string
+  menuCellId?: (row: Row) => string
   implicitFilters?: string[]
 }
 
@@ -100,20 +101,22 @@ const setSorterIconClass = (accessor: string, baseUrl: string): string => {
 }
 
 export const getRowItem = <Row,>(
-  config: TableConfig<Row>[], 
-  row: Row, 
+  config: TableConfig<Row>[],
+  row: Row,
   options?: {
     rowLink?: (row: Row) => string,
     dropdownOptions?: DropdownItem[] | ((row: Row) => DropdownItem[]),
     rowHeight?: number,
     rowId?: (row: Row) => string,
+    menuCellId?: (row: Row) => string,
     entityData?: (data: Row) => JSX.Element,
     entityDataAccessor?: keyof Row,
     props?: Htmx.Attributes
   }
 ): JSX.Element => {
-  const dropdownId = `table-options-${(row as Record<"id", number>).id ?? hash("sha256", (row as Record<"name", string>).name)}` + hash("sha256", JSON.stringify(row))
-  const { rowLink, dropdownOptions, rowHeight, rowId, entityData, entityDataAccessor, props } = options || {}
+  const rowIdValue = (row as Record<"id", number>).id ?? hash("sha256", (row as Record<"name", string>).name)
+  const dropdownId = `table-options-${rowIdValue}`
+  const { rowLink, dropdownOptions, rowHeight, rowId, menuCellId, entityData, entityDataAccessor, props } = options || {}
   const menuOptions = typeof dropdownOptions === "function" ? dropdownOptions(row) : dropdownOptions
   const rowItem = <>
     {config.map(({ accessor, render, width, minWidth, copyable, href }) => {
@@ -165,15 +168,17 @@ export const getRowItem = <Row,>(
       </td>
     })}
     {menuOptions ? <td class="table__data table__menu w-[5%] min-w-fit text-center" {...menuOptions.length === 0 ? { "data-no-options": "true" } : {}}>
-      <DropdownTrigger dropdownId={dropdownId}>
-        <div class="flex justify-center items-center cursor-pointer">
-          <Icon name={"dots-vertical"} size={20} class={"text-grey-100"} />
-        </div>
-      </DropdownTrigger>
-      <Dropdown
-        id={dropdownId}
-        items={menuOptions}
-      />
+      <div {...menuCellId ? { id: menuCellId(row) } : {}}>
+        <DropdownTrigger dropdownId={dropdownId}>
+          <div class="flex justify-center items-center cursor-pointer">
+            <Icon name={"dots-vertical"} size={20} class={"text-grey-100"} />
+          </div>
+        </DropdownTrigger>
+        <Dropdown
+          id={dropdownId}
+          items={menuOptions}
+        />
+      </div>
     </td> : null}
   </>
 
@@ -201,6 +206,7 @@ export default function Table<Row>({
   dropdownOptions,
   rowHeight,
   rowId,
+  menuCellId,
   ...props
 }: TableProps<Row>): JSX.Element {
   const sorterEnabled = !!data.length
@@ -292,6 +298,7 @@ export default function Table<Row>({
                     dropdownOptions,
                     rowHeight,
                     rowId,
+                    menuCellId,
                     entityData: props.entityData,
                     entityDataAccessor: props.entityDataAccessor
                   }

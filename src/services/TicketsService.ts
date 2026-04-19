@@ -4,6 +4,8 @@ import { container, inject, injectable } from "tsyringe"
 import { ticketsTable, TicketSchema, NewTicketSchema } from "$dbSchemas/Tickets"
 import { desc } from "drizzle-orm"
 import { DepartmentsSchema } from "$dbSchemas/Departments"
+import { User } from "./UsersService"
+import { DepartmentUserSchema } from "$dbSchemas/DepartmentUsers"
 
 type WithSenderDepartment<T> = T & {
   senderDepartment?: DepartmentsSchema
@@ -13,7 +15,19 @@ type WithDestinationDepartment<T> = T & {
   destinationDepartment?: DepartmentsSchema
 }
 
-export type Ticket = WithSenderDepartment<WithDestinationDepartment<TicketSchema>>
+export type TicketAssignee = DepartmentUserSchema & {
+  user?: User
+}
+
+type WithAssignee<T> = T & {
+  assignee?: TicketAssignee | null
+}
+
+type WithSenderDepartmentUser<T> = T & {
+  senderDepartmentUser?: TicketAssignee | null
+}
+
+export type Ticket = WithSenderDepartment<WithDestinationDepartment<WithAssignee<WithSenderDepartmentUser<TicketSchema>>>>
 
 type TABLE = typeof ticketsTable
 type PK_TYPE = number
@@ -52,7 +66,13 @@ export default class TicketsService extends BaseService<
       ...options,
       with: {
         senderDepartment: true,
+        senderDepartmentUser: {
+          with: { user: true },
+        },
         destinationDepartment: true,
+        assignee: {
+          with: { user: true },
+        },
       },
     })
   }
