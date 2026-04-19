@@ -65,11 +65,14 @@ function Form<FormData extends FormValues>({
         if (document.readyState === "loading") {
           document.addEventListener("DOMContentLoaded", () => {
             window.registerForm("${props.id}")
+            window.onFormUpdate("${props.id}", false)
           })
         } else {
           window.registerForm("${props.id}")
+          window.onFormUpdate("${props.id}", false)
           document.removeEventListener("DOMContentLoaded", () => {
             window.registerForm("${props.id}")
+            window.onFormUpdate("${props.id}", false)
           })
         }
       `}</script>

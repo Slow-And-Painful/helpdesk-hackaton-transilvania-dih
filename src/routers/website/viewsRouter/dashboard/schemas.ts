@@ -9,7 +9,15 @@ export const schemas = {
       },
     },
   },
-  [ROUTE.TICKETS]: {},
+  [ROUTE.TICKETS]: {
+    querystring: {
+      type: "object",
+      properties: {
+        tab: { type: "string" },
+        ticketId: { type: "string" },
+      },
+    },
+  },
   [ROUTE.USERS]: {},
   [ROUTE.DEPARTMENT]: {
     querystring: {

@@ -15,9 +15,10 @@ type Props = {
   activeDepartment: Department | null
   tab: TicketsViewTab
   baseUrl: string
+  openTicketId?: number
 }
 
-const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Props) => {
+const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl, openTicketId }: Props) => {
   return (
     <DashboardPage
       title={
@@ -59,6 +60,9 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl }: Prop
           activeDepartment={activeDepartment}
         />
       </div>
+      {openTicketId && (
+        <script>{`document.addEventListener('DOMContentLoaded', function() { htmx.ajax('GET', '/partials/tickets/detail/${openTicketId}', { target: '#drawer', swap: 'innerHTML' }) })`}</script>
+      )}
     </DashboardPage>
   )
 }

@@ -41,14 +41,15 @@ function renderDocMarkers(html: string, docs: Array<{ id: number; name: string }
   })
 }
 
-type TicketCta = { deptId: number | null; message: string }
+type TicketCta = { deptId: number | null; title: string; description: string }
 
 function extractTicketCta(markdown: string): TicketCta | null {
-  const match = markdown.match(/\[CTA:CREATE_TICKET:(\d+)?:([^\]]*)\]/)
+  const match = markdown.match(/\[CTA:CREATE_TICKET:(\d+)?:([^:\]]*):([^\]]*)\]/)
   if (!match) return null
   return {
     deptId: match[1] ? parseInt(match[1], 10) : null,
-    message: match[2] ?? "",
+    title: match[2]?.trim() ?? "",
+    description: match[3]?.trim() ?? "",
   }
 }
 
@@ -82,14 +83,22 @@ function appendCreateTicketButton(msgEl: HTMLElement, cta: TicketCta): void {
   const existing = msgEl.querySelector(".hd-chat__ticket-cta")
   if (existing) return
 
+  const messageId = msgEl.dataset.messageId
+
   const btn = document.createElement("button")
   btn.className = "hd-chat__ticket-cta"
   btn.type = "button"
   btn.textContent = "Deschide tichet de suport"
+  if (messageId) btn.id = `ticket-cta-${messageId}`
 
-  const url = cta.deptId != null
-    ? `/partials/tickets/create-modal?departmentId=${cta.deptId}${cta.message ? `&subject=${encodeURIComponent(cta.message)}` : ""}`
-    : "/partials/tickets/create-modal"
+  const params = new URLSearchParams()
+  if (cta.deptId != null) params.set("departmentId", String(cta.deptId))
+  if (cta.title) params.set("subject", cta.title)
+  if (cta.description) params.set("summary", cta.description)
+  params.set("fromChatbot", "1")
+  if (messageId) params.set("chatMessageId", messageId)
+  const qs = params.toString()
+  const url = qs ? `/partials/tickets/create-modal?${qs}` : "/partials/tickets/create-modal"
 
   btn.setAttribute("hx-get", url)
   btn.setAttribute("hx-target", "#modal")
@@ -243,10 +252,14 @@ async function streamChat(form: HTMLFormElement) {
           const displayMarkdown = stripCtaMarkers(stripErrorMarkers(rawMarkdown))
           bubble.innerHTML = renderDocMarkers(md.render(displayMarkdown), docs)
           msgs.scrollTop = msgs.scrollHeight
-        } else if (currentEvent === "done" && typeof parsed === "string" && parsed) {
+        } else if (currentEvent === "done" && parsed && typeof parsed === "object" && "chatUuid" in parsed) {
+          const donePayload = parsed as { chatUuid: string; messageId: number | null }
           if (hiddenInput) {
-            hiddenInput.value = parsed
-            window.history.replaceState(null, "", `/dashboard/?chat=${parsed}`)
+            hiddenInput.value = donePayload.chatUuid
+            window.history.replaceState(null, "", `/dashboard/?chat=${donePayload.chatUuid}`)
+          }
+          if (donePayload.messageId != null) {
+            msgEl.dataset.messageId = String(donePayload.messageId)
           }
         }
       }
