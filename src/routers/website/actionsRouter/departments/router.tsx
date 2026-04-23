@@ -14,15 +14,18 @@ import DepartmentsTable, { departmentsTableId } from "$templates/components/tabl
 import CreateDepartmentForm, { createDepartmentFormId } from "$templates/components/departments/CreateDepartmentForm"
 import { createDepartmentModalId } from "$templates/components/departments/CreateDepartmentModal"
 import UpdateDocumentForm, { getUpdateDocumentFormId } from "$templates/components/documents/UpdateDocumentForm"
-import DocumentsTable, { documentsTableId } from "$templates/components/tables/DocumentsTable"
-import { eq } from "drizzle-orm"
+import CreateFolderForm, { createFolderFormId } from "$templates/components/documents/CreateFolderForm"
+import { and, eq } from "drizzle-orm"
 import { ragDocumentsTable } from "$dbSchemas/ragDocuments"
+import { documentFoldersTable } from "$dbSchemas/DocumentFolders"
+import DocumentFoldersService from "$services/DocumentFoldersService"
 import { getViewPath } from "../../utils"
 
 export const routerPrefix = "/departments"
 
 const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
 const ragDocumentsService = container.resolve<RAGDocumentsService>(RAGDocumentsService.token)
+const documentFoldersService = container.resolve<DocumentFoldersService>(DocumentFoldersService.token)
 const documentTextExtractionComponent = container.resolve<DocumentTextExtractionComponent>(DocumentTextExtractionComponent.token)
 
 export const router = createRouter("departments", (server) => {
@@ -214,40 +217,23 @@ export const router = createRouter("departments", (server) => {
 
       await ragDocumentsService.update(documentId, values)
 
-      const baseUrl = getViewPath("dashboard", "DOCUMENTS")
-      const { items, pagination } = await ragDocumentsService.getTableItems(
-        {},
-        req.activeDepartment
-          ? eq(ragDocumentsTable.departmentId, req.activeDepartment.id)
-          : undefined,
-      )
-
       return res
         .headers({
-          "HX-Retarget": `#${formId},#${documentsTableId}`,
-          "HX-Reswap": "none",
+          "HX-Retarget": `#${formId}`,
+          "HX-Reswap": "outerHTML",
           "HX-Push-Url": "false",
           "HX-Trigger-After-Settle": JSON.stringify({
             showSuccessToast: "Documentul a fost actualizat cu succes",
           }),
         })
         .view(
-          <>
-            <UpdateDocumentForm
-              document={{ ...document, ...values }}
-              values={values}
-              initialValues={values}
-              errors={{}}
-              swapOOB={"outerHTML"}
-              showExtractedText
-            />
-            <DocumentsTable
-              items={items}
-              pagination={pagination}
-              baseUrl={baseUrl}
-              swapOOB={"outerHTML"}
-            />
-          </>
+          <UpdateDocumentForm
+            document={{ ...document, ...values }}
+            values={values}
+            initialValues={values}
+            errors={{}}
+            showExtractedText
+          />
         )
     },
   })
@@ -258,10 +244,20 @@ export const router = createRouter("departments", (server) => {
     schema: schemas[ROUTE.UPLOAD_DOCUMENT],
     config: { authenticated: true },
     handler: async (req, res) => {
-      const { documentKey, name, aiDescription } = req.body as { documentKey: string; documentType: string; name: string; aiDescription?: string }
+      const { documentKey, name, aiDescription, folderId } = req.body as { documentKey: string; documentType: string; name: string; aiDescription?: string; folderId?: number }
 
       if (!req.activeDepartment) {
         return res.status(403).send("No active department")
+      }
+
+      let resolvedFolderId: number | null = folderId ?? null
+
+      if (!resolvedFolderId) {
+        const allFolders = await documentFoldersService.list({
+          where: eq(documentFoldersTable.departmentId, req.activeDepartment.id),
+        })
+        const rootFolder = allFolders.find((f) => !f.deletable && f.parentId === null) ?? null
+        resolvedFolderId = rootFolder?.id ?? null
       }
 
       const newDocument = await ragDocumentsService.sInsert({
@@ -271,34 +267,79 @@ export const router = createRouter("departments", (server) => {
         extractedText: "",
         extractionStatus: "pending",
         departmentId: req.activeDepartment.id,
+        folderId: resolvedFolderId,
       })
 
-      // Trigger text extraction in background — do not await
       void documentTextExtractionComponent.extractAndSave(newDocument, req.callerUser?.id).catch((err) => {
         console.error(`[DocumentExtraction] Failed for document ${newDocument.id}:`, err)
       })
 
-      const { items, pagination } = await ragDocumentsService.getTableItems(req.query as Record<string, string>, eq(ragDocumentsTable.departmentId, req.activeDepartment.id))
       const baseUrl = getViewPath("dashboard", "DOCUMENTS")
+      const redirectUrl = resolvedFolderId ? `${baseUrl}?folderId=${resolvedFolderId}` : baseUrl
 
       return res
         .headers({
-          "HX-Trigger-After-Settle": JSON.stringify({
+          "HX-Trigger": JSON.stringify({
             showSuccessToast: "Documentul a fost incarcat cu succes",
-            closeModal: "upload-department-document-modal",
-            openDocumentDrawer: newDocument.id,
           }),
-          "HX-Reswap": "outerHTML",
-          "HX-Retarget": `#${documentsTableId}`,
-          "HX-Push-Url": `${baseUrl}${pagination.baseUrl ? `?${pagination.baseUrl}&page=${pagination.page}` : `?page=${pagination.page}`}`,
+          "HX-Redirect": redirectUrl,
         })
-        .view(
-          <DocumentsTable
-            items={items}
-            pagination={pagination}
-            baseUrl={baseUrl}
-          />,
-        )
+        .send()
+    },
+  })
+
+  server.route({
+    method: "POST",
+    url: ROUTE.CREATE_FOLDER,
+    schema: schemas[ROUTE.CREATE_FOLDER],
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const { name, parentFolderId } = req.body as { name: string; parentFolderId: number }
+
+      const parentFolder = await documentFoldersService.get(parentFolderId)
+      if (!parentFolder) {
+        return res.status(404).send("Parent folder not found")
+      }
+
+      if (req.activeDepartment && parentFolder.departmentId !== req.activeDepartment.id) {
+        return res.status(403).send("Folder does not belong to active department")
+      }
+
+      const existing = await documentFoldersService.list({
+        where: and(
+          eq(documentFoldersTable.parentId, parentFolderId),
+          eq(documentFoldersTable.name, name),
+        ),
+      })
+
+      if (existing.length > 0) {
+        return res
+          .status(422)
+          .headers({ "HX-Retarget": `#${createFolderFormId}`, "HX-Reswap": "outerHTML" })
+          .view(
+            <CreateFolderForm
+              parentFolderId={parentFolderId}
+              values={{ name, parentFolderId }}
+              initialValues={{ name: "", parentFolderId }}
+              errors={{ name: <>Un folder cu acest nume există deja în acest director</> }}
+            />
+          )
+      }
+
+      await documentFoldersService.insert({
+        name,
+        departmentId: parentFolder.departmentId,
+        parentId: parentFolderId,
+        deletable: true,
+      })
+
+      return res
+        .headers({
+          "HX-Trigger": JSON.stringify({
+            folderCreated: { folderId: parentFolderId, modalId: "create-folder-modal" },
+          }),
+        })
+        .send()
     },
   })
 

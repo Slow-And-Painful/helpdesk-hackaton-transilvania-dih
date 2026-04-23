@@ -3,14 +3,14 @@ import DrizzleDB from "$components/DrizzleDB"
 import { container, inject, injectable } from "tsyringe"
 import { ticketsTable, TicketSchema, NewTicketSchema } from "$dbSchemas/Tickets"
 import { desc } from "drizzle-orm"
-import { Department } from "./DepartmentsService"
+import { DepartmentsSchema } from "$dbSchemas/Departments"
 
 type WithSenderDepartment<T> = T & {
-  senderDepartment?: Department
+  senderDepartment?: DepartmentsSchema
 }
 
 type WithDestinationDepartment<T> = T & {
-  destinationDepartment?: Department
+  destinationDepartment?: DepartmentsSchema
 }
 
 export type Ticket = WithSenderDepartment<WithDestinationDepartment<TicketSchema>>

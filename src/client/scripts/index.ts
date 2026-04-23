@@ -173,6 +173,22 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   })
 
+  document.body.addEventListener("folderCreated", (event) => {
+    const { folderId, modalId } = (event as CustomEvent).detail as { folderId: number; modalId: string }
+
+    // Reload the explorer first, then close the modal so HTMX doesn't lose its context element
+    const explorer = document.getElementById("document-explorer")
+    const currentFolderId = explorer?.dataset.folderId ?? String(folderId)
+
+    window.htmx.ajax("get", `/partials/departments/folder-contents/${currentFolderId}`, {
+      target: "#document-explorer",
+      swap: "outerHTML",
+    })
+
+    window.closeModal(modalId)
+    window.toast.success("Folderul a fost creat cu succes")
+  })
+
   window.addEventListener("resize", () => {
     initTextEllipsis()
     clearTimeout(debounceTimeout)

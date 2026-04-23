@@ -8,7 +8,6 @@ import TicketsView from "$templates/views/TicketsView"
 import UsersView from "$templates/views/UsersView"
 import DepartmentSettingsView from "$templates/views/DepartmentSettingsView"
 import DepartmentDocumentsView from "$templates/views/DepartmentDocumentsView"
-import DocumentsTable, { documentsTableId } from "$templates/components/tables/DocumentsTable"
 import TicketsTable, { ticketsTableId } from "$templates/components/tables/TicketsTable"
 import UsersTable, { usersTableId } from "$templates/components/tables/UsersTable"
 import { container } from "tsyringe"
@@ -25,13 +24,16 @@ import { usersTable } from "$dbSchemas/Users"
 export const routerPrefix = "/dashboard"
 
 import RAGDocumentsService from "$services/RAGDocumentsService"
+import DocumentFoldersService from "$services/DocumentFoldersService"
 import { ragDocumentsTable } from "$dbSchemas/ragDocuments"
+import { documentFoldersTable } from "$dbSchemas/DocumentFolders"
 
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
 const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesService.token)
 const usersService = container.resolve<UsersService>(UsersService.token)
 const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 const ragDocumentsService = container.resolve<RAGDocumentsService>(RAGDocumentsService.token)
+const documentFoldersService = container.resolve<DocumentFoldersService>(DocumentFoldersService.token)
 
 export const router = createRouter("dashboard", (server) => {
   server.route({
@@ -250,33 +252,63 @@ export const router = createRouter("dashboard", (server) => {
       authenticated: true,
     },
     handler: async (req, res) => {
-      const query = req.query as Record<string, string>
-      const baseUrl = getViewPath("dashboard", "DOCUMENTS")
+      const activeDepartment = req.activeDepartment
+      const { folderId: folderIdParam } = req.query as { folderId?: string }
 
-      const additionalWhere = req.activeDepartment
-        ? eq(ragDocumentsTable.departmentId, req.activeDepartment.id)
-        : undefined
+      let currentFolder = null
+      let currentFolders: Awaited<ReturnType<typeof documentFoldersService.list>> = []
+      let currentDocuments: Awaited<ReturnType<typeof ragDocumentsService.list>> = []
+      const breadcrumb: { id: number; name: string }[] = []
 
-      const { items, pagination } = await ragDocumentsService.getTableItems(query, additionalWhere)
+      if (activeDepartment) {
+        const allFolders = await documentFoldersService.list({
+          where: eq(documentFoldersTable.departmentId, activeDepartment.id),
+        })
 
-      const tableOnly = req.headers["hx-template"] === "table"
+        let rootFolder = allFolders.find((f) => !f.deletable && f.parentId === null) ?? null
 
-      if (tableOnly) {
-        return res
-          .headers({
-            "HX-Reswap": "outerHTML",
-            "HX-Retarget": `#${documentsTableId}`,
-            "HX-Push-Url": `${baseUrl}${pagination.baseUrl ? `?${pagination.baseUrl}&page=${pagination.page}` : `?page=${pagination.page}`}`,
+        // Lazy-create root folder for departments created before this feature
+        if (!rootFolder) {
+          rootFolder = await documentFoldersService.sInsert({
+            name: activeDepartment.name,
+            departmentId: activeDepartment.id,
+            parentId: null,
+            deletable: false,
           })
-          .view(<DocumentsTable items={items} pagination={pagination} baseUrl={baseUrl} />)
+        }
+
+        // If a folderId is in the querystring, navigate directly to that folder
+        if (folderIdParam) {
+          const requestedId = parseInt(folderIdParam, 10)
+          currentFolder = await documentFoldersService.get(requestedId)
+          // Security: folder must belong to this department
+          if (!currentFolder || currentFolder.departmentId !== activeDepartment.id) {
+            currentFolder = rootFolder
+          }
+        } else {
+          currentFolder = rootFolder
+        }
+
+        currentFolders = allFolders.filter((f) => f.parentId === currentFolder!.id)
+        currentDocuments = await ragDocumentsService.list({
+          where: eq(ragDocumentsTable.folderId, currentFolder.id),
+        })
+
+        // Build breadcrumb by walking up the tree
+        let node: typeof currentFolder | null = currentFolder
+        while (node) {
+          breadcrumb.unshift({ id: node.id, name: node.name })
+          node = node.parentId ? (allFolders.find((f) => f.id === node!.parentId) ?? null) : null
+        }
       }
 
       return res.view(
         <DepartmentDocumentsView
-          activeDepartment={req.activeDepartment}
-          items={items}
-          pagination={pagination}
-          baseUrl={baseUrl}
+          activeDepartment={activeDepartment}
+          rootFolder={currentFolder}
+          folders={currentFolders}
+          documents={currentDocuments}
+          breadcrumb={breadcrumb}
         />,
         DashboardLayout
       )

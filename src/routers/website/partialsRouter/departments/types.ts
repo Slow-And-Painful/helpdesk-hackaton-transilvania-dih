@@ -6,4 +6,6 @@ export enum ROUTE {
   DOCUMENT_DETAIL = "/document-detail/:documentId",
   DOCUMENT_FORM = "/document-form/:documentId",
   DOCUMENT_DOWNLOAD = "/document-download/:documentId",
+  FOLDER_CONTENTS = "/folder-contents/:folderId",
+  CREATE_FOLDER_MODAL = "/create-folder-modal",
 }

@@ -1,8 +1,9 @@
-import BaseService, { MainQuery } from "$services/BaseService"
+import BaseService, { CommonOptions, MainQuery } from "$services/BaseService"
 import DrizzleDB from "$components/DrizzleDB"
 import { container, inject, injectable } from "tsyringe"
 import { DepartmentsSchema, departmentsTable, NewDepartmentSchema } from "$dbSchemas/Departments"
 import { DepartmentUserSchema } from "$dbSchemas/DepartmentUsers"
+import DocumentFoldersService from "$services/DocumentFoldersService"
 
 export type Department = DepartmentsSchema & {
   users: DepartmentUserSchema[]
@@ -29,7 +30,9 @@ export default class DepartmentsService extends BaseService<
 
   constructor(
     @inject(DrizzleDB.token)
-    drizzleDB: DrizzleDB
+    drizzleDB: DrizzleDB,
+    @inject(DocumentFoldersService.token)
+    private documentFoldersService: DocumentFoldersService
   ) {
     super(drizzleDB)
   }
@@ -41,6 +44,26 @@ export default class DepartmentsService extends BaseService<
         users: true,
       }
     })
+  }
+
+  postInsertProcess = async (
+    inputData: PRE_INSERT_DATA[],
+    pkValues: PK_TYPE[],
+    options?: CommonOptions<MAIN_QUERY_RESULT>,
+  ): Promise<void> => {
+    await Promise.all(
+      pkValues.map((departmentId, i) =>
+        this.documentFoldersService.insert(
+          {
+            name: inputData[i].name ?? "",
+            departmentId,
+            parentId: null,
+            deletable: false,
+          },
+          { transaction: options?.transaction },
+        )
+      )
+    )
   }
 
   static token = Symbol("DepartmentsService")

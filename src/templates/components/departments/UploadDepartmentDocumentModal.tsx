@@ -8,7 +8,7 @@ export const uploadDepartmentDocumentModalId = "upload-department-document-modal
 const SUPPORTED_DOCUMENT_FORMATS = ["pdf"]
 const MAX_DOCUMENT_SIZE = 10 * 1024 * 1024 // 10MB
 
-const UploadDepartmentDocumentModal = () => {
+const UploadDepartmentDocumentModal = ({ folderId }: { folderId?: number }) => {
   const accept = SUPPORTED_DOCUMENT_FORMATS.map((format) => `.${format}`).join(",")
   const uploadUrl = getPartialPath("departments", "GET_UPLOAD_DOCUMENT_PRESIGNED_URL")
   const updateUrl = getActionPath("departments", "UPLOAD_DOCUMENT")
@@ -24,6 +24,7 @@ const UploadDepartmentDocumentModal = () => {
       uploadUrl={uploadUrl}
       updateUrl={updateUrl}
       accept={accept}
+      {...folderId ? { updateUrlBody: { folderId } } : {}}
       isOpen
       loadingComponent={
         <div class={"w-full h-full flex flex-col items-center justify-center gap-2 p-2"}>

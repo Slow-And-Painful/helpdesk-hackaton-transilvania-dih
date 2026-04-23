@@ -3,20 +3,20 @@
 import DashboardPage from "$templates/components/DashboardPage"
 import { Department } from "$services/DepartmentsService"
 import { RAGDocument } from "$services/RAGDocumentsService"
+import { DocumentFolderSchema } from "$dbSchemas/DocumentFolders"
 import Button from "$templates/components/Button"
 import { getPartialPath } from "$routers/website/utils"
-import { TablePagination } from "$templates/components/tables/Table"
-import DocumentsTable from "$templates/components/tables/DocumentsTable"
-import TableFilters from "$templates/components/tables/TableFilters"
+import DocumentExplorer, { ExplorerBreadcrumb } from "$templates/components/documents/DocumentExplorer"
 
 type Props = {
   activeDepartment: Department | null
-  items: RAGDocument[]
-  pagination: TablePagination
-  baseUrl: string
+  rootFolder: DocumentFolderSchema | null
+  folders: DocumentFolderSchema[]
+  documents: RAGDocument[]
+  breadcrumb: { id: number; name: string }[]
 }
 
-const DepartmentDocumentsView = ({ activeDepartment, items, pagination, baseUrl }: Props) => {
+const DepartmentDocumentsView = ({ activeDepartment, rootFolder, folders, documents, breadcrumb }: Props) => {
   return (
     <DashboardPage
       title={
@@ -28,27 +28,44 @@ const DepartmentDocumentsView = ({ activeDepartment, items, pagination, baseUrl 
         </span>
       }
     >
-      <div class="flex flex-col gap-y-6">
-        <TableFilters
-          tableId="documents-table"
-          pagination={pagination}
-          baseUrl={baseUrl}
-          filters={[]}
-          side={
+      <div class="flex flex-col gap-y-4">
+        <div class="flex items-center justify-between gap-3">
+          <ExplorerBreadcrumb breadcrumb={breadcrumb} />
+          <div class="flex items-center gap-2">
+            <Button
+              size="sm"
+              icon="folder-plus"
+              iconPosition="right"
+              preset="secondary"
+              spinner={false}
+              onclick={`
+                const folderId = document.getElementById('document-explorer')?.dataset.folderId;
+                if (!folderId) return;
+                htmx.ajax('GET', '/partials/departments/create-folder-modal?parentFolderId=' + folderId, { target: '#modal', swap: 'beforeend' });
+              `}
+            >
+              Folder nou
+            </Button>
             <Button
               size="sm"
               icon="upload"
               iconPosition="right"
-              hx-get={getPartialPath("departments", "UPLOAD_DOCUMENT_MODAL")}
-              hx-target="#modal"
-              hx-swap="beforeend"
+              spinner={false}
+              onclick={`
+                const folderId = document.getElementById('document-explorer')?.dataset.folderId;
+                htmx.ajax('GET', '/partials/departments/upload-document-modal' + (folderId ? '?folderId=' + folderId : ''), { target: '#modal', swap: 'beforeend' });
+              `}
             >
               Încarcă Document
             </Button>
-          }
-        />
+          </div>
+        </div>
 
-        <DocumentsTable items={items} pagination={pagination} baseUrl={baseUrl} />
+        <DocumentExplorer
+          folders={folders}
+          documents={documents}
+          breadcrumb={breadcrumb}
+        />
       </div>
 
       <div id="modal" />

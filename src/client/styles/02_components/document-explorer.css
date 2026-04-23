@@ -1,0 +1,39 @@
+.document-explorer {
+  @apply w-full;
+}
+
+.document-explorer__empty {
+  @apply flex flex-col items-center justify-center py-20 text-gray-500;
+}
+
+.document-explorer__grid {
+  @apply grid gap-3;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+.document-explorer__item {
+  @apply flex flex-col items-center gap-2 p-4 rounded-xl border border-transparent
+    cursor-pointer transition-all duration-150 text-center;
+  background: transparent;
+}
+
+.document-explorer__item:hover {
+  @apply border-gray-700 bg-gray-900;
+}
+
+.document-explorer__item:active {
+  @apply bg-gray-800;
+}
+
+.document-explorer__item--folder {
+  @apply text-yellow-400;
+}
+
+.document-explorer__item--document {
+  @apply text-blue-400;
+}
+
+.document-explorer__label {
+  @apply text-xs text-gray-300 leading-tight w-full text-center line-clamp-2;
+  word-break: break-word;
+}
