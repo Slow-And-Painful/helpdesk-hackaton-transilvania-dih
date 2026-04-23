@@ -68,6 +68,17 @@ export const schemas = {
     },
   } as const satisfies FastifySchema,
 
+  [ROUTE.CREATE_FOLDER]: {
+    body: {
+      type: "object",
+      properties: {
+        name: { type: "string", minLength: 1, maxLength: 255 },
+        parentFolderId: { type: "integer" },
+      },
+      required: ["name", "parentFolderId"],
+    },
+  } as const satisfies FastifySchema,
+
   [ROUTE.UPLOAD_DOCUMENT]: {
     body: {
       type: "object",
@@ -76,6 +87,7 @@ export const schemas = {
         documentType: { type: "string" },
         name: { type: "string", minLength: 1, maxLength: 255 },
         aiDescription: { type: "string" },
+        folderId: { type: "integer" },
       },
       required: ["documentKey", "documentType", "name"],
     },

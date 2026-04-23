@@ -158,6 +158,8 @@ const documentConfirmUpload = async () => {
   const aiDescriptionInput = document.getElementById("document-ai-description") as HTMLTextAreaElement | null
 
   await htmx.ajax("post", updateUrl, {
+    target: document.body,
+    swap: "none",
     values: {
       ...JSON.parse(updateUrlBody),
       documentKey: fileWithKeysAndTimestamps.key,
@@ -175,11 +177,6 @@ const documentConfirmUpload = async () => {
     submitButton.classList.remove("btn--loading")
   }
   closeModalButton.removeAttribute("disabled")
-
-  const modal = dropzone.closest(".modal__wrap")
-  if (modal?.id) {
-    window.closeModal(modal.id)
-  }
 }
 
 window.documentFileUploader = {

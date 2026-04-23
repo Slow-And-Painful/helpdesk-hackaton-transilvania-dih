@@ -227,6 +227,7 @@ type PartialRoutersParams = {
   }
   departments: {
     DOCUMENT_DETAIL: { documentId: number }
+    FOLDER_CONTENTS: { folderId: number }
   }
 }
 

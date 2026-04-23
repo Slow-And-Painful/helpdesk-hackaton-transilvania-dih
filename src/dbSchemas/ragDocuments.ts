@@ -1,5 +1,6 @@
 import { pgTable, varchar, serial, integer, timestamp, text } from "drizzle-orm/pg-core"
 import { departmentsTable } from "./Departments"
+import { documentFoldersTable } from "./DocumentFolders"
 import { relations } from "drizzle-orm"
 
 export const ragDocumentsTable = pgTable("RAGDocuments", {
@@ -12,6 +13,7 @@ export const ragDocumentsTable = pgTable("RAGDocuments", {
   extractionInputTokens: integer().notNull().default(0),
   extractionOutputTokens: integer().notNull().default(0),
   departmentId: integer().notNull().references(() => departmentsTable.id),
+  folderId: integer().references(() => documentFoldersTable.id, { onDelete: "set null" }),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow()
 })
 
@@ -21,7 +23,11 @@ export const ragDocumentsRelations = relations(
     department: one(departmentsTable, {
       fields: [ragDocumentsTable.departmentId],
       references: [departmentsTable.id]
-    })
+    }),
+    folder: one(documentFoldersTable, {
+      fields: [ragDocumentsTable.folderId],
+      references: [documentFoldersTable.id]
+    }),
   }),
 )
 
