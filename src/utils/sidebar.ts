@@ -56,6 +56,7 @@ const getBaseStaffSidebarItems = (_user: User, routerName: SidebarProps["routerN
   const usersPath = getViewPath("staff", "USERS")
   const aiSettingsPath = getViewPath("staff", "AI_SETTINGS")
   const insightsPath = getViewPath("staff", "INSIGHTS")
+  const documentsPath = getViewPath("staff", "DOCUMENTS")
 
   const normalize = (p: string) => p.replace(/\/$/, "")
   const current = normalize(routerName as string)
@@ -74,6 +75,13 @@ const getBaseStaffSidebarItems = (_user: User, routerName: SidebarProps["routerN
       label: "Utilizatori",
       url: usersPath,
       isActive: current === normalize(usersPath),
+    },
+    {
+      type: SIDEBAR_LINKS_TYPES.SIMPLE,
+      icon: "document",
+      label: "Documente",
+      url: documentsPath,
+      isActive: current === normalize(documentsPath),
     },
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
