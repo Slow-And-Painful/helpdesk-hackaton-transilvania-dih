@@ -19,8 +19,13 @@ import { eq, inArray } from "drizzle-orm"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 import { usersTable } from "$dbSchemas/Users"
 import { ticketsTable } from "$dbSchemas/Tickets"
+import { documentFoldersTable } from "$dbSchemas/DocumentFolders"
+import { ragDocumentsTable } from "$dbSchemas/ragDocuments"
+import DocumentFoldersService from "$services/DocumentFoldersService"
+import RAGDocumentsService from "$services/RAGDocumentsService"
 import GlobalSettingsComponent from "$components/GlobalSettingsComponent"
 import StaffInsightsView from "$templates/views/StaffInsightsView"
+import StaffDocumentsView from "$templates/views/StaffDocumentsView"
 
 export const routerPrefix = "/staff"
 
@@ -29,6 +34,8 @@ const usersService = container.resolve<UsersService>(UsersService.token)
 const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
 const globalSettingsComponent = container.resolve<GlobalSettingsComponent>(GlobalSettingsComponent.token)
+const documentFoldersService = container.resolve<DocumentFoldersService>(DocumentFoldersService.token)
+const ragDocumentsService = container.resolve<RAGDocumentsService>(RAGDocumentsService.token)
 
 export const router = createRouter("staff", (server) => {
   server.route({
@@ -181,6 +188,58 @@ export const router = createRouter("staff", (server) => {
         )
       }
 
+      if (tab === "documents") {
+        const { folderId: folderIdParam } = req.query as { folderId?: string }
+
+        const allFolders = await documentFoldersService.list({
+          where: eq(documentFoldersTable.departmentId, departmentId),
+        })
+
+        let rootFolder = allFolders.find((f) => !f.deletable && f.parentId === null) ?? null
+
+        if (!rootFolder) {
+          rootFolder = await documentFoldersService.sInsert({
+            name: department.name,
+            departmentId,
+            parentId: null,
+            deletable: false,
+          })
+        }
+
+        let currentFolder = rootFolder
+        if (folderIdParam) {
+          const requestedId = parseInt(folderIdParam, 10)
+          const found = await documentFoldersService.get(requestedId)
+          if (found && found.departmentId === departmentId) {
+            currentFolder = found
+          }
+        }
+
+        const [currentFolders, currentDocuments] = await Promise.all([
+          documentFoldersService.list({ where: eq(documentFoldersTable.parentId, currentFolder.id) }),
+          ragDocumentsService.list({ where: eq(ragDocumentsTable.folderId, currentFolder.id) }),
+        ])
+
+        const breadcrumb: { id: number; name: string }[] = []
+        let node: typeof currentFolder | null = currentFolder
+        while (node) {
+          breadcrumb.unshift({ id: node.id, name: node.name })
+          node = node.parentId ? (allFolders.find((f) => f.id === node!.parentId) ?? null) : null
+        }
+
+        return res.view(
+          <StaffDepartmentSettingsView
+            department={department}
+            tab={tab}
+            baseUrl={baseUrl}
+            folders={currentFolders}
+            documents={currentDocuments}
+            breadcrumb={breadcrumb}
+          />,
+          DashboardLayout,
+        )
+      }
+
       return res.view(
         <StaffDepartmentSettingsView department={department} tab={tab} baseUrl={baseUrl} />,
         DashboardLayout,
@@ -232,6 +291,87 @@ export const router = createRouter("staff", (server) => {
     },
     handler: async(_, res) => {
       return res.view(<StaffInsightsView/>, DashboardLayout)
+    },
+  })
+
+  server.route({
+    url: ROUTE.DOCUMENTS,
+    method: "GET",
+    schema: schemas[ROUTE.DOCUMENTS],
+    config: {
+      security: {
+        session: `${USER_ROLE.STAFF_ACCOUNT}`,
+      },
+      authenticated: true,
+    },
+    handler: async (req, res) => {
+      const { departmentId: departmentIdParam, folderId: folderIdParam } = req.query as {
+        departmentId?: string
+        folderId?: string
+      }
+
+      const departments = await departmentsService.list()
+
+      // No department selected — show all departments as root folders
+      if (!departmentIdParam) {
+        return res.view(
+          <StaffDocumentsView departments={departments} />,
+          DashboardLayout,
+        )
+      }
+
+      const departmentId = parseInt(departmentIdParam, 10)
+      const department = await departmentsService.get(departmentId)
+      if (!department) {
+        return res.status(404).send()
+      }
+
+      const allFolders = await documentFoldersService.list({
+        where: eq(documentFoldersTable.departmentId, departmentId),
+      })
+
+      let rootFolder = allFolders.find((f) => !f.deletable && f.parentId === null) ?? null
+
+      if (!rootFolder) {
+        rootFolder = await documentFoldersService.sInsert({
+          name: department.name,
+          departmentId,
+          parentId: null,
+          deletable: false,
+        })
+      }
+
+      let currentFolder = rootFolder
+      if (folderIdParam) {
+        const requestedId = parseInt(folderIdParam, 10)
+        const found = await documentFoldersService.get(requestedId)
+        if (found && found.departmentId === departmentId) {
+          currentFolder = found
+        }
+      }
+
+      const [currentFolders, currentDocuments] = await Promise.all([
+        documentFoldersService.list({ where: eq(documentFoldersTable.parentId, currentFolder.id) }),
+        ragDocumentsService.list({ where: eq(ragDocumentsTable.folderId, currentFolder.id) }),
+      ])
+
+      const breadcrumb: { id: number; name: string }[] = []
+      let node: typeof currentFolder | null = currentFolder
+      while (node) {
+        breadcrumb.unshift({ id: node.id, name: node.name })
+        node = node.parentId ? (allFolders.find((f) => f.id === node!.parentId) ?? null) : null
+      }
+
+      return res.view(
+        <StaffDocumentsView
+          departments={departments}
+          department={department}
+          folders={currentFolders}
+          documents={currentDocuments}
+          breadcrumb={breadcrumb}
+        />,
+        DashboardLayout,
+      )
     },
   })
 })

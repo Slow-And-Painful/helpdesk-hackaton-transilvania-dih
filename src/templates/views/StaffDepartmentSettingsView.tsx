@@ -9,6 +9,9 @@ import StaffDepartmentAiSettingsTab from "$templates/components/departments/Staf
 import StaffDepartmentDocumentsTab from "$templates/components/departments/StaffDepartmentDocumentsTab"
 import StaffDepartmentTicketsTab from "$templates/components/departments/StaffDepartmentTicketsTab"
 import { TicketsViewTab } from "$templates/views/TicketsView"
+import { RAGDocument } from "$services/RAGDocumentsService"
+import { DocumentFolderSchema } from "$dbSchemas/DocumentFolders"
+import { BreadcrumbFolder } from "$templates/components/documents/DocumentExplorer"
 
 export type StaffDepartmentSettingsTab = "users" | "ai-settings" | "documents" | "tickets"
 
@@ -23,6 +26,9 @@ type Props = {
   ticketsPagination?: TablePagination
   ticketsBaseUrl?: string
   ticketTab?: TicketsViewTab
+  folders?: DocumentFolderSchema[]
+  documents?: RAGDocument[]
+  breadcrumb?: BreadcrumbFolder[]
 }
 
 const StaffDepartmentSettingsView = ({
@@ -36,6 +42,9 @@ const StaffDepartmentSettingsView = ({
   ticketsPagination,
   ticketsBaseUrl = "",
   ticketTab = "incoming",
+  folders = [],
+  documents = [],
+  breadcrumb = [],
 }: Props) => {
   return (
     <DashboardPage
@@ -70,7 +79,7 @@ const StaffDepartmentSettingsView = ({
         )}
 
         {tab === "documents" && (
-          <StaffDepartmentDocumentsTab />
+          <StaffDepartmentDocumentsTab folders={folders} documents={documents} breadcrumb={breadcrumb} />
         )}
 
         {tab === "tickets" && (
