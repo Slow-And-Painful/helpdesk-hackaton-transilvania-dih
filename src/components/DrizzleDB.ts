@@ -16,6 +16,7 @@ import * as ChatMessageReferencedDocumentsSchemas from "$dbSchemas/ChatMessageRe
 import * as ChatMessagesSchemas from "$dbSchemas/ChatMessages"
 import * as RAGDocumentsSchemas from "$dbSchemas/ragDocuments"
 import * as DocumentFoldersSchemas from "$dbSchemas/DocumentFolders"
+import * as TicketMessagesSchema from "$dbSchemas/TicketMessages"
 
 import { Logger, sql } from "drizzle-orm"
  
@@ -35,6 +36,7 @@ const getDrizzle = (sql: Postgres.Sql, logger?: Logger) => {
       ...ChatMessagesSchemas,
       ...RAGDocumentsSchemas,
       ...DocumentFoldersSchemas,
+      ...TicketMessagesSchema,
     },
   })
 

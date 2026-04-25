@@ -155,6 +155,13 @@
       "when": 1777130218902,
       "tag": "0021_curved_deadpool",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1777130839037,
+      "tag": "0022_bored_misty_knight",
+      "breakpoints": true
     }
   ]
 }
