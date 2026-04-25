@@ -12,6 +12,7 @@ import { TicketsViewTab } from "$templates/views/TicketsView"
 import { RAGDocument } from "$services/RAGDocumentsService"
 import { DocumentFolderSchema } from "$dbSchemas/DocumentFolders"
 import { BreadcrumbFolder } from "$templates/components/documents/DocumentExplorer"
+import { DepartmentUser } from "$services/DepartmentUsersService"
 
 export type StaffDepartmentSettingsTab = "users" | "ai-settings" | "documents" | "tickets"
 
@@ -20,6 +21,7 @@ type Props = {
   tab: StaffDepartmentSettingsTab
   baseUrl: string
   users?: User[]
+  departmentUsers?: DepartmentUser[]
   usersPagination?: TablePagination
   usersBaseUrl?: string
   tickets?: Ticket[]
@@ -36,6 +38,7 @@ const StaffDepartmentSettingsView = ({
   tab,
   baseUrl,
   users = [],
+  departmentUsers = [],
   usersPagination,
   usersBaseUrl = "",
   tickets = [],
@@ -69,6 +72,7 @@ const StaffDepartmentSettingsView = ({
           <StaffDepartmentUsersTab
             department={department}
             items={users}
+            departmentUsers={departmentUsers}
             pagination={usersPagination}
             baseUrl={usersBaseUrl}
           />

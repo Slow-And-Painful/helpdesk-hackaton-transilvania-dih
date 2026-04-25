@@ -130,7 +130,7 @@ export const router = createRouter("staff", (server) => {
               "HX-Retarget": `#${usersTableId}`,
               "HX-Push-Url": `${tabBaseUrl}${usersPagination.baseUrl ? `&${usersPagination.baseUrl}&page=${usersPagination.page}` : `&page=${usersPagination.page}`}`,
             })
-            .view(<UsersTable items={users} pagination={usersPagination} baseUrl={tabBaseUrl} />)
+            .view(<UsersTable items={users} pagination={usersPagination} baseUrl={tabBaseUrl} departmentUserIdMap={new Map(departmentUsers.map((du) => [du.userId, du.id]))} />)
         }
 
         return res.view(
@@ -139,6 +139,7 @@ export const router = createRouter("staff", (server) => {
             tab={tab}
             baseUrl={baseUrl}
             users={users}
+            departmentUsers={departmentUsers}
             usersPagination={usersPagination}
             usersBaseUrl={tabBaseUrl}
           />,
@@ -257,8 +258,9 @@ export const router = createRouter("staff", (server) => {
       },
       authenticated: true,
     },
-    handler: (_req, res) => {
-      return res.view(<StaffUsersView />, DashboardLayout)
+    handler: async (_req, res) => {
+      const items = await departmentUsersService.listWithRelations()
+      return res.view(<StaffUsersView items={items} />, DashboardLayout)
     },
   })
 

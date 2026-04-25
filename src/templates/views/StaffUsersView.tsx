@@ -1,10 +1,16 @@
 import DashboardPage from "$templates/components/DashboardPage"
+import { DepartmentUserWithRelations } from "$services/DepartmentUsersService"
+import StaffUsersTable from "$templates/components/tables/StaffUsersTable"
 
-const StaffUsersView = () => {
+type Props = {
+  items: DepartmentUserWithRelations[]
+}
+
+const StaffUsersView = ({ items }: Props) => {
   return (
     <DashboardPage title={<span>Utilizatori</span>}>
       <div class="flex flex-col gap-y-6">
-        {/* Users list will go here */}
+        <StaffUsersTable items={items} />
       </div>
     </DashboardPage>
   )

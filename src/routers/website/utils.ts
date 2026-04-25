@@ -222,6 +222,9 @@ type PartialRoutersParams = {
   auth: {
     TEST: { targetEntityId: number }
   }
+  users: {
+    USER_DETAIL: { departmentUserId: number }
+  }
   tickets: {
     TICKET_DETAIL: { ticketId: number }
     ASSIGN_MODAL: { ticketId: number }
