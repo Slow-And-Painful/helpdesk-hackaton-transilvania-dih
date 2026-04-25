@@ -1,9 +1,12 @@
 import Table, { TableConfig, TablePagination } from "$templates/components/tables/Table"
+import { DropdownItem } from "$templates/components/dropdown/Dropdown"
+import { IconName } from "$templates/components/Icon"
 import { Department } from "$services/DepartmentsService"
 import { Ticket } from "$services/TicketsService"
 import TicketStatusBadge from "$templates/components/TicketStatusBadge"
 import { TicketsViewTab } from "$templates/views/TicketsView"
-import { getPartialPath } from "$routers/website/utils"
+import { getActionPath, getPartialPath } from "$routers/website/utils"
+import { TICKET_STATUS } from "$types/tickets"
 
 type Props = {
   items: Ticket[]
@@ -11,16 +14,55 @@ type Props = {
   tab: TicketsViewTab
   baseUrl: string
   activeDepartment: Department | null
+  isDepartmentAdmin?: boolean
 }
 
 export const ticketsTableId = "tickets-table"
+export const ticketMenuCellId = (ticketId: number) => `ticket-row-actions-${ticketId}`
 
-const tabTypeToTabDisplayValueMapping: { [key in TicketsViewTab]: string  } = {
-  incoming: "incoming",
-  outgoing: "ongoing",
+export function buildTicketDropdownOptions(
+  ticketId: number,
+  status: TICKET_STATUS,
+  { isDepartmentAdmin, tab }: { isDepartmentAdmin: boolean; tab: TicketsViewTab },
+): DropdownItem[] {
+  return [
+    {
+      title: <>Detalii</>,
+      icon: "eye" as IconName,
+      "hx-get": getPartialPath("tickets", "TICKET_DETAIL", { ticketId }),
+      "hx-target": "#drawer",
+      "hx-swap": "innerHTML",
+    },
+    ...(isDepartmentAdmin && tab === "incoming" ? [{
+      title: <>Asignează</>,
+      icon: "user" as IconName,
+      "hx-get": getPartialPath("tickets", "ASSIGN_MODAL", { ticketId }),
+      "hx-target": "#modal",
+      "hx-swap": "beforeend",
+    }] as DropdownItem[] : []),
+    status === TICKET_STATUS.OPEN ? {
+      title: <>Închide</>,
+      icon: "x" as IconName,
+      type: "danger" as const,
+      "hx-post": getActionPath("tickets", "CLOSE"),
+      "hx-vals": JSON.stringify({ ticketId, tab }),
+      "hx-swap": "none",
+    } : {
+      title: <>Redeschide</>,
+      icon: "rotate-ccw" as IconName,
+      "hx-post": getActionPath("tickets", "OPEN"),
+      "hx-vals": JSON.stringify({ ticketId, tab }),
+      "hx-swap": "none",
+    },
+  ]
 }
 
-const TicketsTable = ({ items, pagination, tab, baseUrl }: Props) => {
+const tabTypeToTabDisplayValueMapping: { [key in TicketsViewTab]: string  } = {
+  incoming: "primite",
+  outgoing: "trimise",
+}
+
+const TicketsTable = ({ items, pagination, tab, baseUrl, isDepartmentAdmin }: Props) => {
   const config: TableConfig<Ticket>[] = [
     {
       accessor: "id",
@@ -31,7 +73,7 @@ const TicketsTable = ({ items, pagination, tab, baseUrl }: Props) => {
     },
     {
       accessor: "name",
-      heading: <>Name</>,
+      heading: <>Nume</>,
       sortable: true,
       render: (row) => (
         <button
@@ -47,28 +89,44 @@ const TicketsTable = ({ items, pagination, tab, baseUrl }: Props) => {
     },
     {
       accessor: tab === "incoming" ? "senderDepartmentId" : "destinationDepartmentId",
-      heading: <>{tab === "incoming" ? "From" : "To"}</>,
+      heading: <>{tab === "incoming" ? "De la" : "Către"}</>,
       field: tab === "incoming" ? "senderDepartmentId" : "destinationDepartmentId",
       render: (row) => {
         const dept = tab === "incoming" ? row.senderDepartment : row.destinationDepartment
-        return <span safe>{dept?.name ?? "Unknown"}</span>
+        return <span safe>{dept?.name ?? "Necunoscut"}</span>
+      },
+    },
+    {
+      accessor: "assigneeId",
+      heading: <>Asignat</>,
+      width: "160px",
+      render: (row) => {
+        const assignee = row.assignee
+        const name = assignee?.user
+          ? `${assignee.user.firstName} ${assignee.user.lastName}`.trim() || assignee.user.email
+          : null
+        return (
+          <span id={`ticket-row-assignee-${row.id}`} class="text-gray-400">
+            {name ?? <span class="text-gray-500">—</span>}
+          </span>
+        )
       },
     },
     {
       accessor: "status",
-      heading: <>Status</>,
+      heading: <>Stare</>,
       sortable: true,
       width: "120px",
       render: (row) => <span id={`ticket-row-status-${row.id}`}><TicketStatusBadge status={row.status} /></span>,
     },
     {
       accessor: "createdAt",
-      heading: <>Created</>,
+      heading: <>Creat</>,
       sortable: true,
       width: "180px",
       render: (row) => (
         <span class="text-gray-400">
-          {new Date(row.createdAt).toLocaleDateString("en-US", {
+          {new Date(row.createdAt).toLocaleDateString("ro-RO", {
             year: "numeric",
             month: "short",
             day: "numeric",
@@ -86,9 +144,11 @@ const TicketsTable = ({ items, pagination, tab, baseUrl }: Props) => {
       pagination={pagination}
       baseUrl={baseUrl}
       additionalQueryParams={{ tab }}
+      menuCellId={(row) => ticketMenuCellId(row.id)}
+      dropdownOptions={(row) => buildTicketDropdownOptions(row.id, row.status, { isDepartmentAdmin: !!isDepartmentAdmin, tab })}
       noDataProps={{
-        noDataMessage: `No ${tabTypeToTabDisplayValueMapping[tab]} tickets`,
-        noDataFoundMessage: `No ${tabTypeToTabDisplayValueMapping[tab]} tickets found`,
+        noDataMessage: `Niciun tichet ${tabTypeToTabDisplayValueMapping[tab]}`,
+        noDataFoundMessage: `Niciun tichet ${tabTypeToTabDisplayValueMapping[tab]} găsit`,
       }}
     />
   )

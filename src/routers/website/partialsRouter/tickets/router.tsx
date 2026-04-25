@@ -4,14 +4,20 @@ import { schemas } from "./schemas"
 import USER_ROLE from "$types/USER_ROLES"
 import CreateTicketModal from "$templates/components/tickets/CreateTicketModal"
 import TicketDetailDrawer from "$templates/components/tickets/TicketDetailDrawer"
+import AssignTicketModal from "$templates/components/tickets/AssignTicketModal"
+import SenderUserModal from "$templates/components/tickets/SenderUserModal"
 import DepartmentsService from "$services/DepartmentsService"
 import TicketsService from "$services/TicketsService"
+import DepartmentUserService from "$services/DepartmentUsersService"
 import { container } from "tsyringe"
+import { eq } from "drizzle-orm"
+import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 
 export const routerPrefix = "/tickets"
 
 const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
+const departmentUserService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 
 export const router = createRouter("tickets", (server) => {
   server.route({
@@ -66,12 +72,89 @@ export const router = createRouter("tickets", (server) => {
         return res.status(404).send("Ticket not found")
       }
 
+      const isDepartmentAdmin = req.activeDepartmentUserRole === "ADMIN"
+      const isIncoming = ticket.destinationDepartmentId === req.activeDepartment?.id
+      const tab = isIncoming ? "incoming" : "outgoing"
+
       return res
         .headers({
           "HX-Retarget": "#drawer",
           "HX-Reswap": "innerHTML",
         })
-        .view(<TicketDetailDrawer ticket={ticket} />)
+        .view(<TicketDetailDrawer ticket={ticket} isDepartmentAdmin={isDepartmentAdmin} isIncoming={isIncoming} tab={tab} />)
+    },
+  })
+
+  server.route({
+    method: "GET",
+    url: ROUTE.ASSIGN_MODAL,
+    schema: schemas[ROUTE.ASSIGN_MODAL],
+    config: {
+      authenticated: true,
+      security: {
+        session: `${USER_ROLE.DEPARTMENT_ADMIN}`,
+      },
+    },
+    handler: async (req, res) => {
+      const { ticketId } = req.params as { ticketId: number }
+
+      const ticket = await ticketsService.get(ticketId)
+      if (!ticket) {
+        return res.status(404).send("Ticket not found")
+      }
+
+      const departmentUsers = await departmentUserService.list({
+        where: eq(departmentUsersTable.departmentId, ticket.destinationDepartmentId),
+        mainQuery: async ({ db, ...opts }) =>
+          db.query.departmentUsersTable.findMany({ ...opts, with: { user: true } }),
+      })
+
+      return res
+        .headers({
+          "HX-Retarget": "#modal",
+          "HX-Reswap": "beforeend",
+        })
+        .view(
+          <AssignTicketModal
+            ticketId={ticketId}
+            currentAssigneeId={ticket.assigneeId}
+            departmentUsers={departmentUsers as any}
+          />
+        )
+    },
+  })
+
+  server.route({
+    method: "GET",
+    url: ROUTE.SENDER_USER_MODAL,
+    schema: schemas[ROUTE.SENDER_USER_MODAL],
+    config: {
+      authenticated: true,
+      security: {
+        session: `${USER_ROLE.CUSTOMER_ACCOUNT} || ${USER_ROLE.STAFF_ACCOUNT}`,
+      },
+    },
+    handler: async (req, res) => {
+      const { ticketId } = req.params as { ticketId: number }
+
+      const ticket = await ticketsService.get(ticketId)
+      if (!ticket || !ticket.senderDepartmentUser) {
+        return res.status(404).send("Sender user not found")
+      }
+
+      return res
+        .headers({
+          "HX-Retarget": "#modal",
+          "HX-Reswap": "beforeend",
+        })
+        .view(
+          <SenderUserModal
+            senderDepartmentUser={ticket.senderDepartmentUser as any}
+            departmentName={ticket.senderDepartment?.name}
+            ticketId={ticket.id}
+            ticketName={ticket.name}
+          />
+        )
     },
   })
 })

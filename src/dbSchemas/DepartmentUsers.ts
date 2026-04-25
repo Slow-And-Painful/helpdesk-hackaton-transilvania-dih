@@ -3,6 +3,7 @@ import { relations } from "drizzle-orm"
 // import { ORGANIZATION_USER_ROLE } from "$types/organization"
 import { usersTable } from "./Users"
 import { departmentsTable } from "./Departments"
+import { ticketsTable } from "./Tickets"
 import { DEPARTMENT_USER_ROLE } from "$types/departments"
 
 export const departmentUsersTable = pgTable("DepartmentUsers", {
@@ -20,7 +21,7 @@ export const departmentUsersTable = pgTable("DepartmentUsers", {
 
 export const departmentUsersRelations = relations(
   departmentUsersTable,
-  ({ one }) => ({
+  ({ one, many }) => ({
     department: one(departmentsTable, {
       fields: [departmentUsersTable.departmentId],
       references: [departmentsTable.id],
@@ -28,7 +29,9 @@ export const departmentUsersRelations = relations(
     user: one(usersTable, {
       fields: [departmentUsersTable.userId],
       references: [usersTable.id],
-    })
+    }),
+    assignedTickets: many(ticketsTable, { relationName: "assignee" }),
+    sentTickets: many(ticketsTable, { relationName: "senderDepartmentUser" }),
   })
 )
 

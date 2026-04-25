@@ -16,9 +16,10 @@ type Props = {
   tab: TicketsViewTab
   baseUrl: string
   openTicketId?: number
+  isDepartmentAdmin?: boolean
 }
 
-const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl, openTicketId }: Props) => {
+const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl, openTicketId, isDepartmentAdmin }: Props) => {
   return (
     <DashboardPage
       title={
@@ -58,6 +59,7 @@ const TicketsView = ({ items, pagination, activeDepartment, tab, baseUrl, openTi
           tab={tab}
           baseUrl={baseUrl}
           activeDepartment={activeDepartment}
+          isDepartmentAdmin={isDepartmentAdmin}
         />
       </div>
       {openTicketId && (

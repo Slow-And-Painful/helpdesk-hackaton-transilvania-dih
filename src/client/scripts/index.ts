@@ -24,6 +24,7 @@ import "./modules/sidebar-chats"
 import "./modules/charts"
 import "./modules/documentFileUploader"
 import { docDrawerStartResize, docDrawerStartEdgeResize, restoreDocDrawerWidth } from "./modules/docDrawerResize"
+import { ticketDrawerStartEdgeResize, ticketDrawerStartColResize, restoreTicketDrawerWidth } from "./modules/ticketDrawerResize"
 import "./modules/documentExtraction"
 
 
@@ -31,6 +32,8 @@ declare global {
   interface Window {
     docDrawerStartResize: typeof docDrawerStartResize
     docDrawerStartEdgeResize: typeof docDrawerStartEdgeResize
+    ticketDrawerStartEdgeResize: typeof ticketDrawerStartEdgeResize
+    ticketDrawerStartColResize: typeof ticketDrawerStartColResize
     htmx: typeof htmx
     togglePasswordInput: (event: MouseEvent) => void
     toggleNavbarVisibility: (event: MouseEvent) => void
@@ -144,6 +147,7 @@ window.addEventListener("DOMContentLoaded", () => {
     initTextEllipsis()
     addPreCopyButtons()
     restoreDocDrawerWidth()
+    restoreTicketDrawerWidth()
   })
 
   document.body.addEventListener("showSuccessToast", (event) => {

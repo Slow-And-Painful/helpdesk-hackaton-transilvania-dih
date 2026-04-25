@@ -86,6 +86,7 @@ export default ({
           open={false}
           inheritWidth
           offset={0}
+          clone
           class={"select__dropdown"}
         >
           <ul class="dropdown__items">

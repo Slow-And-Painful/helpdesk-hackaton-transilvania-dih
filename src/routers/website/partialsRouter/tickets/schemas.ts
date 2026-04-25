@@ -23,4 +23,22 @@ export const schemas = {
       required: ["ticketId"],
     },
   } as const satisfies FastifySchema,
+  [ROUTE.ASSIGN_MODAL]: {
+    params: {
+      type: "object",
+      properties: {
+        ticketId: { type: "integer" },
+      },
+      required: ["ticketId"],
+    },
+  } as const satisfies FastifySchema,
+  [ROUTE.SENDER_USER_MODAL]: {
+    params: {
+      type: "object",
+      properties: {
+        ticketId: { type: "integer" },
+      },
+      required: ["ticketId"],
+    },
+  } as const satisfies FastifySchema,
 }
