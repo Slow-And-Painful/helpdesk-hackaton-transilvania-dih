@@ -11,6 +11,7 @@ type MessageOptions = {
     department: string
     documents?: Array<{ id: number; name: string; aiDescription: string; extractedText?: string }>
     allDepartments?: Array<{ id: number; name: string; aiDescription: string }>
+    ticketSummaries?: Array<{ ticketId: number; summary: string }>
   }
 }
 
@@ -64,7 +65,47 @@ export default class GeminiComponent {
       }
     }
 
+    if (systemPrompts.ticketSummaries && systemPrompts.ticketSummaries.length > 0) {
+      const summaryLines = systemPrompts.ticketSummaries
+        .map(s => `- Ticket #${s.ticketId}: ${s.summary}`)
+        .join("\n")
+
+      parts.push(`Mai jos sunt rezumatele unor tichete anterioare rezolvate de acest departament. Folosește aceste informații pentru a răspunde direct la întrebări similare, fără a sugera deschiderea unui nou tichet dacă problema a mai fost rezolvată.\n\n${summaryLines}`)
+    }
+
     return parts.join("\n\n---\n\n")
+  }
+
+  summarizeTicket = async (options: {
+    ticketName: string
+    ticketSummary: string | null
+    messages: Array<{ senderName: string; text: string }>
+  }): Promise<{ summary: string; inputTokens: number; outputTokens: number }> => {
+    const { ticketName, ticketSummary, messages } = options
+
+    const conversation = messages
+      .map(m => `${m.senderName}: ${m.text}`)
+      .join("\n")
+
+    const prompt = [
+      `Rezumă următorul tichet de suport într-un paragraf concis (maxim 3 propoziții).`,
+      `Descrie problema raportată și soluția sau răspunsul oferit, astfel încât rezumatul să poată fi folosit ca referință pentru probleme similare în viitor.`,
+      ``,
+      `Titlu tichet: ${ticketName}`,
+      ticketSummary ? `Descriere tichet: ${ticketSummary}` : null,
+      conversation ? `\nConversație:\n${conversation}` : null,
+    ].filter(Boolean).join("\n")
+
+    const response = await this.client.models.generateContent({
+      model: this.model,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+    })
+
+    return {
+      summary: response.text ?? "",
+      inputTokens: response.usageMetadata?.promptTokenCount ?? 0,
+      outputTokens: response.usageMetadata?.candidatesTokenCount ?? 0,
+    }
   }
 
   sendMessage = async(options: MessageOptions) => {

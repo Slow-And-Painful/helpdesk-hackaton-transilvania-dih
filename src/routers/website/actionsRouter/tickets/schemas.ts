@@ -45,4 +45,14 @@ export const schemas = {
       required: ["ticketId"],
     },
   } as const satisfies FastifySchema,
+  [ROUTE.SEND_MESSAGE]: {
+    body: {
+      type: "object",
+      properties: {
+        ticketId: { type: "integer" },
+        text: { type: "string", minLength: 1 },
+      },
+      required: ["ticketId", "text"],
+    },
+  } as const satisfies FastifySchema,
 }

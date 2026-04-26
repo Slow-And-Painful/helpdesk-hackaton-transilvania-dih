@@ -3,4 +3,5 @@ export enum ROUTE {
   CLOSE = "/close",
   OPEN = "/open",
   ASSIGN = "/assign",
+  SEND_MESSAGE = "/send-message",
 }

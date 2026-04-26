@@ -41,4 +41,13 @@ export const schemas = {
       required: ["ticketId"],
     },
   } as const satisfies FastifySchema,
+  [ROUTE.TICKET_MESSAGES]: {
+    params: {
+      type: "object",
+      properties: {
+        ticketId: { type: "integer" },
+      },
+      required: ["ticketId"],
+    },
+  } as const satisfies FastifySchema,
 }

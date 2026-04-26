@@ -54,6 +54,8 @@ export const restoreTicketDrawerWidth = () => {
       const col = document.getElementById("ticket-drawer-details-col")
       if (col) col.style.width = `${savedCol}px`
     }
+    const msgs = document.getElementById("ticket-chat-messages")
+    if (msgs) msgs.scrollTop = msgs.scrollHeight
   } catch {}
 }
 
@@ -99,3 +101,91 @@ export const ticketDrawerStartColResize = (e: MouseEvent) => {
 
 window.ticketDrawerStartEdgeResize = ticketDrawerStartEdgeResize
 window.ticketDrawerStartColResize = ticketDrawerStartColResize
+
+window.ticketChatResize = (el: HTMLTextAreaElement) => {
+  el.style.height = "auto"
+  el.style.height = Math.min(el.scrollHeight, 120) + "px"
+  const btn = document.getElementById("ticket-chat-send")
+  if (!btn) return
+  if (el.value.trim()) {
+    btn.classList.add("ticket-drawer__chat-send--active")
+  } else {
+    btn.classList.remove("ticket-drawer__chat-send--active")
+  }
+}
+
+window.ticketChatKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault()
+    ;(document.getElementById("ticket-chat-form") as HTMLFormElement | null)?.requestSubmit()
+  }
+}
+
+async function submitTicketChat(form: HTMLFormElement) {
+  const input = document.getElementById("ticket-chat-input") as HTMLTextAreaElement | null
+  const text = input?.value.trim()
+  if (!text) return
+
+  const ticketId = form.dataset.ticketId
+  if (!ticketId) return
+
+  // Clear input immediately
+  if (input) {
+    input.value = ""
+    input.style.height = "auto"
+  }
+  document.getElementById("ticket-chat-send")?.classList.remove("ticket-drawer__chat-send--active")
+
+  try {
+    const res = await fetch("/actions/tickets/send-message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticketId: parseInt(ticketId, 10), text }),
+    })
+
+    if (!res.ok) return
+
+    const html = await res.text()
+    const msgs = document.getElementById("ticket-chat-messages")
+    if (!msgs) return
+
+    document.getElementById("ticket-chat-empty")?.remove()
+
+    const tmp = document.createElement("div")
+    tmp.innerHTML = html
+    while (tmp.firstChild) msgs.appendChild(tmp.firstChild)
+
+    msgs.scrollTop = msgs.scrollHeight
+  } catch {
+    // silently fail — no disruptive error for chat
+  }
+}
+
+document.addEventListener("submit", (e) => {
+  const form = (e.target as HTMLElement)?.closest?.("#ticket-chat-form") as HTMLFormElement | null
+  if (!form) return
+  e.preventDefault()
+  e.stopImmediatePropagation()
+  submitTicketChat(form)
+})
+
+import { onSseMessage } from "./sse"
+
+onSseMessage((raw) => {
+  const data = raw as { type: string; ticketId: number; messageHtml: string }
+  if (data?.type !== "TICKET_MESSAGE") return
+
+  const msgs = document.getElementById("ticket-chat-messages")
+  if (!msgs) return
+
+  const form = document.getElementById("ticket-chat-form") as HTMLFormElement | null
+  if (!form || form.dataset.ticketId !== String(data.ticketId)) return
+
+  document.getElementById("ticket-chat-empty")?.remove()
+
+  const tmp = document.createElement("div")
+  tmp.innerHTML = data.messageHtml
+  while (tmp.firstChild) msgs.appendChild(tmp.firstChild)
+
+  msgs.scrollTop = msgs.scrollHeight
+})

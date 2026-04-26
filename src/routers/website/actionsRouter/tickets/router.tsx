@@ -6,22 +6,35 @@ import { container } from "tsyringe"
 import TicketsService from "$services/TicketsService"
 import DepartmentUserService from "$services/DepartmentUsersService"
 import ChatMessagesService from "$services/ChatsMessagesService"
+import TicketMessagesService from "$services/TicketMessagesService"
+import TicketChatMessage from "$templates/components/tickets/TicketChatMessage"
+import TicketChatForm from "$templates/components/tickets/TicketChatForm"
 import { TICKET_STATUS } from "$types/tickets"
 import TicketStatusBadge from "$templates/components/TicketStatusBadge"
 import Toast from "$templates/components/Toast"
-import { and, eq } from "drizzle-orm"
+import { and, eq, inArray } from "drizzle-orm"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
+import SSEManagerComponent from "$components/SSEManagerComponent"
+import { contentsToString } from "@kitajs/html"
 import { buildTicketDropdownOptions, ticketMenuCellId } from "$templates/components/tables/TicketsTable"
 import Dropdown from "$templates/components/dropdown/Dropdown"
 import DropdownTrigger from "$templates/components/dropdown/DropdownTrigger"
 import Icon from "$templates/components/Icon"
 import { TicketsViewTab } from "$templates/views/TicketsView"
+import GeminiComponent from "$components/GeminiComponent"
+import TicketSummariesService from "$services/TicketSummariesService"
+import { ticketMessagesTable } from "$dbSchemas/TicketMessages"
+import { ticketSummariesTable } from "$dbSchemas/TicketSummaries"
 
 export const routerPrefix = "/tickets"
 
 const ticketsService = container.resolve<TicketsService>(TicketsService.token)
 const departmentUserService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
 const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesService.token)
+const ticketMessagesService = container.resolve<TicketMessagesService>(TicketMessagesService.token)
+const sseManager = container.resolve<SSEManagerComponent>(SSEManagerComponent.token)
+const geminiComponent = container.resolve<GeminiComponent>(GeminiComponent.token)
+const ticketSummariesService = container.resolve<TicketSummariesService>(TicketSummariesService.token)
 
 export const router = createRouter("tickets", (server) => {
   server.route({
@@ -136,6 +149,41 @@ export const router = createRouter("tickets", (server) => {
 
       await ticketsService.update(ticketId, { status: TICKET_STATUS.CLOSED })
 
+      // Fire-and-forget: summarize the ticket conversation for future AI context
+      ;(async () => {
+        try {
+          const messages = await ticketMessagesService.list({
+            where: eq(ticketMessagesTable.ticketId, ticketId),
+          })
+
+          const formattedMessages = messages.map(m => ({
+            senderName: m.senderDepartmentUser?.user
+              ? `${m.senderDepartmentUser.user.firstName} ${m.senderDepartmentUser.user.lastName}`.trim()
+              : "Unknown",
+            text: m.text ?? "",
+          })).filter(m => m.text.length > 0)
+
+          const { summary, inputTokens, outputTokens } = await geminiComponent.summarizeTicket({
+            ticketName: ticket.name,
+            ticketSummary: ticket.summary ?? null,
+            messages: formattedMessages,
+          })
+
+          await ticketSummariesService.drizzle.insert(ticketSummariesTable).values({
+            ticketId,
+            senderDepartmentId: ticket.senderDepartmentId,
+            summary,
+            inputTokens,
+            outputTokens,
+          }).onConflictDoUpdate({
+            target: ticketSummariesTable.ticketId,
+            set: { summary, inputTokens, outputTokens, generatedAt: new Date() },
+          })
+        } catch (err) {
+          console.error(`Failed to summarize ticket ${ticketId}:`, err)
+        }
+      })()
+
       const isDepartmentAdmin = req.activeDepartmentUserRole === "ADMIN"
       const dropdownId = `table-options-${ticketId}`
       const menuOptions = tab
@@ -149,6 +197,9 @@ export const router = createRouter("tickets", (server) => {
             <TicketStatusBadge status={TICKET_STATUS.CLOSED} />
           </div>
           <div id="ticket-drawer-footer" hx-swap-oob="delete" />
+          <div id="ticket-chat-form" hx-swap-oob="outerHTML">
+            <TicketChatForm ticketId={ticketId} disabled={true} />
+          </div>
           <span id={`ticket-row-status-${ticketId}`} hx-swap-oob="innerHTML">
             <TicketStatusBadge status={TICKET_STATUS.CLOSED} />
           </span>
@@ -245,6 +296,7 @@ export const router = createRouter("tickets", (server) => {
       await ticketsService.update(ticketId, { assigneeId: assigneeId ?? null })
 
       let assigneeName: string | null = null
+
       if (assigneeId != null) {
         const deptUsers = await departmentUserService.list({
           where: eq(departmentUsersTable.id, assigneeId),
@@ -274,6 +326,90 @@ export const router = createRouter("tickets", (server) => {
             </span>
           </>
         )
+    },
+  })
+
+  server.route({
+    method: "POST",
+    url: ROUTE.SEND_MESSAGE,
+    schema: schemas[ROUTE.SEND_MESSAGE],
+    config: {
+      authenticated: true,
+      security: {
+        session: `${USER_ROLE.CUSTOMER_ACCOUNT} || ${USER_ROLE.STAFF_ACCOUNT}`,
+      },
+    },
+    handler: async (req, res) => {
+      const { ticketId, text } = req.body as { ticketId: number; text: string }
+
+      const callerUser = req.callerUser
+      const activeDepartment = req.activeDepartment
+      if (!callerUser || !activeDepartment) {
+        return res.status(400).send("No active session")
+      }
+
+      const deptUsers = await departmentUserService.list({
+        limit: 1,
+        where: and(
+          eq(departmentUsersTable.departmentId, activeDepartment.id),
+          eq(departmentUsersTable.userId, callerUser.id),
+        ),
+        mainQuery: async ({ db, ...opts }) =>
+          db.query.departmentUsersTable.findMany({ ...opts, with: { user: true } }),
+      })
+
+      const deptUser = deptUsers[0] as typeof deptUsers[0] & { user?: { firstName: string; lastName: string; email: string } }
+      if (!deptUser) {
+        return res.status(403).send("Not a member of the active department")
+      }
+
+      const message = await ticketMessagesService.sInsert({
+        ticketId,
+        text,
+        senderDepartmentUserId: deptUser.id,
+        sentAt: new Date(),
+      })
+
+      const fullMessage = await ticketMessagesService.get(message.id)
+      if (!fullMessage) {
+        return res.status(500).send("Message not found after insert")
+      }
+
+      const ticket = await ticketsService.get(ticketId)
+
+      // Broadcast to all users in both departments so open drawers update live.
+      // Each recipient sees the message as incoming; the sender already has it locally.
+      if (ticket) {
+        const allDeptUsers = await departmentUserService.list({
+          where: inArray(departmentUsersTable.departmentId, [
+            ticket.senderDepartmentId,
+            ticket.destinationDepartmentId,
+          ]),
+        })
+
+        const incomingHtml = await contentsToString([
+          <TicketChatMessage message={fullMessage} isOutgoing={false} />,
+        ])
+
+        const broadcasts = allDeptUsers
+          .filter((u) => u.userId !== callerUser.id)
+          .map((u) =>
+            sseManager.send(SSEManagerComponent.getUserRoomId(u.userId), {
+              type: "TICKET_MESSAGE",
+              ticketId,
+              messageHtml: incomingHtml,
+            }),
+          )
+
+        await Promise.all(broadcasts)
+      }
+
+      return res.view(
+        <TicketChatMessage
+          message={fullMessage}
+          isOutgoing={true}
+        />
+      )
     },
   })
 })
