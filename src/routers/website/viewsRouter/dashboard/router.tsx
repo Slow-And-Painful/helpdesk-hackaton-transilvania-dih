@@ -190,6 +190,8 @@ export const router = createRouter("dashboard", (server) => {
 
       const tableOnly = req.headers["hx-template"] === "table"
 
+      const departmentUserIdMap = new Map(departmentUsers.map((du) => [du.userId, du.id]))
+
       if (tableOnly) {
         return res
           .headers({
@@ -202,6 +204,7 @@ export const router = createRouter("dashboard", (server) => {
               items={items}
               pagination={pagination}
               baseUrl={baseUrl}
+              departmentUserIdMap={departmentUserIdMap}
             />
           )
       }
@@ -212,6 +215,7 @@ export const router = createRouter("dashboard", (server) => {
           pagination={pagination}
           baseUrl={baseUrl}
           activeDepartment={activeDepartment}
+          departmentUserIdMap={departmentUserIdMap}
         />,
         DashboardLayout
       )

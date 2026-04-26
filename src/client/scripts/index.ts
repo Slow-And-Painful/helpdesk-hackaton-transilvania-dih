@@ -26,6 +26,7 @@ import "./modules/documentFileUploader"
 import { docDrawerStartResize, docDrawerStartEdgeResize, restoreDocDrawerWidth } from "./modules/docDrawerResize"
 import { ticketDrawerStartEdgeResize, ticketDrawerStartColResize, restoreTicketDrawerWidth } from "./modules/ticketDrawerResize"
 import "./modules/sse"
+import { userDrawerStartEdgeResize, restoreUserDrawerWidth } from "./modules/userDrawerResize"
 import "./modules/documentExtraction"
 
 
@@ -37,6 +38,7 @@ declare global {
     ticketDrawerStartColResize: typeof ticketDrawerStartColResize
     ticketChatResize: (el: HTMLTextAreaElement) => void
     ticketChatKeydown: (e: KeyboardEvent) => void
+    userDrawerStartEdgeResize: typeof userDrawerStartEdgeResize
     htmx: typeof htmx
     togglePasswordInput: (event: MouseEvent) => void
     toggleNavbarVisibility: (event: MouseEvent) => void
@@ -151,6 +153,7 @@ window.addEventListener("DOMContentLoaded", () => {
     addPreCopyButtons()
     restoreDocDrawerWidth()
     restoreTicketDrawerWidth()
+    restoreUserDrawerWidth()
   })
 
   document.body.addEventListener("showSuccessToast", (event) => {

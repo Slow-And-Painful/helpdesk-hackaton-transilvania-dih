@@ -37,11 +37,11 @@ export default function UserDetailDrawer({ departmentUser, allDeptStats }: Props
         class="ticket-drawer__overlay"
         onclick={`document.getElementById('${userDetailDrawerId}').remove()`}
       />
-      <div class="ticket-drawer__panel relative">
+      <div class="ticket-drawer__panel relative" id="user-drawer-panel">
         <div
           class="ticket-drawer__edge-handle"
           id="user-drawer-edge-handle"
-          onmousedown="window.ticketDrawerStartEdgeResize && window.ticketDrawerStartEdgeResize(event)"
+          onmousedown="window.userDrawerStartEdgeResize && window.userDrawerStartEdgeResize(event)"
         />
         <div class="ticket-drawer__header">
           <h2 class="ticket-drawer__title">Detalii Utilizator</h2>
