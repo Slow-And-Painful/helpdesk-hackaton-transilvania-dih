@@ -1,4 +1,4 @@
-import { createRouter } from "../../utils"
+import { createRouter, getViewPath } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import DepartmentSwitcherModal from "$templates/components/departments/DepartmentSwitcherModal"
@@ -208,8 +208,12 @@ export const router = createRouter("departments", (server) => {
         }
       }
 
+      const replaceUrl = req.activeDepartment
+        ? `${getViewPath("dashboard", "DOCUMENTS")}?folderId=${folderId}`
+        : `${getViewPath("staff", "DOCUMENTS")}?departmentId=${folder.departmentId}&folderId=${folderId}`
+
       return res
-        .headers({ "HX-Replace-Url": `/dashboard/documents?folderId=${folderId}` })
+        .headers({ "HX-Replace-Url": replaceUrl })
         .view(
           <DocumentExplorer
             folders={childFolders}

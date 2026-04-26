@@ -2,8 +2,15 @@ import BaseService, { MainQuery } from "$services/BaseService"
 import DrizzleDB from "$components/DrizzleDB"
 import { container, inject, injectable } from "tsyringe"
 import { DepartmentUserSchema, departmentUsersTable, NewDepartmentUserSchema } from "$dbSchemas/DepartmentUsers"
+import { DepartmentsSchema } from "$dbSchemas/Departments"
+import { UserSchemaWithoutSensitiveData } from "$services/UsersService"
 
 export type DepartmentUser = DepartmentUserSchema
+
+export type DepartmentUserWithRelations = DepartmentUserSchema & {
+  user: UserSchemaWithoutSensitiveData
+  department: DepartmentsSchema
+}
 
 type TABLE = typeof departmentUsersTable
 type PK_TYPE = number
@@ -38,6 +45,20 @@ export default class DepartmentUserService extends BaseService<
   }
 
   static token = Symbol("DepartmentUserService")
+
+  listWithRelations = async (): Promise<DepartmentUserWithRelations[]> => {
+    return this.drizzle.query.departmentUsersTable.findMany({
+      with: {
+        user: {
+          columns: {
+            password: false,
+            salt: false,
+          },
+        },
+        department: true,
+      },
+    }) as Promise<DepartmentUserWithRelations[]>
+  }
 }
 
 container.register(DepartmentUserService.token, DepartmentUserService)

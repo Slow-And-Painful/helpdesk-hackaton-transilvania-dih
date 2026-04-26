@@ -246,18 +246,26 @@ export const router = createRouter("departments", (server) => {
     handler: async (req, res) => {
       const { documentKey, name, aiDescription, folderId } = req.body as { documentKey: string; documentType: string; name: string; aiDescription?: string; folderId?: number }
 
-      if (!req.activeDepartment) {
-        return res.status(403).send("No active department")
+      let resolvedFolderId: number | null = folderId ?? null
+      let resolvedDepartmentId: number | null = req.activeDepartment?.id ?? null
+
+      // Staff users don't have activeDepartment — derive departmentId from the folder
+      if (!resolvedDepartmentId && resolvedFolderId) {
+        const folder = await documentFoldersService.get(resolvedFolderId)
+        resolvedDepartmentId = folder?.departmentId ?? null
       }
 
-      let resolvedFolderId: number | null = folderId ?? null
-
-      if (!resolvedFolderId) {
+      // Dept admin with no folderId: fall back to the root folder of their active department
+      if (!resolvedFolderId && req.activeDepartment) {
         const allFolders = await documentFoldersService.list({
           where: eq(documentFoldersTable.departmentId, req.activeDepartment.id),
         })
         const rootFolder = allFolders.find((f) => !f.deletable && f.parentId === null) ?? null
         resolvedFolderId = rootFolder?.id ?? null
+      }
+
+      if (!resolvedDepartmentId) {
+        return res.status(403).send("Cannot determine department for upload")
       }
 
       const newDocument = await ragDocumentsService.sInsert({
@@ -266,7 +274,7 @@ export const router = createRouter("departments", (server) => {
         aiDescription: aiDescription ?? "",
         extractedText: "",
         extractionStatus: "pending",
-        departmentId: req.activeDepartment.id,
+        departmentId: resolvedDepartmentId,
         folderId: resolvedFolderId,
       })
 
@@ -274,8 +282,16 @@ export const router = createRouter("departments", (server) => {
         console.error(`[DocumentExtraction] Failed for document ${newDocument.id}:`, err)
       })
 
-      const baseUrl = getViewPath("dashboard", "DOCUMENTS")
-      const redirectUrl = resolvedFolderId ? `${baseUrl}?folderId=${resolvedFolderId}` : baseUrl
+      let redirectUrl: string
+      if (req.activeDepartment) {
+        const baseUrl = getViewPath("dashboard", "DOCUMENTS")
+        redirectUrl = resolvedFolderId ? `${baseUrl}?folderId=${resolvedFolderId}` : baseUrl
+      } else {
+        const baseUrl = getViewPath("staff", "DOCUMENTS")
+        redirectUrl = resolvedFolderId
+          ? `${baseUrl}?departmentId=${resolvedDepartmentId}&folderId=${resolvedFolderId}`
+          : `${baseUrl}?departmentId=${resolvedDepartmentId}`
+      }
 
       return res
         .headers({
