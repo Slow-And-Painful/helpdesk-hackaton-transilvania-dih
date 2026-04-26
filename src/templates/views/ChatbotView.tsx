@@ -24,31 +24,35 @@ const ChatbotView = ({ chatId, messages, ragDocuments = [], departmentId }: Prop
       <div class="hd-chat__welcome" id="hd-chat-welcome" style={hasMessages ? "display:none" : undefined}>
         <div class="hd-chat__welcome-badge">
           <span class="hd-chat__welcome-badge-dot" />
-          Asistent AI intern
+          Asistent AI pentru instituții publice
         </div>
         <div class="hd-chat__welcome-icon">
           <Icon name="agent" size={28} />
         </div>
-        <h1 class="hd-chat__welcome-title">Asistent Achiziții Publice</h1>
+
+        <h1 class="hd-chat__welcome-title">Asistent Helpdesk Administrativ</h1>
+
         <p class="hd-chat__welcome-subtitle">
-          Te pot ajuta să navighezi procedurile de achiziție publică, reglementările și cele mai bune practici pentru cumpărarea cu fonduri publice.
+          Te pot ajuta să găsești informații despre servicii publice, proceduri administrative și să
+          navighezi interacțiunea cu instituțiile statului.
         </p>
+
         <div class="hd-chat__suggestions">
           <ChatSuggestion
-            label="Cum încep un proces de achiziție?"
-            message="Cum încep un proces de achiziție publică?"
+            label="Cum depun o solicitare către primărie?"
+            message="Cum pot depune o solicitare către o instituție publică?"
           />
           <ChatSuggestion
-            label="Care sunt pragurile pentru licitații publice?"
-            message="Care sunt pragurile pentru licitații publice?"
+            label="Ce documente sunt necesare pentru o cerere?"
+            message="Ce documente sunt necesare pentru o cerere administrativă?"
           />
           <ChatSuggestion
-            label="Ce documentație am nevoie?"
-            message="Ce documentație am nevoie pentru o achiziție?"
+            label="Cum pot verifica statusul unei solicitări?"
+            message="Cum pot verifica statusul unei solicitări depuse?"
           />
           <ChatSuggestion
-            label="Explică procedura de achiziție directă"
-            message="Explică procedura de achiziție directă"
+            label="Cum contactez un departament?"
+            message="Cum pot lua legătura cu un departament din cadrul instituției?"
           />
         </div>
       </div>
@@ -66,7 +70,7 @@ const ChatbotView = ({ chatId, messages, ragDocuments = [], departmentId }: Prop
       <div class="hd-chat__input-wrapper">
         <ChatbotForm values={{ message: "", chatId: chatId ?? "" }} departmentId={departmentId} />
         <p class="hd-chat__disclaimer">
-          Asistent AI pentru orientare în achiziții publice. Răspunsurile sunt doar informative.
+          Asistent AI pentru orientare în servicii publice. Răspunsurile sunt informative și nu înlocuiesc comunicarea oficială cu instituția.
         </p>
       </div>
     </div>

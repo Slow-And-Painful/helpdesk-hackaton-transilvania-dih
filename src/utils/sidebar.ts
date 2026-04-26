@@ -114,7 +114,7 @@ const getBaseCustomerSidebarItems = (_user: User, routerName: SidebarProps["rout
     {
       type: SIDEBAR_LINKS_TYPES.SIMPLE,
       icon: "new-chat",
-      label: "Acasă",
+      label: "Helpdesk",
       url: homePath,
       isActive: current === normalize(homePath),
     },

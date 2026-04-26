@@ -58,8 +58,8 @@ export function buildTicketDropdownOptions(
 }
 
 const tabTypeToTabDisplayValueMapping: { [key in TicketsViewTab]: string  } = {
-  incoming: "primite",
-  outgoing: "trimise",
+  incoming: "primit",
+  outgoing: "trimis",
 }
 
 const TicketsTable = ({ items, pagination, tab, baseUrl, isDepartmentAdmin }: Props) => {

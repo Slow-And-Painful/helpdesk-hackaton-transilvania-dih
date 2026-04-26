@@ -21,6 +21,7 @@ const ChatPrompt = ({ placeholder = "Întreabă despre achiziții publice...", d
         <Icon name="grid" size={13} />
         <span>Departament</span>
       </button>
+
       <button
         type="button"
         class="hd-chat__dept-switcher-btn"
@@ -32,6 +33,18 @@ const ChatPrompt = ({ placeholder = "Întreabă despre achiziții publice...", d
       >
         <Icon name="folder" size={13} />
         <span id="hd-chat-folder-filter-label">Foldere</span>
+      </button>
+ 
+      <button
+        type="button"
+        class="hd-chat__dept-switcher-btn"
+        id="hd-chat-open-ticket-btn"
+        hx-get={getPartialPath("tickets", "CREATE_TICKET_MODAL")}
+        hx-target="#modal"
+        hx-swap="innerHTML"
+      >
+        <Icon name="folder" size={13} />
+        <span id="hd-chat-folder-filter-label">Deschide tichet</span>
       </button>
     </div>
     <div class="hd-chat__input-row">
