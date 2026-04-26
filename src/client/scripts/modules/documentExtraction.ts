@@ -7,68 +7,26 @@
  * manual refresh.
  */
 
-const SSE_ENDPOINT = "/sse"
+import { onSseMessage } from "./sse"
 
-function connectDocumentExtractionSSE() {
-  const es = new EventSource(SSE_ENDPOINT)
+onSseMessage((raw) => {
+  const data = raw as { type: string; documentId: number; status: "extracting" | "done" | "failed" }
+  if (data?.type !== "DOCUMENT_EXTRACTION_STATUS") return
 
-  es.onmessage = (event: MessageEvent) => {
-    try {
-      const data = JSON.parse(event.data) as {
-        type: string
-        documentId: number
-        status: "extracting" | "done" | "failed"
-        extractedText?: string
-      }
+  const { documentId, status } = data
+  if (status === "extracting") return
 
-      if (data?.type !== "DOCUMENT_EXTRACTION_STATUS") {
-        return
-      }
+  const drawerEl = document.querySelector<HTMLElement>(`[data-document-drawer="${documentId}"]`)
+  if (!drawerEl) return
 
-      const { documentId, status } = data
+  const partialUrl = drawerEl.dataset["partialUrl"]
+  if (!partialUrl) return
 
-      // "extracting" is already shown optimistically by the server response
-      // when the user triggers extraction, so skip it here.
-      if (status === "extracting") {
-        return
-      }
+  const formId = `update-document-form-${documentId}`
+  if (!document.getElementById(formId)) return
 
-      // Find the open drawer for this document
-      const drawerEl = document.querySelector<HTMLElement>(
-        `[data-document-drawer="${documentId}"]`,
-      )
-      if (!drawerEl) {
-        return
-      }
-
-      const partialUrl = drawerEl.dataset["partialUrl"]
-      if (!partialUrl) {
-        return
-      }
-
-      // Target only the form element — avoids re-rendering the whole drawer
-      // which would cause the close/open animation glitch
-      const formId = `update-document-form-${documentId}`
-      const formEl = document.getElementById(formId)
-      if (!formEl) {
-        return
-      }
-
-      window.htmx.ajax("get", partialUrl, {
-        target: `#${formId}`,
-        swap: "outerHTML",
-      })
-    } catch {
-      // Ignore parse errors
-    }
-  }
-
-  es.onerror = () => {
-    es.close()
-    setTimeout(connectDocumentExtractionSSE, 5000)
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  connectDocumentExtractionSSE()
+  window.htmx.ajax("get", partialUrl, {
+    target: `#${formId}`,
+    swap: "outerHTML",
+  })
 })

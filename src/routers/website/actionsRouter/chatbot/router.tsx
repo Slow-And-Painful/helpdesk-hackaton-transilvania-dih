@@ -8,10 +8,12 @@ import ChatMessagesService from "$services/ChatsMessagesService"
 import GeminiComponent from "$components/GeminiComponent"
 import RAGDocumentsService from "$services/RAGDocumentsService"
 import DepartmentsService from "$services/DepartmentsService"
+import TicketSummariesService from "$services/TicketSummariesService"
 import { chatsTable } from "$dbSchemas/Chats"
 import { chatMessagesTable } from "$dbSchemas/ChatMessages"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 import { ragDocumentsTable } from "$dbSchemas/ragDocuments"
+import { ticketSummariesTable } from "$dbSchemas/TicketSummaries"
 import { and, eq } from "drizzle-orm"
 import type { Content } from "@google/genai"
 import Sidebar from "$templates/components/Sidebar"
@@ -23,6 +25,7 @@ const chatMessagesService = container.resolve<ChatMessagesService>(ChatMessagesS
 const geminiComponent = container.resolve<GeminiComponent>(GeminiComponent.token)
 const ragDocumentsService = container.resolve<RAGDocumentsService>(RAGDocumentsService.token)
 const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
+const ticketSummariesService = container.resolve<TicketSummariesService>(TicketSummariesService.token)
 
 export const router = createRouter("chatbot", (server) => {
   server.route({
@@ -52,9 +55,10 @@ export const router = createRouter("chatbot", (server) => {
         return res.status(400).send("User not in department")
       }
 
-      const [ragDocuments, allDepartmentsRaw] = await Promise.all([
+      const [ragDocuments, allDepartmentsRaw, ticketSummaries] = await Promise.all([
         ragDocumentsService.list({ where: eq(ragDocumentsTable.departmentId, activeDepartment.id) }),
         departmentsService.list({ where: undefined }),
+        ticketSummariesService.list({ where: eq(ticketSummariesTable.senderDepartmentId, activeDepartment.id) }),
       ])
 
       const allDepartments = allDepartmentsRaw.map(d => ({ id: d.id, name: d.name, aiDescription: d.aiDescription }))
@@ -121,6 +125,7 @@ export const router = createRouter("chatbot", (server) => {
             department: activeDepartment.systemPrompt,
             documents: ragDocuments,
             allDepartments,
+            ticketSummaries,
           },
         })
 
@@ -175,9 +180,10 @@ export const router = createRouter("chatbot", (server) => {
         return res.status(400).send("User not in department")
       }
 
-      const [ragDocuments, allDepartmentsRaw] = await Promise.all([
+      const [ragDocuments, allDepartmentsRaw, ticketSummaries] = await Promise.all([
         ragDocumentsService.list({ where: eq(ragDocumentsTable.departmentId, activeDepartment.id) }),
         departmentsService.list({ where: undefined }),
+        ticketSummariesService.list({ where: eq(ticketSummariesTable.senderDepartmentId, activeDepartment.id) }),
       ])
 
       const allDepartments = allDepartmentsRaw.map(d => ({ id: d.id, name: d.name, aiDescription: d.aiDescription }))
@@ -196,6 +202,7 @@ export const router = createRouter("chatbot", (server) => {
             department: activeDepartment.systemPrompt,
             documents: ragDocuments,
             allDepartments,
+            ticketSummaries,
           },
         })
 
@@ -252,6 +259,7 @@ export const router = createRouter("chatbot", (server) => {
             department: activeDepartment.systemPrompt,
             documents: ragDocuments,
             allDepartments,
+            ticketSummaries,
           },
         })
 

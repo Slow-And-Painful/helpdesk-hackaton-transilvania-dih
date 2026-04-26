@@ -5,3 +5,8 @@ export type SseEvents =
       status: "extracting" | "done" | "failed"
       extractedText?: string
     }
+  | {
+      type: "TICKET_MESSAGE"
+      ticketId: number
+      messageHtml: string
+    }

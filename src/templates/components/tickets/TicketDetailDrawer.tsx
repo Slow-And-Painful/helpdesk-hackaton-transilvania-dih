@@ -6,17 +6,22 @@ import TicketStatusBadge from "$templates/components/TicketStatusBadge"
 import Button from "$templates/components/Button"
 import Icon from "$templates/components/Icon"
 import { getActionPath, getPartialPath } from "$routers/website/utils"
+import TicketChatForm from "$templates/components/tickets/TicketChatForm"
+import TicketChatMessage from "$templates/components/tickets/TicketChatMessage"
+import { TicketMessage } from "$services/TicketMessagesService"
 
 type Props = {
   ticket: Ticket
   isDepartmentAdmin?: boolean
   isIncoming?: boolean
   tab?: "incoming" | "outgoing"
+  messages?: TicketMessage[]
+  currentUserId?: number
 }
 
 export const ticketDetailDrawerId = "ticket-detail-drawer"
 
-export default function TicketDetailDrawer({ ticket, isDepartmentAdmin, isIncoming, tab }: Props) {
+export default function TicketDetailDrawer({ ticket, isDepartmentAdmin, isIncoming, tab, messages = [], currentUserId }: Props) {
   const isOpen = ticket.status === TICKET_STATUS.OPEN
   const assigneeName = ticket.assignee?.user
     ? `${ticket.assignee.user.firstName} ${ticket.assignee.user.lastName}`.trim() || ticket.assignee.user.email
@@ -120,31 +125,29 @@ export default function TicketDetailDrawer({ ticket, isDepartmentAdmin, isIncomi
 
           {/* ── Conversation column ── */}
           <div class="ticket-drawer__chat-col">
-            <div class="ticket-drawer__chat-messages">
-              <div class="ticket-drawer__chat-empty">
-                <div class="ticket-drawer__chat-empty-icon">
-                  <Icon name="message-square" size={20} />
+            <div class="ticket-drawer__chat-messages" id="ticket-chat-messages">
+              {messages.length === 0 ? (
+                <div class="ticket-drawer__chat-empty" id="ticket-chat-empty">
+                  <div class="ticket-drawer__chat-empty-icon">
+                    <Icon name="message-square" size={20} />
+                  </div>
+                  <p class="ticket-drawer__chat-empty-title">Niciun mesaj încă</p>
+                  <p class="ticket-drawer__chat-empty-subtitle">
+                    Expeditorul și membrii departamentului destinatar pot schimba mesaje aici.
+                  </p>
                 </div>
-                <p class="ticket-drawer__chat-empty-title">Niciun mesaj încă</p>
-                <p class="ticket-drawer__chat-empty-subtitle">
-                  Expeditorul și membrii departamentului destinatar pot schimba mesaje aici.
-                </p>
-              </div>
+              ) : (
+                messages.map((msg) => (
+                  <TicketChatMessage
+                    message={msg}
+                    isOutgoing={msg.senderDepartmentUser?.userId === currentUserId}
+                  />
+                ))
+              )}
             </div>
 
             <div class="ticket-drawer__chat-input-area">
-              <div class="ticket-drawer__chat-input-box">
-                <div class="ticket-drawer__chat-input-row">
-                  <textarea
-                    class="ticket-drawer__chat-input"
-                    placeholder="Scrie un mesaj…"
-                    rows="1"
-                  />
-                  <button type="button" class="ticket-drawer__chat-send">
-                    <Icon name="send" size={15} />
-                  </button>
-                </div>
-              </div>
+              <TicketChatForm ticketId={ticket.id} disabled={!isOpen} />
             </div>
           </div>
 

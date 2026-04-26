@@ -3,4 +3,5 @@ export enum ROUTE {
   TICKET_DETAIL = "/detail/:ticketId",
   ASSIGN_MODAL = "/assign-modal/:ticketId",
   SENDER_USER_MODAL = "/sender-user-modal/:ticketId",
+  TICKET_MESSAGES = "/messages/:ticketId",
 }

@@ -25,6 +25,7 @@ import "./modules/charts"
 import "./modules/documentFileUploader"
 import { docDrawerStartResize, docDrawerStartEdgeResize, restoreDocDrawerWidth } from "./modules/docDrawerResize"
 import { ticketDrawerStartEdgeResize, ticketDrawerStartColResize, restoreTicketDrawerWidth } from "./modules/ticketDrawerResize"
+import "./modules/sse"
 import "./modules/documentExtraction"
 
 
@@ -34,6 +35,8 @@ declare global {
     docDrawerStartEdgeResize: typeof docDrawerStartEdgeResize
     ticketDrawerStartEdgeResize: typeof ticketDrawerStartEdgeResize
     ticketDrawerStartColResize: typeof ticketDrawerStartColResize
+    ticketChatResize: (el: HTMLTextAreaElement) => void
+    ticketChatKeydown: (e: KeyboardEvent) => void
     htmx: typeof htmx
     togglePasswordInput: (event: MouseEvent) => void
     toggleNavbarVisibility: (event: MouseEvent) => void
