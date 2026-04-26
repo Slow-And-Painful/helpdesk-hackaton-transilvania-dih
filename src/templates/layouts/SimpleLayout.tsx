@@ -7,6 +7,7 @@ import { Head } from "$templates/layouts/partials/Head"
 import { Body } from "$templates/layouts/partials/Body"
 import { Page } from "$templates/layouts/partials/Page"
 import ErrorPage from "$templates/components/ErrorPage"
+import SmallScreenView from "$templates/layouts/partials/SmallScreenView"
 import classNames from "classnames"
 
 export function SimpleLayout({
@@ -34,6 +35,7 @@ export function SimpleLayout({
           <Head globalResources={globalResources} />
 
           <Body>
+            <SmallScreenView />
             <Page>              
               <div class={classNames("page__content !pt-1 !pb-2")}>
                 <div class={classNames("h-full px-2")}>

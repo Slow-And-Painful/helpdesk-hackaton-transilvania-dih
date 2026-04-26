@@ -1,23 +1,22 @@
 import Icon from "$templates/components/Icon"
-import LogoBase from "$templates/components/LogoBase"
 
 const SmallScreenView = () => {
   return (
-    <div id="small-screen-view" class="min-w-screen min-h-screen fixed top-0 left-0 flex items-center justify-center p-8">
-      <div
-        class="bg-black border border-gray-700 rounded-lg flex flex-col gap-y-6 items-center justify-center p-8"
-        style={{ boxShadow: "0px 4px 34px 0px rgba(253, 81, 120, 0.25)" }}
-      >
-        <div class="flex flex-col items-center justify-center gap-y-1">
-          <LogoBase />
-          <p class="text-sm text-gray-400">Is designed for bigger screen size.</p>
+    <div id="small-screen-view" class="fixed inset-0 bg-black flex items-center justify-center p-8 z-50">
+      <div class="pointer-events-none fixed inset-0 overflow-hidden">
+        <div style="position:absolute;top:-8rem;left:-8rem;width:500px;height:500px;border-radius:9999px;background:radial-gradient(circle,rgba(37,99,235,0.18) 0%,transparent 65%);filter:blur(90px);" />
+        <div style="position:absolute;bottom:-6rem;right:-6rem;width:450px;height:450px;border-radius:9999px;background:radial-gradient(circle,rgba(147,51,234,0.14) 0%,transparent 65%);filter:blur(90px);" />
+      </div>
+
+      <div class="relative flex flex-col items-center gap-y-8 text-center max-w-xs">
+
+        <div class="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/20">
+          <Icon name="monitor" size={28} class="text-blue-400" />
         </div>
 
-        <Icon name="display" size={45} />
-
-        <div class="text-gray-200 text-center">
-          Please vist it form a desktop device and use it in fullscreen for the best experience
-        </div>
+        <p class="text-gray-300 text-sm leading-relaxed">
+          Ne pare rău, momentan aplicația este disponibilă doar pe desktop. Lucrăm din greu pentru a soluționa această inconveniență.
+        </p>
       </div>
     </div>
   )

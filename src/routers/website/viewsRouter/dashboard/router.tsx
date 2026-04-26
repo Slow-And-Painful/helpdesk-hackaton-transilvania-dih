@@ -69,7 +69,7 @@ export const router = createRouter("dashboard", (server) => {
           })
 
           return res.view(
-            <ChatbotView chatId={chatUuid} messages={messages} ragDocuments={ragDocuments} />,
+            <ChatbotView chatId={chatUuid} messages={messages} ragDocuments={ragDocuments} departmentId={activeDep?.id} />,
             DashboardLayout,
             { activeChatUuid: chatUuid }
           )
@@ -79,7 +79,7 @@ export const router = createRouter("dashboard", (server) => {
       return res.headers({
         "HX-Push-Url": getViewPath("dashboard", "HOME")
       }).view(
-        <ChatbotView ragDocuments={ragDocuments} />,
+        <ChatbotView ragDocuments={ragDocuments} departmentId={activeDep?.id} />,
         DashboardLayout,
       )
     },

@@ -12,9 +12,10 @@ type Props = {
   chatId?: string
   messages?: ChatMessageSchema[]
   ragDocuments?: DocRef[]
+  departmentId?: number
 }
 
-const ChatbotView = ({ chatId, messages, ragDocuments = [] }: Props) => {
+const ChatbotView = ({ chatId, messages, ragDocuments = [], departmentId }: Props) => {
   const hasMessages = messages && messages.length > 0
 
   return (
@@ -63,7 +64,7 @@ const ChatbotView = ({ chatId, messages, ragDocuments = [] }: Props) => {
 
       {/* Input area — always at the bottom */}
       <div class="hd-chat__input-wrapper">
-        <ChatbotForm values={{ message: "", chatId: chatId ?? "" }} />
+        <ChatbotForm values={{ message: "", chatId: chatId ?? "" }} departmentId={departmentId} />
         <p class="hd-chat__disclaimer">
           Asistent AI pentru orientare în achiziții publice. Răspunsurile sunt doar informative.
         </p>

@@ -57,6 +57,14 @@ export const schemas = {
       required: ["folderId"],
     },
   } as const satisfies FastifySchema,
+  [ROUTE.RAG_FILTER_MODAL]: {} as const satisfies FastifySchema,
+  [ROUTE.RAG_FILTER_FOLDER_CONTENTS]: {
+    params: {
+      type: "object",
+      properties: { folderId: { type: "integer" } },
+      required: ["folderId"],
+    },
+  } as const satisfies FastifySchema,
   [ROUTE.GET_UPLOAD_DOCUMENT_PRESIGNED_URL]: {
     body: {
       type: "object",

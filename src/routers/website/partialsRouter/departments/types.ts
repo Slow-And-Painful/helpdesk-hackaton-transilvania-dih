@@ -8,4 +8,6 @@ export enum ROUTE {
   DOCUMENT_DOWNLOAD = "/document-download/:documentId",
   FOLDER_CONTENTS = "/folder-contents/:folderId",
   CREATE_FOLDER_MODAL = "/create-folder-modal",
+  RAG_FILTER_MODAL = "/rag-filter-modal",
+  RAG_FILTER_FOLDER_CONTENTS = "/rag-filter-folder/:folderId",
 }

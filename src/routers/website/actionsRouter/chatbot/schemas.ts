@@ -8,6 +8,7 @@ export const schemas = {
       properties: {
         message: { type: "string", minLength: 1, maxLength: 4000 },
         chatId: { type: "string" },
+        folderIds: { type: "array", items: { type: "integer" } },
       },
       required: ["message"],
     },
@@ -18,6 +19,7 @@ export const schemas = {
       properties: {
         message: { type: "string", minLength: 1, maxLength: 4000 },
         chatId: { type: "string" },
+        folderIds: { type: "array", items: { type: "integer" } },
       },
       required: ["message"],
     },

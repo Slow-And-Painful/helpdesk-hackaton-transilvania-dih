@@ -5,9 +5,10 @@ import { getPartialPath } from "$routers/website/utils"
 
 type Props = {
   placeholder?: string
+  departmentId?: number
 }
 
-const ChatPrompt = ({ placeholder = "Întreabă despre achiziții publice..." }: Props) => (
+const ChatPrompt = ({ placeholder = "Întreabă despre achiziții publice...", departmentId }: Props) => (
   <div class="hd-chat__input-container">
     <div class="hd-chat__input-toolbar">
       <button
@@ -19,6 +20,18 @@ const ChatPrompt = ({ placeholder = "Întreabă despre achiziții publice..." }:
       >
         <Icon name="grid" size={13} />
         <span>Departament</span>
+      </button>
+      <button
+        type="button"
+        class="hd-chat__dept-switcher-btn"
+        id="hd-chat-folder-filter-btn"
+        data-storage-key={departmentId ? `rag-folder-filter-${departmentId}` : undefined}
+        hx-get={getPartialPath("departments", "RAG_FILTER_MODAL")}
+        hx-target="#modal"
+        hx-swap="innerHTML"
+      >
+        <Icon name="folder" size={13} />
+        <span id="hd-chat-folder-filter-label">Foldere</span>
       </button>
     </div>
     <div class="hd-chat__input-row">

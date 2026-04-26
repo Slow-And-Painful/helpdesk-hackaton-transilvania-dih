@@ -14,7 +14,7 @@ import { chatMessagesTable } from "$dbSchemas/ChatMessages"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
 import { ragDocumentsTable } from "$dbSchemas/ragDocuments"
 import { ticketSummariesTable } from "$dbSchemas/TicketSummaries"
-import { and, eq } from "drizzle-orm"
+import { and, eq, inArray, isNull, or } from "drizzle-orm"
 import type { Content } from "@google/genai"
 import Sidebar from "$templates/components/Sidebar"
 
@@ -33,7 +33,7 @@ export const router = createRouter("chatbot", (server) => {
     url: ROUTE.STREAM_MESSAGE,
     schema: schemas[ROUTE.STREAM_MESSAGE],
     handler: async (req, res) => {
-      const { message, chatId } = req.body as { message: string; chatId?: string }
+      const { message, chatId, folderIds } = req.body as { message: string; chatId?: string; folderIds?: number[] }
 
       const activeDepartment = req.activeDepartment
 
@@ -55,8 +55,15 @@ export const router = createRouter("chatbot", (server) => {
         return res.status(400).send("User not in department")
       }
 
+      const ragDocumentsWhere = folderIds && folderIds.length > 0
+        ? and(
+            eq(ragDocumentsTable.departmentId, activeDepartment.id),
+            or(isNull(ragDocumentsTable.folderId), inArray(ragDocumentsTable.folderId, folderIds))
+          )
+        : eq(ragDocumentsTable.departmentId, activeDepartment.id)
+
       const [ragDocuments, allDepartmentsRaw, ticketSummaries] = await Promise.all([
-        ragDocumentsService.list({ where: eq(ragDocumentsTable.departmentId, activeDepartment.id) }),
+        ragDocumentsService.list({ where: ragDocumentsWhere }),
         departmentsService.list({ where: undefined }),
         ticketSummariesService.list({ where: eq(ticketSummariesTable.senderDepartmentId, activeDepartment.id) }),
       ])
@@ -158,7 +165,7 @@ export const router = createRouter("chatbot", (server) => {
     url: ROUTE.SEND_MESSAGE,
     schema: schemas[ROUTE.SEND_MESSAGE],
     handler: async (req, res) => {
-      const { message, chatId } = req.body as { message: string; chatId?: string }
+      const { message, chatId, folderIds } = req.body as { message: string; chatId?: string; folderIds?: number[] }
 
       const activeDepartment = req.activeDepartment
 
@@ -180,8 +187,15 @@ export const router = createRouter("chatbot", (server) => {
         return res.status(400).send("User not in department")
       }
 
+      const ragDocumentsWhere = folderIds && folderIds.length > 0
+        ? and(
+            eq(ragDocumentsTable.departmentId, activeDepartment.id),
+            or(isNull(ragDocumentsTable.folderId), inArray(ragDocumentsTable.folderId, folderIds))
+          )
+        : eq(ragDocumentsTable.departmentId, activeDepartment.id)
+
       const [ragDocuments, allDepartmentsRaw, ticketSummaries] = await Promise.all([
-        ragDocumentsService.list({ where: eq(ragDocumentsTable.departmentId, activeDepartment.id) }),
+        ragDocumentsService.list({ where: ragDocumentsWhere }),
         departmentsService.list({ where: undefined }),
         ticketSummariesService.list({ where: eq(ticketSummariesTable.senderDepartmentId, activeDepartment.id) }),
       ])

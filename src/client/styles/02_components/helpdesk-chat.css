@@ -241,6 +241,11 @@
   }
 }
 
+.hd-chat__dept-switcher-btn--active {
+  @apply bg-blue-500/15 border-blue-500/40 text-blue-400
+  hover:bg-blue-500/25 hover:border-blue-500/60 hover:text-blue-300;
+}
+
 .hd-chat__input-row {
   @apply flex items-end gap-2;
 }

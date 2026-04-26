@@ -2,6 +2,8 @@ import { createRouter, getViewPath } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import DepartmentSwitcherModal from "$templates/components/departments/DepartmentSwitcherModal"
+import RagFolderFilterModal, { RagFolderFilterContents } from "$templates/components/departments/RagFolderFilterModal"
+import type { RagFilterBreadcrumb } from "$templates/components/departments/RagFolderFilterModal"
 import CreateDepartmentModal from "$templates/components/departments/CreateDepartmentModal"
 import UploadDepartmentDocumentModal from "$templates/components/departments/UploadDepartmentDocumentModal"
 import DocumentDetailDrawer from "$templates/components/documents/DocumentDetailDrawer"
@@ -41,6 +43,110 @@ export const router = createRouter("departments", (server) => {
             userDepartments={req.userDepartments}
           />
         )
+    },
+  })
+
+  server.route({
+    method: "GET",
+    url: ROUTE.RAG_FILTER_MODAL,
+    schema: schemas[ROUTE.RAG_FILTER_MODAL],
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const activeDepartment = req.activeDepartment
+
+      if (!activeDepartment) {
+        return res.status(400).send("No active department")
+      }
+
+      const allFolders = await documentFoldersService.list({
+        where: eq(documentFoldersTable.departmentId, activeDepartment.id),
+      })
+
+      const rootFolder = allFolders.find(f => !f.deletable && f.parentId === null) ?? null
+      const topLevelFolders = rootFolder
+        ? allFolders.filter(f => f.parentId === rootFolder.id)
+        : allFolders.filter(f => f.parentId === null)
+
+      const storageKey = `rag-folder-filter-${activeDepartment.id}`
+      const breadcrumb: RagFilterBreadcrumb[] = [{ id: 0, name: "Toate folderele" }]
+
+      return res
+        .headers({
+          "HX-Retarget": "#modal",
+          "HX-Reswap": "beforeend",
+        })
+        .view(
+          <RagFolderFilterModal
+            folders={topLevelFolders}
+            breadcrumb={breadcrumb}
+            departmentId={activeDepartment.id}
+            storageKey={storageKey}
+          />
+        )
+    },
+  })
+
+  server.route({
+    method: "GET",
+    url: ROUTE.RAG_FILTER_FOLDER_CONTENTS,
+    schema: schemas[ROUTE.RAG_FILTER_FOLDER_CONTENTS],
+    config: { authenticated: true },
+    handler: async (req, res) => {
+      const { folderId } = req.params as { folderId: number }
+      const activeDepartment = req.activeDepartment
+
+      if (!activeDepartment) {
+        return res.status(400).send("No active department")
+      }
+
+      // folderId=0 means go back to top level
+      if (folderId === 0) {
+        const allFolders = await documentFoldersService.list({
+          where: eq(documentFoldersTable.departmentId, activeDepartment.id),
+        })
+        const rootFolder = allFolders.find(f => !f.deletable && f.parentId === null) ?? null
+        const topLevelFolders = rootFolder
+          ? allFolders.filter(f => f.parentId === rootFolder.id)
+          : allFolders.filter(f => f.parentId === null)
+
+        return res.view(
+          <RagFolderFilterContents
+            folders={topLevelFolders}
+            breadcrumb={[{ id: 0, name: "Toate folderele" }]}
+            departmentId={activeDepartment.id}
+          />
+        )
+      }
+
+      const folder = await documentFoldersService.get(folderId)
+      if (!folder) {
+        return res.status(404).send("Folder not found")
+      }
+
+      const allFolders = await documentFoldersService.list({
+        where: eq(documentFoldersTable.departmentId, activeDepartment.id),
+      })
+
+      const subFolders = allFolders.filter(f => f.parentId === folderId)
+
+      // Build breadcrumb by walking up the tree, stopping before root
+      const rootFolder = allFolders.find(f => !f.deletable && f.parentId === null) ?? null
+      const breadcrumb: RagFilterBreadcrumb[] = [{ id: 0, name: "Toate folderele" }]
+      const ancestors: RagFilterBreadcrumb[] = []
+      let current: typeof folder | null = folder
+      while (current && current.id !== rootFolder?.id) {
+        ancestors.unshift({ id: current.id, name: current.name })
+        current = current.parentId ? (allFolders.find(f => f.id === current!.parentId) ?? null) : null
+      }
+      breadcrumb.push(...ancestors)
+
+      return res.view(
+        <RagFolderFilterContents
+          folders={subFolders}
+          breadcrumb={breadcrumb}
+          departmentId={activeDepartment.id}
+        />
+      )
     },
   })
 

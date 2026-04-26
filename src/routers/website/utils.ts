@@ -233,6 +233,9 @@ type PartialRoutersParams = {
   departments: {
     DOCUMENT_DETAIL: { documentId: number }
     FOLDER_CONTENTS: { folderId: number }
+    DOCUMENT_DOWNLOAD: { documentId: number }
+    DOCUMENT_FORM: { documentId: number }
+    RAG_FILTER_FOLDER_CONTENTS: { folderId: number }
   }
 }
 

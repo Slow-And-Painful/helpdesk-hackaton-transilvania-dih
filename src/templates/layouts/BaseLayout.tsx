@@ -6,6 +6,7 @@ import { ErrorBoundary } from "@kitajs/html/error-boundary"
 import { Head } from "$templates/layouts/partials/Head"
 import { Body } from "$templates/layouts/partials/Body"
 import { Page } from "$templates/layouts/partials/Page"
+import SmallScreenView from "$templates/layouts/partials/SmallScreenView"
 import ErrorPage from "$templates/components/ErrorPage"
 import classNames from "classnames"
 import Sidebar from "$templates/components/Sidebar"
@@ -66,6 +67,7 @@ export function BaseLayout({
           <Head globalResources={globalResources} />
 
           <Body>
+            <SmallScreenView />
             <Page toasts={toasts}>
             {
               withSidebar ?

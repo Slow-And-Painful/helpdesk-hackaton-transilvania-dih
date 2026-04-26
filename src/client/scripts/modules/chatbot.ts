@@ -8,6 +8,8 @@ declare global {
     handleChatKeydown: (e: KeyboardEvent) => void
     submitSuggestion: (btn: HTMLElement) => void
     initChatScroll: () => void
+    applyRagFolderFilter: (modalId: string, storageKey: string) => void
+    updateRagFolderFilterLabel: (storageKey: string) => void
   }
 }
 
@@ -194,11 +196,22 @@ async function streamChat(form: HTMLFormElement) {
   msgs.appendChild(indicator)
   msgs.scrollTop = msgs.scrollHeight
 
+  const folderFilterKey = getRagFolderStorageKey()
+  let folderIds: number[] | undefined
+  if (folderFilterKey) {
+    try {
+      const stored = JSON.parse(localStorage.getItem(folderFilterKey) || "null")
+      if (Array.isArray(stored)) folderIds = stored
+    } catch {
+      // ignore
+    }
+  }
+
   try {
     const res = await fetch("/actions/chatbot/stream-message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, chatId: chatId || undefined }),
+      body: JSON.stringify({ message, chatId: chatId || undefined, folderIds }),
     })
 
     if (!res.ok || !res.body) {
@@ -300,6 +313,110 @@ document.addEventListener("submit", (e) => {
 window.initChatScroll = () => {
   const msgs = document.getElementById("hd-chat-messages")
   if (msgs) msgs.scrollTop = msgs.scrollHeight
+}
+
+function getRagFolderStorageKey(): string | null {
+  const btn = document.getElementById("hd-chat-folder-filter-btn")
+  return btn?.dataset.storageKey ?? null
+}
+
+// In-memory accumulator: folderId → checked state, built up as the user navigates
+const ragPendingSelections = new Map<number, boolean>()
+
+function syncRagCheckboxesToPending() {
+  const list = document.querySelector<HTMLElement>(".rag-filter__list")
+  if (!list) return
+  list.querySelectorAll<HTMLInputElement>("input[name=ragFolderId]").forEach(cb => {
+    ragPendingSelections.set(Number(cb.value), cb.checked)
+  })
+}
+
+function restoreRagCheckboxesFromPending(storageKey: string) {
+  const list = document.querySelector<HTMLElement>(".rag-filter__list")
+  if (!list) return
+
+  let stored: number[] | null = null
+  if (ragPendingSelections.size === 0) {
+    // First open — seed from localStorage
+    try { stored = JSON.parse(localStorage.getItem(storageKey) || "null") } catch { /* ignore */ }
+  }
+
+  list.querySelectorAll<HTMLInputElement>("input[name=ragFolderId]").forEach(cb => {
+    const id = Number(cb.value)
+    if (ragPendingSelections.has(id)) {
+      cb.checked = ragPendingSelections.get(id)!
+    } else if (Array.isArray(stored)) {
+      cb.checked = stored.includes(id)
+    } else {
+      cb.checked = true
+    }
+  })
+}
+
+// Sync pending state before HTMX swaps the content away on in-modal navigation
+document.addEventListener("htmx:beforeRequest", (e) => {
+  const elt = (e as CustomEvent).detail?.elt as HTMLElement | undefined
+  if (!elt) return
+  // Only sync if the request originates inside the filter contents (folder navigation)
+  if (elt.closest?.("#rag-filter-contents")) syncRagCheckboxesToPending()
+  // Fresh open of the modal — clear any stale pending state
+  if (elt.id === "hd-chat-folder-filter-btn") ragPendingSelections.clear()
+})
+
+// After HTMX swaps, restore checkbox state (both initial modal open and in-modal navigation)
+document.addEventListener("htmx:afterSwap", (e) => {
+  const detail = (e as CustomEvent).detail as { elt?: HTMLElement; target?: HTMLElement } | undefined
+  if (!detail) return
+  const storageKey = getRagFolderStorageKey()
+  if (!storageKey) return
+  const swapTarget = detail.target
+  // Direct swap of the contents div (in-modal navigation)
+  const isContentsSwap = swapTarget?.id === "rag-filter-contents"
+  // Initial modal open: the modal was injected into #modal, which contains #rag-filter-contents
+  const hasContents = !isContentsSwap && swapTarget?.querySelector?.("#rag-filter-contents")
+  if (isContentsSwap || hasContents) {
+    restoreRagCheckboxesFromPending(storageKey)
+  }
+})
+
+window.applyRagFolderFilter = (modalId: string, storageKey: string) => {
+  // Sync any currently visible checkboxes
+  syncRagCheckboxesToPending()
+
+  const selectedIds = Array.from(ragPendingSelections.entries())
+    .filter(([, checked]) => checked)
+    .map(([id]) => id)
+
+  const allIds = Array.from(ragPendingSelections.keys())
+
+  // If everything visible is checked (or map is empty), treat as "no filter"
+  const valueToStore = allIds.length > 0 && selectedIds.length < allIds.length ? selectedIds : null
+
+  if (valueToStore === null) {
+    localStorage.removeItem(storageKey)
+  } else {
+    localStorage.setItem(storageKey, JSON.stringify(valueToStore))
+  }
+
+  ragPendingSelections.clear()
+
+  // Update the toolbar button label
+  const btn = document.getElementById("hd-chat-folder-filter-btn")
+  if (btn) {
+    btn.dataset.storageKey = storageKey
+    const label = btn.querySelector("#hd-chat-folder-filter-label")
+    if (label) {
+      if (valueToStore === null) {
+        label.textContent = "Foldere"
+        btn.classList.remove("hd-chat__dept-switcher-btn--active")
+      } else {
+        label.textContent = `Foldere (${selectedIds.length})`
+        btn.classList.add("hd-chat__dept-switcher-btn--active")
+      }
+    }
+  }
+
+  window.closeModal(modalId, true)
 }
 
 window.submitSuggestion = (btn: HTMLElement) => {
