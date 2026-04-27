@@ -98,6 +98,54 @@
   @apply bg-gray-500/15 text-gray-400;
 }
 
+/* ==================== PRIORITY BADGE ==================== */
+
+.tickets-priority-badge {
+  @apply inline-flex items-center gap-1.5 text-xs font-roboto-medium;
+}
+
+.tickets-priority-badge__dot {
+  @apply inline-block w-2 h-2 rounded-full shrink-0;
+}
+
+.tickets-priority-badge--urgent .tickets-priority-badge__dot {
+  @apply bg-red-500;
+}
+
+.tickets-priority-badge--urgent {
+  @apply text-red-400;
+}
+
+.tickets-priority-badge--medie .tickets-priority-badge__dot {
+  @apply bg-yellow-400;
+}
+
+.tickets-priority-badge--medie {
+  @apply text-yellow-400;
+}
+
+.tickets-priority-badge--scazuta .tickets-priority-badge__dot {
+  @apply bg-green-500;
+}
+
+.tickets-priority-badge--scazuta {
+  @apply text-green-400;
+}
+
+/* ==================== PRIORITY INLINE SELECT ==================== */
+
+.tickets-priority-select {
+  @apply bg-transparent text-xs text-gray-400 border border-gray-700 rounded-md px-1.5 py-0.5 cursor-pointer outline-none transition-colors duration-150;
+
+  &:hover, &:focus {
+    @apply border-gray-500 text-gray-200;
+  }
+
+  option {
+    @apply bg-gray-900 text-gray-200;
+  }
+}
+
 /* ==================== TICKET DETAIL DRAWER ==================== */
 
 .ticket-drawer {

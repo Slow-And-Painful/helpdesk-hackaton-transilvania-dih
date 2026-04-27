@@ -3,4 +3,5 @@ export enum ROUTE {
   CLOSE = "/close",
   OPEN = "/open",
   ASSIGN = "/assign",
+  CHANGE_PRIORITY = "/change-priority",
 }

@@ -49,6 +49,7 @@ export default class TicketsService extends BaseService<
   allowedFilters = {
     id: "string",
     status: "string",
+    priority: "string",
     senderDepartmentId: "string",
     destinationDepartmentId: "string"
   } as Record<string, "string" | "boolean">

@@ -4,6 +4,7 @@ import { IconName } from "$templates/components/Icon"
 import { Department } from "$services/DepartmentsService"
 import { Ticket } from "$services/TicketsService"
 import TicketStatusBadge from "$templates/components/TicketStatusBadge"
+import TicketPriorityBadge from "$templates/components/TicketPriorityBadge"
 import { TicketsViewTab } from "$templates/views/TicketsView"
 import { getActionPath, getPartialPath } from "$routers/website/utils"
 import { TICKET_STATUS } from "$types/tickets"
@@ -118,6 +119,13 @@ const TicketsTable = ({ items, pagination, tab, baseUrl, isDepartmentAdmin }: Pr
       sortable: true,
       width: "120px",
       render: (row) => <span id={`ticket-row-status-${row.id}`}><TicketStatusBadge status={row.status} /></span>,
+    },
+    {
+      accessor: "priority",
+      heading: <>Prioritate</>,
+      sortable: true,
+      width: "120px",
+      render: (row) => <span id={`ticket-row-priority-${row.id}`}><TicketPriorityBadge priority={row.priority} /></span>,
     },
     {
       accessor: "createdAt",
