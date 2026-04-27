@@ -9,8 +9,9 @@ import ChatMessagesService from "$services/ChatsMessagesService"
 import TicketMessagesService from "$services/TicketMessagesService"
 import TicketChatMessage from "$templates/components/tickets/TicketChatMessage"
 import TicketChatForm from "$templates/components/tickets/TicketChatForm"
-import { TICKET_STATUS } from "$types/tickets"
+import { TICKET_STATUS, TICKET_PRIORITY } from "$types/tickets"
 import TicketStatusBadge from "$templates/components/TicketStatusBadge"
+import TicketPriorityBadge from "$templates/components/TicketPriorityBadge"
 import Toast from "$templates/components/Toast"
 import { and, eq, inArray } from "drizzle-orm"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
@@ -49,6 +50,7 @@ export const router = createRouter("tickets", (server) => {
     },
     handler: async (req, res) => {
       const { name, destinationDepartmentId, summary, fromChatbot } = req.body
+      const priority = (req.body.priority as TICKET_PRIORITY | undefined) ?? TICKET_PRIORITY.MEDIE
       let chatMessageId: number | undefined
       try {
         chatMessageId = req.body.chatMessageId ? parseInt(req.body.chatMessageId as string, 10) : undefined
@@ -77,6 +79,7 @@ export const router = createRouter("tickets", (server) => {
       const ticket = await ticketsService.sInsert({
         name,
         summary,
+        priority,
         senderDepartmentId: activeDepartment.id,
         senderDepartmentUserId,
         destinationDepartmentId,
@@ -409,6 +412,43 @@ export const router = createRouter("tickets", (server) => {
           message={fullMessage}
           isOutgoing={true}
         />
+      )
+    }
+  })
+
+  server.route({
+    method: "POST",
+    url: ROUTE.CHANGE_PRIORITY,
+    schema: schemas[ROUTE.CHANGE_PRIORITY],
+    config: {
+      authenticated: true,
+      security: {
+        session: `${USER_ROLE.CUSTOMER_ACCOUNT} || ${USER_ROLE.STAFF_ACCOUNT}`,
+      },
+    },
+    handler: async (req, res) => {
+      const { ticketId, priority } = req.body as { ticketId: number; priority: TICKET_PRIORITY }
+
+      if (!Object.values(TICKET_PRIORITY).includes(priority)) {
+        return res.status(400).send("Invalid priority value")
+      }
+
+      const ticket = await ticketsService.get(ticketId)
+      if (!ticket) {
+        return res.status(404).send("Ticket not found")
+      }
+
+      await ticketsService.update(ticketId, { priority })
+
+      return res.view(
+        <>
+          <span id={`ticket-row-priority-${ticketId}`} hx-swap-oob="innerHTML">
+            <TicketPriorityBadge priority={priority} />
+          </span>
+          <div id="ticket-drawer-priority" hx-swap-oob="innerHTML">
+            <TicketPriorityBadge priority={priority} />
+          </div>
+        </>
       )
     },
   })

@@ -9,6 +9,7 @@ export const schemas = {
         name: { type: "string", minLength: 1, maxLength: 255 },
         destinationDepartmentId: { type: "integer" },
         summary: { type: "string" },
+        priority: { type: "string" },
         fromChatbot: { type: "string" },
         chatMessageId: { type: "string" },
       },
@@ -53,6 +54,16 @@ export const schemas = {
         text: { type: "string", minLength: 1 },
       },
       required: ["ticketId", "text"],
+    },
+  } as const satisfies FastifySchema,
+  [ROUTE.CHANGE_PRIORITY]: {
+    body: {
+      type: "object",
+      properties: {
+        ticketId: { type: "integer" },
+        priority: { type: "string" },
+      },
+      required: ["ticketId", "priority"],
     },
   } as const satisfies FastifySchema,
 }

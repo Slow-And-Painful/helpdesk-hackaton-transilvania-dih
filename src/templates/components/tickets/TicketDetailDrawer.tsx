@@ -1,8 +1,9 @@
 /// <reference types="@kitajs/html/htmx.d.ts" />
 
 import { Ticket } from "$services/TicketsService"
-import { TICKET_STATUS } from "$types/tickets"
+import { TICKET_STATUS, TICKET_PRIORITY } from "$types/tickets"
 import TicketStatusBadge from "$templates/components/TicketStatusBadge"
+import TicketPriorityBadge from "$templates/components/TicketPriorityBadge"
 import Button from "$templates/components/Button"
 import Icon from "$templates/components/Icon"
 import { getActionPath, getPartialPath } from "$routers/website/utils"
@@ -100,6 +101,29 @@ export default function TicketDetailDrawer({ ticket, isDepartmentAdmin, isIncomi
                 <span class="ticket-drawer__label">Asignat</span>
                 <span id="ticket-drawer-assignee" class="ticket-drawer__value">
                   {assigneeName ?? <span class="text-gray-500">Neasignat</span>}
+                </span>
+              </div>
+              <div class="ticket-drawer__detail-row">
+                <span class="ticket-drawer__label">Prioritate</span>
+                <span class="ticket-drawer__value flex items-center gap-2">
+                  <span id="ticket-drawer-priority">
+                    <TicketPriorityBadge priority={ticket.priority} />
+                  </span>
+                  {isOpen && (
+                    <select
+                      class="tickets-priority-select"
+                      name="priority"
+                      hx-post={getActionPath("tickets", "CHANGE_PRIORITY")}
+                      hx-trigger="change"
+                      hx-vals={`{"ticketId": ${ticket.id}}`}
+                      hx-swap="none"
+                      aria-label="Schimbă prioritatea"
+                    >
+                      <option value={TICKET_PRIORITY.URGENT} selected={ticket.priority === TICKET_PRIORITY.URGENT}>Urgentă</option>
+                      <option value={TICKET_PRIORITY.MEDIE} selected={ticket.priority === TICKET_PRIORITY.MEDIE}>Medie</option>
+                      <option value={TICKET_PRIORITY.SCAZUTA} selected={ticket.priority === TICKET_PRIORITY.SCAZUTA}>Scăzută</option>
+                    </select>
+                  )}
                 </span>
               </div>
               <div class="ticket-drawer__detail-row">
