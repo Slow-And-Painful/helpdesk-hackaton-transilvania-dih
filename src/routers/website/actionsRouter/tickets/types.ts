@@ -4,4 +4,5 @@ export enum ROUTE {
   OPEN = "/open",
   ASSIGN = "/assign",
   SEND_MESSAGE = "/send-message",
+  CHANGE_PRIORITY = "/change-priority",
 }
