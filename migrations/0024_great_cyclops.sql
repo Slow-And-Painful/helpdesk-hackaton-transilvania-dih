@@ -1,1 +1,0 @@
-ALTER TABLE "Tickets" ADD COLUMN "priority" varchar(50) DEFAULT 'medie' NOT NULL;

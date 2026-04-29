@@ -1,1 +1,0 @@
-ALTER TABLE "Departments" ADD COLUMN "aiDescription" text DEFAULT '' NOT NULL;

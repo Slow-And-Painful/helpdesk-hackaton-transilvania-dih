@@ -1,1 +1,0 @@
-ALTER TABLE "Chats" ADD COLUMN "name" varchar(255);
