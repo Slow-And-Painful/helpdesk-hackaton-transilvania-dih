@@ -27,14 +27,16 @@ export const router = createRouter("users", (server) => {
     config: {
       authenticated: true,
       security: {
-        session: `${USER_ROLE.DEPARTMENT_ADMIN}`,
+        session: `${USER_ROLE.DEPARTMENT_ADMIN} || ${USER_ROLE.STAFF_ACCOUNT}`,
       },
     },
     handler: async (req, res) => {
       const { firstName, lastName, email } = req.body
+      const role = (req.body.role as DEPARTMENT_USER_ROLE | undefined) ?? DEPARTMENT_USER_ROLE.MEMBER
+      const bodyDepartmentId = (req.body as { departmentId?: number }).departmentId
 
-      const activeDepartment = req.activeDepartment
-      if (!activeDepartment) {
+      const departmentId = bodyDepartmentId ?? req.activeDepartment?.id
+      if (!departmentId) {
         return res.status(400).send("No active department selected")
       }
 
@@ -47,9 +49,10 @@ export const router = createRouter("users", (server) => {
           })
           .view(
             <CreateUserForm
-              values={{ firstName, lastName, email }}
-              initialValues={{ firstName, lastName, email }}
+              values={{ firstName, lastName, email, role }}
+              initialValues={{ firstName, lastName, email, role }}
               errors={{ email: <>Un utilizator cu acest email există deja</> }}
+              departmentId={bodyDepartmentId}
             />
           )
       }
@@ -67,12 +70,12 @@ export const router = createRouter("users", (server) => {
 
       await departmentUsersService.sInsert({
         userId: user.id,
-        departmentId: activeDepartment.id,
-        role: DEPARTMENT_USER_ROLE.MEMBER,
+        departmentId,
+        role,
       })
 
       const departmentUsers = await departmentUsersService.list({
-        where: eq(departmentUsersTable.departmentId, activeDepartment.id),
+        where: eq(departmentUsersTable.departmentId, departmentId),
       })
 
       const userIds = departmentUsers.map((du) => du.userId)

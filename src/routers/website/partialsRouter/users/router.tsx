@@ -28,16 +28,19 @@ export const router = createRouter("users", (server) => {
     config: {
       authenticated: true,
       security: {
-        session: `${USER_ROLE.DEPARTMENT_ADMIN}`,
+        session: `${USER_ROLE.DEPARTMENT_ADMIN} || ${USER_ROLE.STAFF_ACCOUNT}`,
       },
     },
-    handler: async (_req, res) => {
+    handler: async (req, res) => {
+      const { departmentId: departmentIdParam } = req.query as { departmentId?: string }
+      const departmentId = departmentIdParam ? parseInt(departmentIdParam, 10) : undefined
+
       return res
         .headers({
           "HX-Retarget": "#modal",
           "HX-Reswap": "beforeend",
         })
-        .view(<CreateUserModal />)
+        .view(<CreateUserModal departmentId={departmentId} />)
     },
   })
 
