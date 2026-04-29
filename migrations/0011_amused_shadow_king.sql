@@ -1,1 +1,0 @@
-ALTER TABLE "DepartmentUsers" ADD COLUMN "role" varchar(255) NOT NULL;

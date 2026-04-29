@@ -2,10 +2,12 @@ import { createRouter } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import USER_ROLE from "$types/USER_ROLES"
+import USER_TYPE from "$types/USER_TYPE"
 import CreateUserModal from "$templates/components/users/CreateUserModal"
 import UserDetailDrawer from "$templates/components/users/UserDetailDrawer"
 import { container } from "tsyringe"
 import DepartmentUserService from "$services/DepartmentUsersService"
+import DepartmentsService from "$services/DepartmentsService"
 import { chatsTable } from "$dbSchemas/Chats"
 import { chatMessagesTable } from "$dbSchemas/ChatMessages"
 import { ticketsTable } from "$dbSchemas/Tickets"
@@ -18,6 +20,7 @@ import DrizzleDB from "$components/DrizzleDB"
 export const routerPrefix = "/users"
 
 const departmentUserService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
+const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
 const drizzleDB = container.resolve<DrizzleDB>(DrizzleDB.token)
 
 export const router = createRouter("users", (server) => {
@@ -28,16 +31,30 @@ export const router = createRouter("users", (server) => {
     config: {
       authenticated: true,
       security: {
-        session: `${USER_ROLE.DEPARTMENT_ADMIN}`,
+        session: `${USER_ROLE.STAFF_ACCOUNT} || ${USER_ROLE.DEPARTMENT_ADMIN}`,
       },
     },
-    handler: async (_req, res) => {
+    handler: async (req, res) => {
+      const { departmentId: departmentIdParam } = req.query as { departmentId?: string }
+      const isStaff = req.callerUser?.type === USER_TYPE.STAFF
+
+      let departmentId: number | undefined
+      let departments: Awaited<ReturnType<typeof departmentsService.list>> | undefined
+
+      if (isStaff) {
+        if (departmentIdParam) {
+          departmentId = parseInt(departmentIdParam, 10)
+        } else {
+          departments = await departmentsService.list()
+        }
+      }
+
       return res
         .headers({
           "HX-Retarget": "#modal",
           "HX-Reswap": "beforeend",
         })
-        .view(<CreateUserModal />)
+        .view(<CreateUserModal departmentId={departmentId} departments={departments} />)
     },
   })
 

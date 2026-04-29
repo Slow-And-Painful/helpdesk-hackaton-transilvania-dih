@@ -1,10 +1,16 @@
 import Modal from "$templates/components/Modal"
 import ModalFooter from "$templates/components/ModalFooter"
 import CreateUserForm, { createUserFormId } from "$templates/components/users/CreateUserForm"
+import { Department } from "$services/DepartmentsService"
 
 export const createUserModalId = "create-user-modal"
 
-export default function CreateUserModal() {
+type Props = {
+  departmentId?: number
+  departments?: Department[]
+}
+
+export default function CreateUserModal({ departmentId, departments }: Props) {
   return (
     <Modal
       id={createUserModalId}
@@ -22,8 +28,10 @@ export default function CreateUserModal() {
       }
     >
       <CreateUserForm
-        values={{ firstName: "", lastName: "", email: "" }}
-        initialValues={{ firstName: "", lastName: "", email: "" }}
+        values={{ firstName: "", lastName: "", email: "", departmentId: departmentId ? String(departmentId) : undefined }}
+        initialValues={{ firstName: "", lastName: "", email: "", departmentId: departmentId ? String(departmentId) : undefined }}
+        departmentId={departmentId}
+        departments={departments}
       />
     </Modal>
   )
