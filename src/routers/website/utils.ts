@@ -32,6 +32,7 @@ import { DASHBOARD_VIEW_ROUTE, dashboardViewsRouterPrefix } from "./viewsRouter/
 import { WAITING_ROOM_VIEW_ROUTE, waitingRoomViewsRouterPrefix } from "./viewsRouter/waitingRoom"
 import { STAFF_VIEW_ROUTE, staffViewsRouterPrefix } from "./viewsRouter/staff"
 import { STAFF_ACTIONS_ROUTE, staffActionsRouterPrefix } from "./actionsRouter/staff"
+import { CONTACT_ACTIONS_ROUTE, contactActionsRouterPrefix } from "./actionsRouter/contact"
 
 // ==================== ROUTER ===================== //
 
@@ -98,6 +99,7 @@ type ActionRouter =
 | "tickets"
 | "chatbot"
 | "staff"
+| "contact"
 
 type ActionRoutersPaths = {
   users: typeof USERS_ACTIONS_ROUTE
@@ -106,6 +108,7 @@ type ActionRoutersPaths = {
   tickets: typeof TICKETS_ACTIONS_ROUTE
   chatbot: typeof CHATBOT_ACTIONS_ROUTE
   staff: typeof STAFF_ACTIONS_ROUTE
+  contact: typeof CONTACT_ACTIONS_ROUTE
 }
 
 type ActionRoutersParams = {
@@ -143,7 +146,11 @@ const actionRoutersConfig: {
   staff: {
     paths: STAFF_ACTIONS_ROUTE,
     prefix: staffActionsRouterPrefix
-  }
+  },
+  contact: {
+    paths: CONTACT_ACTIONS_ROUTE,
+    prefix: contactActionsRouterPrefix,
+  },
 }
 
 export function getActionPath<

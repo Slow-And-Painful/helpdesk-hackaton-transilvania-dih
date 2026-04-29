@@ -8,6 +8,13 @@
       "when": 1777412430908,
       "tag": "0000_cloudy_blade",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777450114329,
+      "tag": "0001_plain_weapon_omega",
+      "breakpoints": true
     }
   ]
 }

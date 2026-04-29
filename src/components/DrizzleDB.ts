@@ -18,6 +18,7 @@ import * as RAGDocumentsSchemas from "$dbSchemas/ragDocuments"
 import * as DocumentFoldersSchemas from "$dbSchemas/DocumentFolders"
 import * as TicketMessagesSchema from "$dbSchemas/TicketMessages"
 import * as TicketSummariesSchemas from "$dbSchemas/TicketSummaries"
+import * as ContactFormSubmissionsSchemas from "$dbSchemas/ContactFormSubmissions"
 
 import { Logger, sql } from "drizzle-orm"
  
@@ -39,6 +40,7 @@ const getDrizzle = (sql: Postgres.Sql, logger?: Logger) => {
       ...DocumentFoldersSchemas,
       ...TicketMessagesSchema,
       ...TicketSummariesSchemas,
+      ...ContactFormSubmissionsSchemas,
     },
   })
 

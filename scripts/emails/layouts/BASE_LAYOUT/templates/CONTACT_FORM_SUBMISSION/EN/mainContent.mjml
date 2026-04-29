@@ -1,0 +1,36 @@
+<mj-section padding="32px 40px 8px 40px" background-color="#0d1117">
+  <mj-column>
+    <mj-text
+      font-size="16px"
+      line-height="26px"
+      color="#d1d5db"
+      font-family="Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      padding="0 0 20px 0"
+    >
+      A fost completat un nou formular de contact pe platforma Transilvania Digital Innovation Hub.
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section padding="0 40px 28px 40px" background-color="#0d1117">
+  <mj-column>
+    <mj-table font-size="14px" color="#d1d5db" cellpadding="0" cellspacing="0">
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.07);">
+        <td style="padding: 12px 24px 12px 0; color: #6b7280; white-space: nowrap; font-weight: 500;">Prenume</td>
+        <td style="padding: 12px 0; color: #ffffff;">{{firstName}}</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.07);">
+        <td style="padding: 12px 24px 12px 0; color: #6b7280; white-space: nowrap; font-weight: 500;">Nume</td>
+        <td style="padding: 12px 0; color: #ffffff;">{{lastName}}</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.07);">
+        <td style="padding: 12px 24px 12px 0; color: #6b7280; white-space: nowrap; font-weight: 500;">Instituție</td>
+        <td style="padding: 12px 0; color: #ffffff;">{{numeInstitutie}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px 24px 12px 0; color: #6b7280; white-space: nowrap; font-weight: 500;">Email</td>
+        <td style="padding: 12px 0; color: #60a5fa;">{{email}}</td>
+      </tr>
+    </mj-table>
+  </mj-column>
+</mj-section>

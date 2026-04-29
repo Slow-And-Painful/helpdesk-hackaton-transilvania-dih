@@ -6,6 +6,7 @@ import { ticketsActionsRouter, ticketsActionsRouterPrefix } from "./tickets/inde
 import { chatbotActionsRouter, chatbotActionsRouterPrefix } from "./chatbot/index"
 import { usersActionsRouter, usersActionsRouterPrefix } from "./users/index"
 import { staffActionsRouter, staffActionsRouterPrefix } from "./staff"
+import { contactActionsRouter, contactActionsRouterPrefix } from "./contact"
 
 export const routerPrefix = "/actions"
 
@@ -16,6 +17,7 @@ const router: FastifyPluginCallback = (server, _, done) => {
   registerActionsRouter(server, chatbotActionsRouter, chatbotActionsRouterPrefix)
   registerActionsRouter(server, usersActionsRouter, usersActionsRouterPrefix)
   registerActionsRouter(server, staffActionsRouter, staffActionsRouterPrefix)
+  registerActionsRouter(server, contactActionsRouter, contactActionsRouterPrefix)
 
   return done()
 }

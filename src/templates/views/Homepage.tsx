@@ -27,12 +27,13 @@ const Homepage = (props: Props) => {
         </div>
 
         <h1 class="text-h2 font-roboto-bold text-white leading-tight">
-          Hub de Inovație
-          <br />
-          Digitală{" "}
           <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Transilvania
+            SAP Team
           </span>
+          <br/>
+          Transilvania Digital
+          <br/>
+          Innovation Hub
         </h1>
 
         <p class="text-base text-gray-400 max-w-sm leading-relaxed">
