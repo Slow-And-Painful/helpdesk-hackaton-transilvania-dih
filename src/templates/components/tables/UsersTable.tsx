@@ -8,11 +8,13 @@ type Props = {
   baseUrl: string
   /** Maps userId → departmentUserId; when provided the name becomes a clickable drawer link */
   departmentUserIdMap?: Map<number, number>
+  /** Maps userId → department role (ADMIN | MEMBER) */
+  departmentUserRoleMap?: Map<number, string>
 }
 
 export const usersTableId = "users-table"
 
-const UsersTable = ({ items, pagination, baseUrl, departmentUserIdMap }: Props) => {
+const UsersTable = ({ items, pagination, baseUrl, departmentUserIdMap, departmentUserRoleMap }: Props) => {
   const config: TableConfig<User>[] = [
     {
       accessor: "id",
@@ -52,6 +54,21 @@ const UsersTable = ({ items, pagination, baseUrl, departmentUserIdMap }: Props) 
       render: (row) => <span safe>{row.email}</span>,
       width: "250px",
     },
+    ...(departmentUserRoleMap ? [{
+      accessor: "id" as keyof User,
+      heading: <>Rol</>,
+      sortable: false,
+      width: "120px",
+      render: (row: User) => {
+        const role = departmentUserRoleMap.get(row.id)
+        if (!role) return <span class="text-gray-400">-</span>
+        return (
+          <span class={role === "ADMIN" ? "text-primary-400" : "text-gray-300"}>
+            {role === "ADMIN" ? "Admin" : "Membru"}
+          </span>
+        )
+      },
+    }] : []),
     {
       accessor: "blocked",
       heading: <>Status</>,

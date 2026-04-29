@@ -205,6 +205,7 @@ export const router = createRouter("dashboard", (server) => {
               pagination={pagination}
               baseUrl={baseUrl}
               departmentUserIdMap={departmentUserIdMap}
+              departmentUserRoleMap={new Map(departmentUsers.map((du) => [du.userId, du.role]))}
             />
           )
       }
@@ -216,6 +217,7 @@ export const router = createRouter("dashboard", (server) => {
           baseUrl={baseUrl}
           activeDepartment={activeDepartment}
           departmentUserIdMap={departmentUserIdMap}
+          departmentUserRoleMap={new Map(departmentUsers.map((du) => [du.userId, du.role]))}
         />,
         DashboardLayout
       )

@@ -33,7 +33,7 @@ export const router = createRouter("users", (server) => {
       },
     },
     handler: async (req, res) => {
-      const { firstName, lastName, email, departmentId: departmentIdParam } = req.body
+      const { firstName, lastName, email, departmentId: departmentIdParam, role, userType } = req.body
       const isStaff = req.callerUser?.type === USER_TYPE.STAFF
 
       // Resolve which department to assign the new user to
@@ -63,21 +63,27 @@ export const router = createRouter("users", (server) => {
           })
           .view(
             <CreateUserForm
-              values={{ firstName, lastName, email, departmentId: departmentIdParam }}
-              initialValues={{ firstName, lastName, email, departmentId: departmentIdParam }}
+              values={{ firstName, lastName, email, departmentId: departmentIdParam, role, userType }}
+              initialValues={{ firstName, lastName, email, departmentId: departmentIdParam, role, userType }}
               errors={{ email: <>Un utilizator cu acest email există deja</> }}
               departmentId={targetDepartmentId}
               departments={departments}
+              isStaff={isStaff}
             />
           )
       }
+
+      const resolvedUserType =
+        isStaff && userType === USER_TYPE.STAFF ? USER_TYPE.STAFF : USER_TYPE.CUSTOMER
+      const resolvedRole =
+        role === DEPARTMENT_USER_ROLE.ADMIN ? DEPARTMENT_USER_ROLE.ADMIN : DEPARTMENT_USER_ROLE.MEMBER
 
       const user = await usersService.sInsert({
         firstName,
         lastName,
         email,
         password: "password",
-        type: USER_TYPE.CUSTOMER,
+        type: resolvedUserType,
         emailVerified: true,
         privacyPolicyAcceptance: true,
         termsConditionsAcceptance: true,
@@ -87,7 +93,7 @@ export const router = createRouter("users", (server) => {
         await departmentUsersService.sInsert({
           userId: user.id,
           departmentId: targetDepartmentId,
-          role: DEPARTMENT_USER_ROLE.MEMBER,
+          role: resolvedRole,
         })
       }
 
@@ -122,6 +128,7 @@ export const router = createRouter("users", (server) => {
                 pagination={pagination}
                 baseUrl={staffDeptBaseUrl}
                 departmentUserIdMap={new Map(departmentUsers.map((du) => [du.userId, du.id]))}
+                departmentUserRoleMap={new Map(departmentUsers.map((du) => [du.userId, du.role]))}
               />
             )
         }
@@ -157,7 +164,7 @@ export const router = createRouter("users", (server) => {
             showSuccessToast: "Utilizatorul a fost creat cu succes",
           }),
         })
-        .view(<UsersTable items={items} pagination={pagination} baseUrl={baseUrl} />)
+        .view(<UsersTable items={items} pagination={pagination} baseUrl={baseUrl} departmentUserRoleMap={new Map(departmentUsers.map((du) => [du.userId, du.role]))} />)
     },
   })
 })

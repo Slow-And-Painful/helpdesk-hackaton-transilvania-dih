@@ -8,9 +8,10 @@ export const createUserModalId = "create-user-modal"
 type Props = {
   departmentId?: number
   departments?: Department[]
+  isStaff?: boolean
 }
 
-export default function CreateUserModal({ departmentId, departments }: Props) {
+export default function CreateUserModal({ departmentId, departments, isStaff }: Props) {
   return (
     <Modal
       id={createUserModalId}
@@ -32,6 +33,7 @@ export default function CreateUserModal({ departmentId, departments }: Props) {
         initialValues={{ firstName: "", lastName: "", email: "", departmentId: departmentId ? String(departmentId) : undefined }}
         departmentId={departmentId}
         departments={departments}
+        isStaff={isStaff}
       />
     </Modal>
   )

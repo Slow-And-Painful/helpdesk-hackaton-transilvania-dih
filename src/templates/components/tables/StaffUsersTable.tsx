@@ -46,6 +46,16 @@ const StaffUsersTable = ({ items }: Props) => {
       sortable: false,
       render: (row) => <span class="text-gray-400" safe>{row.user.email}</span>,
     },
+    {
+      accessor: "role",
+      heading: <>Rol</>,
+      sortable: false,
+      render: (row) => (
+        <span class={row.role === "ADMIN" ? "text-primary-400" : "text-gray-300"}>
+          {row.role === "ADMIN" ? "Admin" : "Membru"}
+        </span>
+      ),
+    },
   ]
 
   return (
