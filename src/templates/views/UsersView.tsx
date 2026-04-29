@@ -13,9 +13,10 @@ type Props = {
   baseUrl: string
   activeDepartment: Department
   departmentUserIdMap?: Map<number, number>
+  departmentUserRoleMap?: Map<number, string>
 }
 
-const UsersView = ({ items, pagination, baseUrl, activeDepartment, departmentUserIdMap }: Props) => {
+const UsersView = ({ items, pagination, baseUrl, activeDepartment, departmentUserIdMap, departmentUserRoleMap }: Props) => {
   return (
     <DashboardPage
       title={
@@ -57,6 +58,7 @@ const UsersView = ({ items, pagination, baseUrl, activeDepartment, departmentUse
           pagination={pagination}
           baseUrl={baseUrl}
           departmentUserIdMap={departmentUserIdMap}
+          departmentUserRoleMap={departmentUserRoleMap}
         />
       </div>
     </DashboardPage>

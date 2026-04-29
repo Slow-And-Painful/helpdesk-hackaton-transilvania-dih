@@ -10,6 +10,8 @@ export const schemas = {
         lastName: { type: "string", minLength: 1, maxLength: 255 },
         email: { type: "string", minLength: 1, maxLength: 255 },
         departmentId: { type: "string" },
+        role: { type: "string", enum: ["ADMIN", "MEMBER"] },
+        userType: { type: "string", enum: ["STAFF", "CUSTOMER"] },
       },
       required: ["firstName", "lastName", "email"],
     },

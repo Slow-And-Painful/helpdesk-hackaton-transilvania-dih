@@ -20,6 +20,9 @@ const StaffDepartmentUsersTab = ({ department, items, departmentUsers = [], pagi
   const departmentUserIdMap = new Map<number, number>(
     departmentUsers.map((du) => [du.userId, du.id])
   )
+  const departmentUserRoleMap = new Map<number, string>(
+    departmentUsers.map((du) => [du.userId, du.role])
+  )
 
   const createButton = (
     <Button
@@ -53,6 +56,7 @@ const StaffDepartmentUsersTab = ({ department, items, departmentUsers = [], pagi
         pagination={pagination}
         baseUrl={baseUrl}
         departmentUserIdMap={departmentUserIdMap}
+        departmentUserRoleMap={departmentUserRoleMap}
       />
     </div>
   )

@@ -11,16 +11,22 @@ type FormData = {
   lastName: string
   email: string
   departmentId?: string
+  role?: string
+  userType?: string
 }
 
 type Props = FormCommonProps<FormData> & {
   departmentId?: number
   departments?: Department[]
+  isStaff?: boolean
 }
 
 export const createUserFormId = "create-user-form"
 
-const CreateUserForm = ({ errors, values, initialValues, departmentId, departments }: Props) => {
+const CreateUserForm = ({ errors, values, initialValues, departmentId, departments, isStaff }: Props) => {
+  const isStaffUser = values?.userType === "STAFF"
+  const deptRoleRowId = `${createUserFormId}-dept-role-row`
+
   return (
     <Form
       id={createUserFormId}
@@ -38,26 +44,6 @@ const CreateUserForm = ({ errors, values, initialValues, departmentId, departmen
       errors={errors}
       render={({ errors, values, formId }) => (
         <div class="flex flex-col gap-y-4">
-          {departments && departments.length > 0 ? (
-            <FormControl name="departmentId" formId={formId} showChanged={false}>
-              <Select
-                id={`${formId}-departmentId`}
-                label="Departament"
-                name="departmentId"
-                required
-                error={errors?.departmentId}
-                options={departments.map((d) => ({
-                  label: d.name,
-                  value: d.id,
-                  selected: d.id === Number(values?.departmentId),
-                }))}
-                size="sm"
-              />
-            </FormControl>
-          ) : departmentId ? (
-            <input type="hidden" name="departmentId" value={String(departmentId)} />
-          ) : null}
-
           <FormControl name="firstName" formId={formId} showChanged={false}>
             <Input
               id={`${formId}-firstName`}
@@ -99,6 +85,78 @@ const CreateUserForm = ({ errors, values, initialValues, departmentId, departmen
               size={"sm"}
             />
           </FormControl>
+
+          {isStaff && (
+            <FormControl name="userType" formId={formId} showChanged={false}>
+              <Select
+                id={`${formId}-userType`}
+                label="Tip utilizator"
+                name="userType"
+                required
+                error={errors?.userType}
+                options={[
+                  { label: "Client", value: "CUSTOMER", selected: (values?.userType ?? "CUSTOMER") === "CUSTOMER" },
+                  { label: "Staff", value: "STAFF", selected: values?.userType === "STAFF" },
+                ]}
+                size="sm"
+              />
+            </FormControl>
+          )}
+
+          <div
+            id={deptRoleRowId}
+            class="flex gap-x-4"
+            style={isStaffUser ? "display:none" : undefined}
+          >
+            {departments && departments.length > 0 ? (
+              <FormControl name="departmentId" formId={formId} showChanged={false} class="flex-1">
+                <Select
+                  id={`${formId}-departmentId`}
+                  label="Departament"
+                  name="departmentId"
+                  required
+                  error={errors?.departmentId}
+                  options={departments.map((d) => ({
+                    label: d.name,
+                    value: d.id,
+                    selected: d.id === Number(values?.departmentId),
+                  }))}
+                  size="sm"
+                />
+              </FormControl>
+            ) : departmentId ? (
+              <input type="hidden" name="departmentId" value={String(departmentId)} />
+            ) : null}
+
+            <FormControl name="role" formId={formId} showChanged={false} class="flex-1">
+              <Select
+                id={`${formId}-role`}
+                label="Rol"
+                name="role"
+                required
+                error={errors?.role}
+                options={[
+                  { label: "Membru", value: "MEMBER", selected: (values?.role ?? "MEMBER") === "MEMBER" },
+                  { label: "Admin", value: "ADMIN", selected: values?.role === "ADMIN" },
+                ]}
+                size="sm"
+              />
+            </FormControl>
+          </div>
+
+          {isStaff && (
+            <script>{`
+              (function() {
+                var hiddenInput = document.getElementById("${formId}-userType-hidden-input");
+                var row = document.getElementById("${deptRoleRowId}");
+                if (hiddenInput && row) {
+                  hiddenInput.addEventListener("change", function() {
+                    row.style.display = hiddenInput.value === "STAFF" ? "none" : "";
+                  });
+                }
+              })();
+            `}</script>
+          )}
         </div>
       )}
     />

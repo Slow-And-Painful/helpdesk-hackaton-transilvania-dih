@@ -54,7 +54,7 @@ export const router = createRouter("users", (server) => {
           "HX-Retarget": "#modal",
           "HX-Reswap": "beforeend",
         })
-        .view(<CreateUserModal departmentId={departmentId} departments={departments} />)
+        .view(<CreateUserModal departmentId={departmentId} departments={departments} isStaff={isStaff} />)
     },
   })
 

@@ -2,6 +2,7 @@ import { createRouter, getViewPath } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import USER_ROLE from "$types/USER_ROLES"
+import USER_TYPE from "$types/USER_TYPE"
 import { DashboardLayout } from "$templates/layouts/DashboardLayout"
 import StaffDepartmentsView from "$templates/views/StaffDepartmentsView"
 import StaffDepartmentSettingsView, { StaffDepartmentSettingsTab } from "$templates/views/StaffDepartmentSettingsView"
@@ -130,7 +131,7 @@ export const router = createRouter("staff", (server) => {
               "HX-Retarget": `#${usersTableId}`,
               "HX-Push-Url": `${tabBaseUrl}${usersPagination.baseUrl ? `&${usersPagination.baseUrl}&page=${usersPagination.page}` : `&page=${usersPagination.page}`}`,
             })
-            .view(<UsersTable items={users} pagination={usersPagination} baseUrl={tabBaseUrl} departmentUserIdMap={new Map(departmentUsers.map((du) => [du.userId, du.id]))} />)
+            .view(<UsersTable items={users} pagination={usersPagination} baseUrl={tabBaseUrl} departmentUserIdMap={new Map(departmentUsers.map((du) => [du.userId, du.id]))} departmentUserRoleMap={new Map(departmentUsers.map((du) => [du.userId, du.role]))} />)
         }
 
         return res.view(
@@ -258,9 +259,20 @@ export const router = createRouter("staff", (server) => {
       },
       authenticated: true,
     },
-    handler: async (_req, res) => {
+    handler: async (req, res) => {
+      const { tab: tabParam } = req.query as { tab?: string }
+      const tab = tabParam === "staff" ? "staff" : "customers"
+      const baseUrl = getViewPath("staff", "USERS")
+
+      if (tab === "staff") {
+        const staffUsers = await usersService.list({
+          where: eq(usersTable.type, USER_TYPE.STAFF),
+        })
+        return res.view(<StaffUsersView tab={tab} baseUrl={baseUrl} staffUsers={staffUsers} />, DashboardLayout)
+      }
+
       const items = await departmentUsersService.listWithRelations()
-      return res.view(<StaffUsersView items={items} />, DashboardLayout)
+      return res.view(<StaffUsersView tab={tab} baseUrl={baseUrl} items={items} />, DashboardLayout)
     },
   })
 
