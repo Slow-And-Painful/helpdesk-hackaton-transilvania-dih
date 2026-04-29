@@ -25,7 +25,7 @@ export default class DocumentTextExtractionComponent {
     private sseManagerComponent: SSEManagerComponent,
   ) {
     this.client = new GoogleGenAI({ apiKey: configs.env.GEMINI_API_KEY })
-    this.model = "gemini-2.5-flash-lite"
+    this.model = "gemini-3.1-pro-preview"
   }
 
   extractText = async (document: RAGDocumentSchema): Promise<string> => {
