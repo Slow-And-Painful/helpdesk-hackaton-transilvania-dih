@@ -2,10 +2,11 @@ import { createRouter, getViewPath } from "../../utils"
 import { ROUTE } from "./types"
 import { schemas } from "./schemas"
 import USER_ROLE from "$types/USER_ROLES"
+import USER_TYPE from "$types/USER_TYPE"
 import { container } from "tsyringe"
 import UsersService from "$services/UsersService"
 import DepartmentUserService from "$services/DepartmentUsersService"
-import USER_TYPE from "$types/USER_TYPE"
+import DepartmentsService from "$services/DepartmentsService"
 import { DEPARTMENT_USER_ROLE } from "$types/departments"
 import { eq, inArray } from "drizzle-orm"
 import { departmentUsersTable } from "$dbSchemas/DepartmentUsers"
@@ -18,6 +19,7 @@ export const routerPrefix = "/users"
 
 const usersService = container.resolve<UsersService>(UsersService.token)
 const departmentUsersService = container.resolve<DepartmentUserService>(DepartmentUserService.token)
+const departmentsService = container.resolve<DepartmentsService>(DepartmentsService.token)
 
 export const router = createRouter("users", (server) => {
   server.route({
@@ -27,19 +29,33 @@ export const router = createRouter("users", (server) => {
     config: {
       authenticated: true,
       security: {
-        session: `${USER_ROLE.DEPARTMENT_ADMIN}`,
+        session: `${USER_ROLE.STAFF_ACCOUNT} || ${USER_ROLE.DEPARTMENT_ADMIN}`,
       },
     },
     handler: async (req, res) => {
-      const { firstName, lastName, email } = req.body
+      const { firstName, lastName, email, departmentId: departmentIdParam } = req.body
+      const isStaff = req.callerUser?.type === USER_TYPE.STAFF
 
-      const activeDepartment = req.activeDepartment
-      if (!activeDepartment) {
-        return res.status(400).send("No active department selected")
+      // Resolve which department to assign the new user to
+      let targetDepartmentId: number | undefined
+      if (isStaff) {
+        if (departmentIdParam) {
+          targetDepartmentId = Number(departmentIdParam)
+        }
+      } else {
+        const activeDepartment = req.activeDepartment
+        if (!activeDepartment) {
+          return res.status(400).send("No active department selected")
+        }
+        targetDepartmentId = activeDepartment.id
       }
 
       const existing = await usersService.getUserByEmail(email)
       if (existing) {
+        const departments = isStaff && !departmentIdParam
+          ? await departmentsService.list()
+          : undefined
+
         return res
           .headers({
             "HX-Retarget": `#${createUserFormId}`,
@@ -47,9 +63,11 @@ export const router = createRouter("users", (server) => {
           })
           .view(
             <CreateUserForm
-              values={{ firstName, lastName, email }}
-              initialValues={{ firstName, lastName, email }}
+              values={{ firstName, lastName, email, departmentId: departmentIdParam }}
+              initialValues={{ firstName, lastName, email, departmentId: departmentIdParam }}
               errors={{ email: <>Un utilizator cu acest email există deja</> }}
+              departmentId={targetDepartmentId}
+              departments={departments}
             />
           )
       }
@@ -65,12 +83,60 @@ export const router = createRouter("users", (server) => {
         termsConditionsAcceptance: true,
       })
 
-      await departmentUsersService.sInsert({
-        userId: user.id,
-        departmentId: activeDepartment.id,
-        role: DEPARTMENT_USER_ROLE.MEMBER,
-      })
+      if (targetDepartmentId) {
+        await departmentUsersService.sInsert({
+          userId: user.id,
+          departmentId: targetDepartmentId,
+          role: DEPARTMENT_USER_ROLE.MEMBER,
+        })
+      }
 
+      // For staff: check whether request came from department detail page or staff users page
+      if (isStaff && targetDepartmentId) {
+        const currentUrl = req.headers["hx-current-url"] as string | undefined
+        const staffDeptUrl = getViewPath("staff", "DEPARTMENT_SETTINGS").replace(":id", String(targetDepartmentId))
+        const isOnDeptPage = currentUrl?.includes(staffDeptUrl)
+
+        if (isOnDeptPage) {
+          const departmentUsers = await departmentUsersService.list({
+            where: eq(departmentUsersTable.departmentId, targetDepartmentId),
+          })
+          const userIds = departmentUsers.map((du) => du.userId)
+          const staffDeptBaseUrl = `${staffDeptUrl}?tab=users`
+          const { items, pagination } = await usersService.getTableItems(
+            req.query as Record<string, string>,
+            userIds.length ? inArray(usersTable.id, userIds) : eq(usersTable.id, -1),
+          )
+          return res
+            .headers({
+              "HX-Reswap": "outerHTML",
+              "HX-Retarget": `#${usersTableId}`,
+              "HX-Trigger-After-Settle": JSON.stringify({
+                closeModal: createUserModalId,
+                showSuccessToast: "Utilizatorul a fost creat cu succes",
+              }),
+            })
+            .view(
+              <UsersTable
+                items={items}
+                pagination={pagination}
+                baseUrl={staffDeptBaseUrl}
+                departmentUserIdMap={new Map(departmentUsers.map((du) => [du.userId, du.id]))}
+              />
+            )
+        }
+
+        return res
+          .headers({
+            "HX-Trigger": JSON.stringify({
+              closeModal: createUserModalId,
+            }),
+            "HX-Refresh": "true",
+          })
+          .send()
+      }
+
+      const activeDepartment = req.activeDepartment!
       const departmentUsers = await departmentUsersService.list({
         where: eq(departmentUsersTable.departmentId, activeDepartment.id),
       })
@@ -88,7 +154,7 @@ export const router = createRouter("users", (server) => {
           "HX-Retarget": `#${usersTableId}`,
           "HX-Trigger-After-Settle": JSON.stringify({
             closeModal: createUserModalId,
-            showSuccessToast: "Utilizatorul a fost creat cu succes"
+            showSuccessToast: "Utilizatorul a fost creat cu succes",
           }),
         })
         .view(<UsersTable items={items} pagination={pagination} baseUrl={baseUrl} />)

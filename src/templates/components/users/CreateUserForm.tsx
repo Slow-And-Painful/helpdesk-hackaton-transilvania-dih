@@ -1,20 +1,26 @@
 import Form from "$templates/components/Form"
 import FormControl from "$templates/components/FormControl"
 import Input from "$templates/components/Input"
+import Select from "$templates/components/Select"
 import { getActionPath } from "$routers/website/utils"
 import { FormCommonProps } from "$types/ui"
+import { Department } from "$services/DepartmentsService"
 
 type FormData = {
   firstName: string
   lastName: string
   email: string
+  departmentId?: string
 }
 
-type Props = FormCommonProps<FormData>
+type Props = FormCommonProps<FormData> & {
+  departmentId?: number
+  departments?: Department[]
+}
 
 export const createUserFormId = "create-user-form"
 
-const CreateUserForm = ({ errors, values, initialValues }: Props) => {
+const CreateUserForm = ({ errors, values, initialValues, departmentId, departments }: Props) => {
   return (
     <Form
       id={createUserFormId}
@@ -32,6 +38,26 @@ const CreateUserForm = ({ errors, values, initialValues }: Props) => {
       errors={errors}
       render={({ errors, values, formId }) => (
         <div class="flex flex-col gap-y-4">
+          {departments && departments.length > 0 ? (
+            <FormControl name="departmentId" formId={formId} showChanged={false}>
+              <Select
+                id={`${formId}-departmentId`}
+                label="Departament"
+                name="departmentId"
+                required
+                error={errors?.departmentId}
+                options={departments.map((d) => ({
+                  label: d.name,
+                  value: d.id,
+                  selected: d.id === Number(values?.departmentId),
+                }))}
+                size="sm"
+              />
+            </FormControl>
+          ) : departmentId ? (
+            <input type="hidden" name="departmentId" value={String(departmentId)} />
+          ) : null}
+
           <FormControl name="firstName" formId={formId} showChanged={false}>
             <Input
               id={`${formId}-firstName`}
